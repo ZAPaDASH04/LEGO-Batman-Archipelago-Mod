@@ -1,0 +1,1 @@
+start "" "C:\Program Files (x86)\Steam\steamapps\common\Lego Batman\injector.exe"
