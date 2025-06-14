@@ -59,18 +59,18 @@ bool IsMemoryExecutable(void* addr, size_t size) {
 
 
 bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byteCount){
-    int maxWaitMs = 10000;
+    int maxWaitMs = 20000;
        // Resolve multilevel pointer, if depth > 0
-    std::ofstream file("C:\\stupid\\a.txt");
+    std::ofstream file("a.txt", std::ios::app);
     file << "Writing code." << std::endl;
-    for (int i = 0; i < depth; ++i) {
-        if (IsBadReadPtr(pAddress, sizeof(LPVOID))) {
-            file << "IsBadReadPtr." << std::endl;
-            file.close();
-            return false;
-        }
-        pAddress = *((LPVOID*)pAddress);
-    }
+    // for (int i = 0; i < depth; ++i) {
+    //     if (IsBadReadPtr(pAddress, sizeof(LPVOID))) {
+    //         file << "IsBadReadPtr." << std::endl;
+    //         file.close();
+    //         return false;
+    //     }
+    //     pAddress = *((LPVOID*)pAddress);
+    // }
 
     // // Ensure the address is valid before writing
     // if (IsBadWritePtr(pAddress, byteCount)) {
@@ -86,11 +86,19 @@ bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byte
         if (IsMemoryReadable(pAddress, byteCount)) {
             // TODO: figure out if you can avoid this vvv
             if (memcmp(pAddress, bytesOld, byteCount) == 0) {
+                file << "Matches." << std::endl;
                 break; // Pattern matched, safe to patch
             }
+            file << "Doesn't Match." << std::endl;
         }
         Sleep(200);
         waited += 200;
+    }
+
+    if (waited >= maxWaitMs) {
+        file << "Failed to write. " << std::endl;
+        file.close();
+        return false;
     }
     
 
@@ -105,12 +113,16 @@ bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byte
         file.close();
         return false;
     }
+    file << "VirtPro." << std::endl;
     // Write the bytes
     memcpy(pAddress, bytes, byteCount);
+    file << "Written." << std::endl;
 
     // Restore the original protection
     VirtualProtect(pAddress, byteCount, oldProtect, &oldProtect);
+    file << "ReVirtPro." << std::endl;
 
+    file.close();
     return true;
 
 }
@@ -127,7 +139,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     HMODULE dummy;
     GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)hSelf, &dummy);
 
-    std::ofstream file("C:\\stupid\\a.txt");
+    std::ofstream file("a.txt");
     file << "ThreadProc started" << std::endl;
     file.close();
 
@@ -169,7 +181,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
 
     while (true) {
-        std::ofstream file("C:\\stupid\\a.txt", std::ios::app);
+        std::ofstream file("a.txt", std::ios::app);
         file << std::hex << (int) batman << " -> " << (int) (*batman) << std::endl; // write whether enabled.
         file.close();
         if (*batman == 0x00) *batman = 0x03;
