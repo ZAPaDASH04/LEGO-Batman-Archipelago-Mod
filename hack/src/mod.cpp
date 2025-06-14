@@ -161,7 +161,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     ///////////////TODO: This sucks but I just can't find a good way to do this :(
     // to prevent reading/writing too early. this includes both writing code and writing data.
-    Sleep(50000);
+    Sleep(30000);
 
 
     //BYTE* myFuncAddr = HookFunc;
@@ -169,9 +169,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
 
     while (true) {
-        // std::ofstream file("C:\\stupid\\a.txt", std::ios::app);
-        // file << std::hex << (int) batman << " -> " << (int) (*batman) << std::endl; // write whether enabled.
-        // file.close();
+        std::ofstream file("C:\\stupid\\a.txt", std::ios::app);
+        file << std::hex << (int) batman << " -> " << (int) (*batman) << std::endl; // write whether enabled.
+        file.close();
         if (*batman == 0x00) *batman = 0x03;
         else *batman = 0x00;
         Sleep(1000);

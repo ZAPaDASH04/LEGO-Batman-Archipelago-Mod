@@ -207,7 +207,7 @@
 
 // Modify as needed
 const wchar_t* TARGET_PROCESS = L"LEGOBatman.exe";
-const wchar_t* DLL_PATH = L"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Lego Batman\\mod.dll"; // Use full absolute path!
+const wchar_t* DLL_PATH = L"mod.dll"; // Use full absolute path?
 
 DWORD FindProcessId(const wchar_t* procName) {
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
