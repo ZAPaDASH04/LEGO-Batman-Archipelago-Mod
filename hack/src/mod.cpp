@@ -184,6 +184,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         std::ofstream file("a.txt", std::ios::app);
         file << std::hex << (int) batman << " -> " << (int) (*batman) << std::endl; // write whether enabled.
         file.close();
+        
         if (*batman == 0x00) *batman = 0x03;
         else *batman = 0x00;
         Sleep(1000);

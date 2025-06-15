@@ -8,4 +8,4 @@ rem start "" cmd /c "i686-w64-mingw32-g++ -shared -m32 -o \"%GAMEPATH%\mod.dll\"
 
 
 i686-w64-mingw32-g++ -m32 -o "C:\Program Files (x86)\Steam\steamapps\common\Lego Batman\LB1I.exe" .\injector\src\injector.cpp -static-libgcc -static-libstdc++ -static 1>injector_log.txt 2>&1
-i686-w64-mingw32-g++ -shared -m32 -o "C:\Program Files (x86)\Steam\steamapps\common\Lego Batman\ap.dll" .\hack\src\mod.cpp -static-libgcc -static-libstdc++ 1>mod_log.txt 2>&1
+i686-w64-mingw32-g++ -shared -m32 -o "C:\Program Files (x86)\Steam\steamapps\common\Lego Batman\ap.dll" .\hack\src\mod.cpp -static-libgcc -static-libstdc++ -static 1>mod_log.txt 2>&1
