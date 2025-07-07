@@ -1,0 +1,6 @@
+[submodule "hack/inc/wswrap"]
+	path = hack/inc/wswrap
+	url = https://github.com/black-sliver/wswrap.git
+[submodule "hack/inc/apclientpp"]
+	path = hack/inc/apclientpp
+	url = https://github.com/black-sliver/apclientpp.git
