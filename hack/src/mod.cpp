@@ -6,7 +6,7 @@
 #include <fstream>
 #include <shlobj.h> // For SHGetFolderPath
 
-
+std::ofstream file;
 
 bool IsMemoryReadable(void* addr, size_t size) {
     MEMORY_BASIC_INFORMATION mbi;
@@ -65,7 +65,7 @@ bool IsMemoryWritable(void* addr, size_t size) {
 bool WaitForExecutableMemory(void* addr, DWORD timeoutMs = 10000) {
     DWORD elapsed = 0;
     MEMORY_BASIC_INFORMATION mbi;
-    std::ofstream file("a.txt", std::ios::app);
+    //std::ofstream file("a.txt", std::ios::app);
     file << "WaitForExecutableMemory." << std::endl;
 
     while (elapsed < timeoutMs) {
@@ -74,7 +74,7 @@ bool WaitForExecutableMemory(void* addr, DWORD timeoutMs = 10000) {
             if (mbi.State == MEM_COMMIT &&
                 (mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE))) {
                 file << "Succeeded." << std::endl;
-                file.close();
+                //file.close();
                 return true;
             }
         }
@@ -82,25 +82,25 @@ bool WaitForExecutableMemory(void* addr, DWORD timeoutMs = 10000) {
         Sleep(50);
         elapsed += 50;
     }
-    file.close();
+    //file.close();
     return false;
 }
 
 bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byteCount){
     int maxWaitMs = 20000;
        // Resolve multilevel pointer, if depth > 0
-    std::ofstream file("a.txt", std::ios::app);
+    //std::ofstream file("a.txt", std::ios::app);
     file << "Writing code." << std::endl;
     file << "Waiting for executable memory..." << std::endl;
-    file.close();
+    //file.close();
     if (!WaitForExecutableMemory((void*)pAddress)) {
         // Now it's safe to patch
-        file.open("a.txt", std::ios::app);
+        //file.open("a.txt", std::ios::app);
         file << "Failed. Memory never became executable." << std::endl;
-        file.close();
+        //file.close();
         return false;
     }
-    file.open("a.txt", std::ios::app);
+    //file.open("a.txt", std::ios::app);
     // for (int i = 0; i < depth; ++i) {
     //     if (IsBadReadPtr(pAddress, sizeof(LPVOID))) {
     //         file << "IsBadReadPtr." << std::endl;
@@ -135,7 +135,7 @@ bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byte
 
     if (waited >= maxWaitMs) {
         file << "Failed to write. " << std::endl;
-        file.close();
+        //file.close();
         return false;
     }
     
@@ -148,7 +148,7 @@ bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byte
     DWORD oldProtect;
     if (!VirtualProtect(pAddress, byteCount, PAGE_EXECUTE_READWRITE, &oldProtect)) {
         file << "Failed to change protections." << std::endl;
-        file.close();
+        //file.close();
         return false;
     }
     file << "VirtPro." << std::endl;
@@ -160,7 +160,7 @@ bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byte
     VirtualProtect(pAddress, byteCount, oldProtect, &oldProtect);
     file << "ReVirtPro." << std::endl;
 
-    file.close();
+    //file.close();
     return true;
 
 }
@@ -177,7 +177,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     HMODULE dummy;
     GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)hSelf, &dummy);
 
-    std::ofstream file("a.txt");
+    file.open("a.txt");
     file << "ThreadProc started" << std::endl;
 
     // DWORD BASE_ADDR;// = (DWORD)GetModuleHandle(nullptr);
@@ -282,9 +282,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //BYTE* myFuncAddr = HookFunc;
     //memcpy(dmgFuncAddr,NOP,7);
     file << "Patching damage function..." << std::endl;
-    file.close();
+    //file.close();
     WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
-    file.open("a.txt", std::ios::app);
+    //file.open("a.txt", std::ios::app);
     file << "Patched damage function." << std::endl;
 
     for (DWORD i = 0; i < 48; i++) {
