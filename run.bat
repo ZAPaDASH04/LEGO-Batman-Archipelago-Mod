@@ -1,1 +1,1 @@
-start "" "C:\Program Files (x86)\Steam\steamapps\common\Lego Batman\injector.exe"
+start "" "C:\Program Files (x86)\Steam\steamapps\common\Lego Batman\LB1I.exe"

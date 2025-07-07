@@ -1,0 +1,11 @@
+ThreadProc started
+Module found.
+Patching damage function...
+Writing code.
+Waiting for executable memory...
+WaitForExecutableMemory.
+Checking state.
+Succeeded.
+Doesn't Match.
+Doesn't Match.
+Doesn't Match.

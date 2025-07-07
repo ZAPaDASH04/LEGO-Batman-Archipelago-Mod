@@ -263,16 +263,50 @@ int main() {
     std::wcout << L"[+] Waiting for module: LEGOBatman.exe" << std::endl;
 
     while (!IsMainModuleLoaded(pid, L"LEGOBatman.exe")) {
-        std::wcout << L"[*] Waiting for main module...\n";
+        std::wcout << L"[*] Waiting for main module...\n"; // TODO: Got stuck looping here.
         Sleep(500);
     }
     std::wcout << L"[+] Main module is loaded" << std::endl;
 
-    // TODO: Test this
-    while (!IsMainModuleLoaded(pid, L"xinput1_3.dll")) {
-        std::wcout << L"[*] Waiting for final module...\n";
-        Sleep(500);
-    }
+    // // TODO: Test this
+    // while (!IsMainModuleLoaded(pid, L"xinput1_3.dll")) {
+    //     std::wcout << L"[*] Waiting for final module...\n";
+    //     Sleep(500);
+    // }
+
+    // std::wcout << L"[*] Waiting for game window..." << std::endl;
+    // HWND hWnd = nullptr;
+    // while ((hWnd = FindMainWindow(pid)) == nullptr) {
+    //     Sleep(500);
+    // }
+    // std::wcout << L"[+] Found game window: 0x" << std::hex << (uintptr_t)hWnd << std::endl;
+
+
+    //TODO: DETECT WHEN THE GAME HAS LOADED.
+    
+    // try code signatures
+    // detect level then save file
+    // save file should hopefully have a unique default that tells us that a file hasn't been selected
+
+    // level ptr
+    // legobatman.exe+6C98C4
+    // 0x00 is title screen. (alternative uses unknown)
+    // 0x09 is batcave. TODO: check new save. it puts you in a certain level right? there should be a byte for new save
+
+    // loaded save ptr
+    // LEGOBatman.exe+56801C
+    // 0xFF no save. set when pressing start on title screen. kept when making new game.
+    // 0x00 save 1
+    // etc
+
+    // IDEAS
+    // when games starts for first time or when start is pressed on menu loaded save ptr is set to -1
+    // this does not include when player exits to menu but in that case you can check that the level is 00
+
+    // NEW GAME ISSUE
+    // 
+    
+
 
     HANDLE hProcess = OpenProcess(
         PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |

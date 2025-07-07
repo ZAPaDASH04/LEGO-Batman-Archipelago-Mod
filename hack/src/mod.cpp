@@ -39,30 +39,63 @@ bool IsMemoryWritable(void* addr, size_t size) {
     return false;
 }
 
-bool IsMemoryExecutable(void* addr, size_t size) {
+// bool IsMemoryExecutable(void* addr, size_t size) {
+//     MEMORY_BASIC_INFORMATION mbi;
+//     if (!VirtualQuery(addr, &mbi, sizeof(mbi)))
+//         return false;
+
+//     if (mbi.State != MEM_COMMIT)
+//         return false;
+
+//     if (mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD))
+//         return false;
+
+//     // Check if protection allows execution
+//     if (mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY))
+//         return true;
+
+//     return false;
+// }
+
+bool WaitForExecutableMemory(void* addr, DWORD timeoutMs = 10000) {
+    DWORD elapsed = 0;
     MEMORY_BASIC_INFORMATION mbi;
-    if (!VirtualQuery(addr, &mbi, sizeof(mbi)))
-        return false;
+    std::ofstream file("a.txt", std::ios::app);
+    file << "WaitForExecutableMemory." << std::endl;
 
-    if (mbi.State != MEM_COMMIT)
-        return false;
-
-    if (mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD))
-        return false;
-
-    // Check if protection allows execution
-    if (mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY))
-        return true;
-
+    while (elapsed < timeoutMs) {
+        if (VirtualQuery(addr, &mbi, sizeof(mbi))) {
+            file << "Checking state." << std::endl;
+            if (mbi.State == MEM_COMMIT &&
+                (mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE))) {
+                file << "Succeeded." << std::endl;
+                file.close();
+                return true;
+            }
+        }
+        file << "VirtualQuery Failed." << std::endl;
+        Sleep(50);
+        elapsed += 50;
+    }
+    file.close();
     return false;
 }
-
 
 bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byteCount){
     int maxWaitMs = 20000;
        // Resolve multilevel pointer, if depth > 0
     std::ofstream file("a.txt", std::ios::app);
     file << "Writing code." << std::endl;
+    file << "Waiting for executable memory..." << std::endl;
+    file.close();
+    if (!WaitForExecutableMemory((void*)pAddress)) {
+        // Now it's safe to patch
+        file.open("a.txt", std::ios::app);
+        file << "Failed. Memory never became executable." << std::endl;
+        file.close();
+        return false;
+    }
+    file.open("a.txt", std::ios::app);
     // for (int i = 0; i < depth; ++i) {
     //     if (IsBadReadPtr(pAddress, sizeof(LPVOID))) {
     //         file << "IsBadReadPtr." << std::endl;
@@ -141,7 +174,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     std::ofstream file("a.txt");
     file << "ThreadProc started" << std::endl;
-    file.close();
 
     // DWORD BASE_ADDR;// = (DWORD)GetModuleHandle(nullptr);
     
@@ -158,8 +190,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     
     HMODULE hModule = nullptr;
     while ((hModule = GetModuleHandleA("LEGOBatman.exe")) == nullptr) {
+        file << "Waiting for Module." << std::endl;
         Sleep(50);
     }
+    file << "Module found." << std::endl;
     DWORD BASE_ADDR = (DWORD)hModule;
     
     BYTE NOP[16] = {0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90};
@@ -221,12 +255,16 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     ///////////////TODO: This sucks but I just can't find a good way to do this :(
     // to prevent reading/writing too early. this includes both writing code and writing data.
-    Sleep(30000);
+    //Sleep(30000);
 
 
     //BYTE* myFuncAddr = HookFunc;
     //memcpy(dmgFuncAddr,NOP,7);
+    file << "Patching damage function..." << std::endl;
+    file.close();
     WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
+    file.open("a.txt", std::ios::app);
+    file << "Patched damage function." << std::endl;
 
     for (DWORD i = 0; i < 48; i++) {
         if (*(characters[i]) == 0x03) *(characters[i]) = 0x00;
@@ -235,8 +273,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     int cou = -1;
 
+    file << "About to loop." << std::endl;
+    file.close(); // close file before infinite loop.
     while (true) {
-        // std::ofstream file("a.txt", std::ios::app);
+        // file.open("a.txt", std::ios::app);
         // file << std::hex << (int) batman << " -> " << (int) (*batman) << std::endl; // write whether enabled.
         // file.close();
         cou = cou % 3;

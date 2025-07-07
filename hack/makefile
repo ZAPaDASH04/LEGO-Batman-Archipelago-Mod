@@ -1,12 +1,12 @@
 # Program Name
-PROGRAM_NAME = lb1mod.dll
+PROGRAM_NAME = ap.dll # lb1mod.dll
 
 # Compiler
-CXX = g++
+CXX = i686-w64-mingw32-g++ -m32
 
 # Directories
 SRC_DIR = ./src
-BIN_DIR = ../test
+BIN_DIR = ./bin
 OBJ_DIR = ./obj
 DEP_DIR = ./obj
 RELEASE_DIR = ./
@@ -16,7 +16,7 @@ INCLUDE_DIR = ./inc
 
 
 # Build modes
-DEBUG_FLAGS = -static-libgcc -static-libstdc++ -Wl,--subsystem,windows #-Wall -Wextra -g -I$(INCLUDE_DIR) -std=c++17 -MMD -MP
+DEBUG_FLAGS = -shared -static-libgcc -static-libstdc++ -static #-static-libgcc -static-libstdc++ -Wl,--subsystem,windows #-Wall -Wextra -g -I$(INCLUDE_DIR) -std=c++17 -MMD -MP
 RELEASE_FLAGS = -Wall -Wextra -O3 -DNDEBUG -I$(INCLUDE_DIR) -std=c++17 -static -MMD -MP
 DLL_FLAGS = -shared
 

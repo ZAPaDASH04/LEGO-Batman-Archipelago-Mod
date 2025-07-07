@@ -1,1 +1,1 @@
-start "GAME" "c:\Program Files (x86)\Steam\steamapps\common\Lego Batman\LEGOBatman.exe"
+start "" "c:\Program Files (x86)\Steam\steamapps\common\Lego Batman\LEGOBatman.exe"
