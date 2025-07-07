@@ -10,13 +10,20 @@ BIN_DIR = ./bin
 OBJ_DIR = ./obj
 DEP_DIR = ./obj
 RELEASE_DIR = ./
-INCLUDE_DIR = ./inc
-
+INCLUDE_DIR = inc
+LIBS = -lws2_32
+INCLUDES = \
+	-Iinc/apclientpp \
+	-Iinc/asio/include  \
+	-Iinc/websocketpp \
+	-Iinc/wswrap/include \
+	-Iinc/json/include \
+	-Iinc/valijson/include 
 # Bools
 
 
 # Build modes
-DEBUG_FLAGS = -I$(INCLUDE_DIR) -shared -static-libgcc -static-libstdc++ -static #-static-libgcc -static-libstdc++ -Wl,--subsystem,windows #-Wall -Wextra -g -I$(INCLUDE_DIR) -std=c++17 -MMD -MP
+DEBUG_FLAGS = $(INCLUDES) -shared -static-libgcc -static-libstdc++ -static $(LIBS) #-static-libgcc -static-libstdc++ -Wl,--subsystem,windows #-Wall -Wextra -g -I$(INCLUDE_DIR) -std=c++17 -MMD -MP
 RELEASE_FLAGS = -Wall -Wextra -O3 -DNDEBUG -I$(INCLUDE_DIR) -std=c++17 -static -MMD -MP
 DLL_FLAGS = -shared
 
@@ -45,7 +52,7 @@ all: clean_unused $(EXECUTABLE)
 # Linking
 $(EXECUTABLE): $(OBJ_FILES) | $(BIN_DIR) $(RELEASE_DIR)
 	@echo "linking."
-	$(CXX) -shared $(OBJ_FILES) -o $(EXECUTABLE)
+	$(CXX) -shared $(OBJ_FILES) -o $(EXECUTABLE) $(LIBS)
 
 # Compilation rule with dependency generation
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
