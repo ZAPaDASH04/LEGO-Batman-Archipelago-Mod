@@ -83,5 +83,5 @@
         "text_encoding": "cpp",
         "variant": "cpp"
     },
-    "C_Cpp.default.compilerPath": "C:/msys64/mingw32/bin/g++.exe"
+    "C_Cpp.default.compilerPath": "C:/msys64/mingw32/bin/i686-w64-mingw32-g++.exe"
 }

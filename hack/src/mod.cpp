@@ -3,7 +3,8 @@
 #include <fstream>
 #include <shlobj.h> // For SHGetFolderPath
 
-#include "nlohmann/json.hpp"
+#include <apclient.hpp>
+
 
 bool IsMemoryReadable(void* addr, size_t size) {
     MEMORY_BASIC_INFORMATION mbi;

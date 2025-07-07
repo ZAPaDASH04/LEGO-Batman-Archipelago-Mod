@@ -2,7 +2,7 @@
 PROGRAM_NAME = ap.dll # lb1mod.dll
 
 # Compiler
-CXX = i686-w64-mingw32-g++ -m32
+CXX = i686-w64-mingw32-g++ -m32 -DASIO_STANDALONE -DWSWRAP_NO_SSL
 
 # Directories
 SRC_DIR = ./src

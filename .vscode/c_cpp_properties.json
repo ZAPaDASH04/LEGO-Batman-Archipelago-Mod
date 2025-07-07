@@ -4,8 +4,12 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/hack/inc/**"
-                //"${workspaceFolder}/hack/inc/nlohmann/**"
+                "${workspaceFolder}/hack/inc/apclientpp/**",
+                "${workspaceFolder}/hack/inc/asio/include/**",
+                "${workspaceFolder}/hack/inc/websocketpp/**",
+                "${workspaceFolder}/hack/inc/wswrap/include/**",
+                "${workspaceFolder}/hack/inc/json/include/**",
+                "${workspaceFolder}/hack/inc/valijson/include/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -13,10 +17,14 @@
                 "_UNICODE"
             ],
             "windowsSdkVersion": "10.0.19041.0",
-            "compilerPath": "C:/msys64/mingw32/bin/g++.exe",
+            "compilerPath": "C:/msys64/mingw32/bin/i686-w64-mingw32-g++.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "windows-msvc-x64"
+            "intelliSenseMode": "windows-gcc-x64",
+            "compilerArgs": [
+                "-DASIO_STANDALONE",
+                "-DWSWRAP_NO_SSL"
+            ]
         }
     ],
     "version": 4

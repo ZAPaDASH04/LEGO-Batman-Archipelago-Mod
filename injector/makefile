@@ -2,7 +2,7 @@
 PROGRAM_NAME = LB1I
 
 # Compiler
-CXX = i686-w64-mingw32-g++ -m32
+CXX = i686-w64-mingw32-g++ -m32 
 
 # Directories
 SRC_DIR = ./src
