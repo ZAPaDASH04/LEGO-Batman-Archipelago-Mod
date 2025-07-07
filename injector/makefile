@@ -1,22 +1,22 @@
 # Program Name
-PROGRAM_NAME = injector
+PROGRAM_NAME = LB1I
 
 # Compiler
-CXX = g++
+CXX = i686-w64-mingw32-g++ -m32
 
 # Directories
 SRC_DIR = ./src
-BIN_DIR = ../test
+BIN_DIR = ./bin
 OBJ_DIR = ./obj
 DEP_DIR = ./obj
 RELEASE_DIR = ./
-INCLUDE_DIR = ./
+INCLUDE_DIR = ./inc
 
 # Bools
 
 
 # Build modes
-DEBUG_FLAGS = -Wall -Wextra -g -Iinclude -std=c++17 -MMD -MP
+DEBUG_FLAGS = -static-libgcc -static-libstdc++ -static #-Wall -Wextra -g -Iinclude -std=c++17 -MMD -MP
 RELEASE_FLAGS = -Wall -Wextra -O3 -DNDEBUG -Iinclude -std=c++17 -static -MMD -MP
 DLL_FLAGS = -shared
 

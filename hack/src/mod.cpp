@@ -3,6 +3,8 @@
 #include <fstream>
 #include <shlobj.h> // For SHGetFolderPath
 
+#include "nlohmann/json.hpp"
+
 bool IsMemoryReadable(void* addr, size_t size) {
     MEMORY_BASIC_INFORMATION mbi;
     if (!VirtualQuery(addr, &mbi, sizeof(mbi)))
@@ -250,14 +252,30 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // 7 byte add function
 
 
-    BYTE* dmgFuncAddr = (BYTE*)(BASE_ADDR + (0x1C356D));
 
 
     ///////////////TODO: This sucks but I just can't find a good way to do this :(
     // to prevent reading/writing too early. this includes both writing code and writing data.
     //Sleep(30000);
+    BYTE* saveFile = (BYTE*)(BASE_ADDR + (0x56801C));
+    BYTE* level = (BYTE*)(BASE_ADDR + (0x6C98C4));
+
+    while (*level == 0x00) {
+        Sleep(500); 
+    }
+    file << "Level is " << std::hex << (int)*level << std::endl;
+    file << "Save file is " << (int)*saveFile << std::endl;
+    // TODO: wait for player to gain control?
+    if (*saveFile == 0xFF) {
+        // NEW GAME started
+        // TODO: Find some way to make the player save.
+    } else {
+        // preexisting save file.
+    }
 
 
+    BYTE* dmgFuncAddr = (BYTE*)(BASE_ADDR + (0x1C356D));
+    
     //BYTE* myFuncAddr = HookFunc;
     //memcpy(dmgFuncAddr,NOP,7);
     file << "Patching damage function..." << std::endl;

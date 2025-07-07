@@ -3,7 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/hack/inc/**"
+                //"${workspaceFolder}/hack/inc/nlohmann/**"
             ],
             "defines": [
                 "_DEBUG",

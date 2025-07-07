@@ -304,7 +304,8 @@ int main() {
     // this does not include when player exits to menu but in that case you can check that the level is 00
 
     // NEW GAME ISSUE
-    // 
+    // when doing new game.
+    // a save file is only created when beating level
     
 
 
