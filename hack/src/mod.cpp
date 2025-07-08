@@ -1,4 +1,11 @@
-// mod.cpp
+/**
+ * @file mod.cpp
+ * @author ZAPaDASH04 (ZAPaDASH04@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2025-07-07
+ * 
+ */
 
 #include <apclient.hpp>
 
@@ -74,7 +81,6 @@ bool WaitForExecutableMemory(void* addr, DWORD timeoutMs = 10000) {
             if (mbi.State == MEM_COMMIT &&
                 (mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE))) {
                 file << "Succeeded." << std::endl;
-                //file.close();
                 return true;
             }
         }
@@ -82,7 +88,6 @@ bool WaitForExecutableMemory(void* addr, DWORD timeoutMs = 10000) {
         Sleep(50);
         elapsed += 50;
     }
-    //file.close();
     return false;
 }
 
@@ -92,19 +97,14 @@ bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byte
     //std::ofstream file("a.txt", std::ios::app);
     file << "Writing code." << std::endl;
     file << "Waiting for executable memory..." << std::endl;
-    //file.close();
     if (!WaitForExecutableMemory((void*)pAddress)) {
         // Now it's safe to patch
-        //file.open("a.txt", std::ios::app);
         file << "Failed. Memory never became executable." << std::endl;
-        //file.close();
         return false;
     }
-    //file.open("a.txt", std::ios::app);
     // for (int i = 0; i < depth; ++i) {
     //     if (IsBadReadPtr(pAddress, sizeof(LPVOID))) {
     //         file << "IsBadReadPtr." << std::endl;
-    //         file.close();
     //         return false;
     //     }
     //     pAddress = *((LPVOID*)pAddress);
@@ -113,7 +113,6 @@ bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byte
     // // Ensure the address is valid before writing
     // if (IsBadWritePtr(pAddress, byteCount)) {
     //     file << "IsBadWritePtr." << std::endl;
-    //     file.close();
     //     return false;
     // }
     
@@ -135,7 +134,6 @@ bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byte
 
     if (waited >= maxWaitMs) {
         file << "Failed to write. " << std::endl;
-        //file.close();
         return false;
     }
     
@@ -148,7 +146,6 @@ bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byte
     DWORD oldProtect;
     if (!VirtualProtect(pAddress, byteCount, PAGE_EXECUTE_READWRITE, &oldProtect)) {
         file << "Failed to change protections." << std::endl;
-        //file.close();
         return false;
     }
     file << "VirtPro." << std::endl;
@@ -160,7 +157,6 @@ bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byte
     VirtualProtect(pAddress, byteCount, oldProtect, &oldProtect);
     file << "ReVirtPro." << std::endl;
 
-    //file.close();
     return true;
 
 }
@@ -265,6 +261,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     while (*level == 0x00) {
         Sleep(500); 
+        // this is flawed as it often crashes on batman robin loading
     }
     file << "Level is " << std::hex << (int)*level << std::endl;
     file << "Save file is " << (int)*saveFile << std::endl;
@@ -277,14 +274,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     }
 
 
+    ///////////////////////////////////////////////////////
+
     BYTE* dmgFuncAddr = (BYTE*)(BASE_ADDR + (0x1C356D));
     
     //BYTE* myFuncAddr = HookFunc;
-    //memcpy(dmgFuncAddr,NOP,7);
     file << "Patching damage function..." << std::endl;
-    //file.close();
     WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
-    //file.open("a.txt", std::ios::app);
     file << "Patched damage function." << std::endl;
 
     for (DWORD i = 0; i < 48; i++) {
@@ -293,6 +289,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     }
 
     int cou = -1;
+
+    //////////////////////////////////////////////////////////////////////////
+
 
     file << "About to loop." << std::endl;
     file.close(); // close file before infinite loop.
