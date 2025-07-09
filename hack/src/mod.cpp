@@ -307,22 +307,39 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
     // AP testing.
-    std::ofstream connectionFile("APConnect.txt");
+    //TODO: will need to be fool-proofed, remove duplicate code, and probably can modularize this, but testing initial connection & proof of concept
+    std::ifstream connectionFile("APConnect.txt");
 
+    std::string line;
+    std::getline(connectionFile, line);
+    std::string serverURL = line.substr(12);
+    std::getline(connectionFile, line);
+    std::string serverPort = line.substr(13);
+    std::getline(connectionFile, line);
+    std::string playerName = line.substr(13);
+    std::getline(connectionFile, line);
+    std::string password = "";
+    if(line.length() > 10)
+        password = line.substr(10);
+        
 
-    std::string URI = ""; // {SERVER_IP}:{SERVER_PORT}
-    //APClient client(ap_get_uuid(UUID_FILE),"Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/,URI);
-    
+    //from what I can find in the AP documentation, UUID is a Unique identifier for player client. 
+    //the ap client library has 2 input parameters, uuidFile & host (both &strings)
+    //host defaults to "" if not entered. Dark Souls III does not pass host into the function
+
+    std::string uuid = ap_get_uuid(UUID_FILE); 
+    std::string URI = serverURL + ":" + serverPort; // {SERVER_IP}:{SERVER_PORT}
     connectionFile.close();
-
+    //ap = new APClient(uuid,"Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/,URI);
     
 
+    //testing set up of uuid, URI & file read
+    file << "UUID is:" << uuid << std::endl;
+    file << "URI is:" << URI << std::endl;
+    file << "Player name is: " << playerName << std::endl;
+    file << "Password is: " << password << std::endl;
 
-
-
-
-
-
+    //Turn off damage player function
     file << "Patching damage function..." << std::endl;
     WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
     file << "Patched damage function." << std::endl;
