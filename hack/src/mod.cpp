@@ -14,6 +14,16 @@
 #include <fstream>
 #include <shlobj.h> // For SHGetFolderPath
 
+
+#ifdef __EMSCRIPTEN__
+//#define DATAPACKAGE_CACHE "/settings/datapackage.json"
+#define UUID_FILE "/settings/uuid"
+#else
+//#define DATAPACKAGE_CACHE "datapackage.json" // TODO: place in %appdata%
+#define UUID_FILE "uuid" // TODO: place in %appdata%
+#endif
+
+
 std::ofstream file;
 
 bool IsMemoryReadable(void* addr, size_t size) {
@@ -225,6 +235,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
     // Temporary pointers for testing. will be moved later.
+    BYTE* levelBeatenH1_1 = *((BYTE**)(BASE_ADDR + 0x006CA830)) + -0x4C5; // you can bank on batman beaten
+    BYTE* levelBeatenH1_2 = *((BYTE**)(BASE_ADDR + 0x006CA830)) + -0x4B9;
+    BYTE* levelUnlockedH1_1 = *((BYTE**)(BASE_ADDR + 0x006CA830)) + -0x4C6;
+    BYTE* levelUnlockedH1_2 = *((BYTE**)(BASE_ADDR + 0x006CA830)) + -0x4BA; // An icy reception unlocked.
 
     BYTE* batman =      *((BYTE**)(BASE_ADDR + 0x006CA830)) + 0x00;
     BYTE* robin  =      *((BYTE**)(BASE_ADDR + 0x006CA830)) + 0x01;
@@ -283,25 +297,35 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     /*////////////////////////////////
     -////  Pre Loop Setup Begin  ////-
     ////////////////////////////////*/
+
+
+    // AP testing.
+    std::ofstream connectionFile("APConnect.txt");
+
+
+    std::string URI = ""; // {SERVER_IP}:{SERVER_PORT}
+    //APClient client(ap_get_uuid(UUID_FILE),"Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/,URI);
     
-    //BYTE* myFuncAddr = HookFunc;
+    connectionFile.close();
+
+    
+
+
+
+
+
+
+
     file << "Patching damage function..." << std::endl;
     WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
     file << "Patched damage function." << std::endl;
 
-    for (DWORD i = 0; i < 48; i++) {
-        if (*(characters[i]) == 0x03) *(characters[i]) = 0x00;
-        //if (i%2 == 0) *(characters[i]) = 0x03;
-    }
+    // for (DWORD i = 0; i < 48; i++) {
+    //     if (*(characters[i]) == 0x03) *(characters[i]) = 0x00;
+    //     //if (i%2 == 0) *(characters[i]) = 0x03;
+    // }
 
-
-    // AP testing.
-    //APClient client(ap_get_uuid("I don't know what goes here."/*is this user name?*/),"LEGO Batman: The Videogame");
-
-
-
-
-    int cou = -1; // count for cycling
+    // int cou = -1; // count for cycling
 
     /*//////////////////////////////
     -////  Pre Loop Setup End  ////-
@@ -314,17 +338,26 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         // file.open("a.txt", std::ios::app);
         // file << std::hex << (int) batman << " -> " << (int) (*batman) << std::endl; // write whether enabled.
         // file.close();
-        cou = cou % 3;
-        for (DWORD i = 0; i < 48; i++) {
-            if ((i+cou+(i/12))%3 == 0) {// even
-                *(characters[i]) = 0x03;
-                //if (*(characters[i]) == 0x00) *(characters[i]) = 0x03; else *(characters[i]) = 0x00;
-            } else {
-                *(characters[i]) = 0x00;
-                //if (*(characters[i]) == 0x03) *(characters[i]) = 0x00; else *(characters[i]) = 0x03;
-            }
-        }
-        cou++;
+        
+
+        // AP STUFF
+
+
+
+
+
+        // cou = cou % 3;
+        // for (DWORD i = 0; i < 48; i++) {
+        //     if ((i+cou+(i/12))%3 == 0) {// even
+        //         *(characters[i]) = 0x03;
+        //         //if (*(characters[i]) == 0x00) *(characters[i]) = 0x03; else *(characters[i]) = 0x00;
+        //     } else {
+        //         *(characters[i]) = 0x00;
+        //         //if (*(characters[i]) == 0x03) *(characters[i]) = 0x00; else *(characters[i]) = 0x03;
+        //     }
+        // }
+        // cou++;
+
         Sleep(500);
     }
 

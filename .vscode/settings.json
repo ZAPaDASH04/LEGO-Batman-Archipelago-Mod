@@ -100,7 +100,7 @@
         "backgroundColor": "Red", // Background color
         "overviewRulerColor": "LightCoral", // Color in the overview ruler
         "border": "1px solid Red", // Border style
-        "borderRadius": "3px", // Border radius
+        "borderRadius": "0px", // Border radius
         "isWholeLine": false // Set to true to highlight the entire line
         }
     ]
