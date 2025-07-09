@@ -2,12 +2,13 @@
  * @file mod.cpp
  * @author ZAPaDASH04 (ZAPaDASH04@gmail.com)
  * @brief 
- * @version 0.1
+ * @version 0.2
  * @date 2025-07-07
  * 
  */
 
 #include <apclient.hpp>
+#include <apuuid.hpp>
 
 #include <windows.h>
 #include <fstream>
@@ -199,6 +200,32 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     
     BYTE NOP[16] = {0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90};
 
+
+    // Wait for data and code to be readable and writable
+
+    ///////////////TODO: This sucks but I just can't find a good way to do this :(
+    // WARN: does not work yet. just inject after in level.
+    //Sleep(30000);
+    BYTE* saveFile = (BYTE*)(BASE_ADDR + (0x56801C));
+    BYTE* level = (BYTE*)(BASE_ADDR + (0x6C98C4));
+
+    while (*level == 0x00) {
+        Sleep(500); 
+        // this is flawed as it often crashes on batman robin loading
+    }
+    file << "Level is " << std::hex << (int)*level << std::endl;
+    file << "Save file is " << (int)*saveFile << std::endl;
+    // TODO: wait for player to gain control?
+    if (*saveFile == 0xFF) {
+        // NEW GAME started
+        // TODO: Find some way to make the player save.
+    } else {
+        // preexisting save file.
+    }
+
+
+    // Temporary pointers for testing. will be moved later.
+
     BYTE* batman =      *((BYTE**)(BASE_ADDR + 0x006CA830)) + 0x00;
     BYTE* robin  =      *((BYTE**)(BASE_ADDR + 0x006CA830)) + 0x01;
     BYTE* brucew =      *((BYTE**)(BASE_ADDR + 0x006CA830)) + 0x18;
@@ -249,34 +276,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     BYTE* char48 =      *((BYTE**)(BASE_ADDR + 0x006CA830)) + 0x4A;
     BYTE* characters[48] = {batman, robin, brucew, char04, char05, char06, char07, char08, char09, char10, char11, char12, char13, char14, char15, char16, char17, char18, char19, char20, char21, char22, char23, char24, char25, char26, char27, char28, char29, char30, char31, char32, char33, char34, char35, char36, char37, char38, char39, char40, char41, char42, char43, char44, char45, char46, char47, char48};
     // 7 byte add function
-
-
-
-
-    ///////////////TODO: This sucks but I just can't find a good way to do this :(
-    // to prevent reading/writing too early. this includes both writing code and writing data.
-    //Sleep(30000);
-    BYTE* saveFile = (BYTE*)(BASE_ADDR + (0x56801C));
-    BYTE* level = (BYTE*)(BASE_ADDR + (0x6C98C4));
-
-    while (*level == 0x00) {
-        Sleep(500); 
-        // this is flawed as it often crashes on batman robin loading
-    }
-    file << "Level is " << std::hex << (int)*level << std::endl;
-    file << "Save file is " << (int)*saveFile << std::endl;
-    // TODO: wait for player to gain control?
-    if (*saveFile == 0xFF) {
-        // NEW GAME started
-        // TODO: Find some way to make the player save.
-    } else {
-        // preexisting save file.
-    }
-
-
-    ///////////////////////////////////////////////////////
-
     BYTE* dmgFuncAddr = (BYTE*)(BASE_ADDR + (0x1C356D));
+
+
+
+    /*////////////////////////////////
+    -////  Pre Loop Setup Begin  ////-
+    ////////////////////////////////*/
     
     //BYTE* myFuncAddr = HookFunc;
     file << "Patching damage function..." << std::endl;
@@ -288,9 +294,18 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         //if (i%2 == 0) *(characters[i]) = 0x03;
     }
 
-    int cou = -1;
 
-    //////////////////////////////////////////////////////////////////////////
+    // AP testing.
+    //APClient client(ap_get_uuid("I don't know what goes here."/*is this user name?*/),"LEGO Batman: The Videogame");
+
+
+
+
+    int cou = -1; // count for cycling
+
+    /*//////////////////////////////
+    -////  Pre Loop Setup End  ////-
+    //////////////////////////////*/
 
 
     file << "About to loop." << std::endl;
@@ -313,12 +328,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         Sleep(500);
     }
 
-    // Never reached, but good practice:
+    // Never reached but good practice
     FreeLibraryAndExitThread(hSelf, 0);
     return 0;
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID reserved) {
+    // WARNING: minimize code in this function.
     if (reason == DLL_PROCESS_ATTACH) {
         DisableThreadLibraryCalls(hModule); // Prevent thread attach/detach notifications
         HANDLE hThread = CreateThread(NULL, 0, ThreadProc, (LPVOID)hModule, 0, NULL);
