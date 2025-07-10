@@ -310,19 +310,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //TODO: will need to be fool-proofed, remove duplicate code, and probably can modularize this, but testing initial connection & proof of concept
     std::ifstream connectionFile("APConnect.txt");
 
-    std::string line;
-    std::getline(connectionFile, line);
-    std::string serverURL = line.substr(12);
-    std::getline(connectionFile, line);
-    std::string serverPort = line.substr(13);
-    std::getline(connectionFile, line);
-    std::string playerName = line.substr(13);
-    std::getline(connectionFile, line);
-    std::string password = "";
-    if(line.length() > 10)
-        password = line.substr(10);
+    std::string serverURL {};
+    std::getline(connectionFile, serverURL); //to skip pass the header line
+    std::getline(connectionFile, serverURL);
+    std::string serverPort {};
+    std::getline(connectionFile, serverPort);
+    std::string playerName {};
+    std::getline(connectionFile, playerName);
+    std::string password = ""; //TODO: to test how a password with an archi server works. Initial read through of the documentation appears to have the server tell the player?
+    if(!connectionFile.eof())
+        std::getline(connectionFile, password);   
         
-
     //from what I can find in the AP documentation, UUID is a Unique identifier for player client. 
     //the ap client library has 2 input parameters, uuidFile & host (both &strings)
     //host defaults to "" if not entered. Dark Souls III does not pass host into the function
@@ -334,8 +332,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     
 
     //testing set up of uuid, URI & file read
-    file << "UUID is:" << uuid << std::endl;
-    file << "URI is:" << URI << std::endl;
+    file << "UUID is: " << uuid << std::endl;
+    file << "URI is: " << URI << std::endl;
     file << "Player name is: " << playerName << std::endl;
     file << "Password is: " << password << std::endl;
 
