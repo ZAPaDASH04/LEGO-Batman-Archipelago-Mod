@@ -307,6 +307,15 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
     // AP testing.
+    // TODO: This whole section should be broken out into its own cpp file & modularized. This is just an initial test.
+
+    APClient* ap; //in dark souls, this variable is initialized outside of the function.
+    /* I think this code below is used for first time connections to reset the datapackage_cache (which I think holds all locations completed & 
+    items received that were completed), but if you disconnect from the server due to internet issues, the cache doesn't need to be reset*/
+    if(ap != nullptr) 
+        ap->reset(); 
+
+
     //TODO: will need to be fool-proofed, remove duplicate code, and probably can modularize this, but testing initial connection & proof of concept
     std::ifstream connectionFile("APConnect.txt");
 
@@ -320,15 +329,16 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     std::string password = ""; //TODO: to test how a password with an archi server works. Initial read through of the documentation appears to have the server tell the player?
     if(!connectionFile.eof())
         std::getline(connectionFile, password);   
-        
-    //from what I can find in the AP documentation, UUID is a Unique identifier for player client. 
-    //the ap client library has 2 input parameters, uuidFile & host (both &strings)
-    //host defaults to "" if not entered. Dark Souls III does not pass host into the function
-
-    std::string uuid = ap_get_uuid(UUID_FILE); 
-    std::string URI = serverURL + ":" + serverPort; // {SERVER_IP}:{SERVER_PORT}
     connectionFile.close();
-    //ap = new APClient(uuid,"Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/,URI);
+
+    std::string uuid = ap_get_uuid(UUID_FILE); // UUID is a Unique identifier for player client. I believe it is 1 per player, doesn't change between seeds
+    std::string URI = serverURL + ":" + serverPort; // {SERVER_IP}:{SERVER_PORT}
+    ap = new APClient(uuid,"Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/,URI);
+    ap->set_socket_connected_handler([]() {
+		});
+	ap->set_socket_disconnected_handler([]() {
+	 	});
+    bool connected = ap->ConnectSlot(playerName, password, 1); //TODO: see network protocol documentation for item handling flags. the library has ways to set them, which will implement later
     
 
     //testing set up of uuid, URI & file read
@@ -336,6 +346,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     file << "URI is: " << URI << std::endl;
     file << "Player name is: " << playerName << std::endl;
     file << "Password is: " << password << std::endl;
+    file << "Did the connection successfully work? " << connected << std::endl;
 
     //Turn off damage player function
     file << "Patching damage function..." << std::endl;
