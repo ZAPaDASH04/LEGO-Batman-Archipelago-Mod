@@ -183,8 +183,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // Prevent the DLL from being unloaded
     HMODULE dummy;
     GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)hSelf, &dummy);
+    
 
     file.open("a.txt");
+    std::cout.rdbuf(file.rdbuf());
+    std::cerr.rdbuf(file.rdbuf());
+    std::cout << "hello world" << std::endl;
+    std::cerr << "error world" << std::endl;
     file << "ThreadProc started" << std::endl;
 
     // DWORD BASE_ADDR;// = (DWORD)GetModuleHandle(nullptr);
