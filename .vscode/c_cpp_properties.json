@@ -23,7 +23,8 @@
             "intelliSenseMode": "windows-gcc-x64",
             "compilerArgs": [
                 "-DASIO_STANDALONE",
-                "-DWSWRAP_NO_SSL"
+                "-DWSWRAP_NO_SSL",
+                "-DWSWRAP_NO_COMPRESSION"
             ]
         }
     ],
