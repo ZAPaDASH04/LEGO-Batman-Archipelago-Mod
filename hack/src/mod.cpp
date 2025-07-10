@@ -338,13 +338,20 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     std::string uuid = ap_get_uuid(UUID_FILE); // UUID is a Unique identifier for player client. I believe it is 1 per player, doesn't change between seeds
     std::string URI = serverURL + ":" + serverPort; // {SERVER_IP}:{SERVER_PORT}
-    ap = new APClient(uuid,"Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/,URI);
+    ap = new APClient(uuid, "Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/, URI);
     ap->set_socket_connected_handler([]() {
 		});
 	ap->set_socket_disconnected_handler([]() {
 	 	});
+    std::cout << "connected? " << (int)ap->get_state() << std::endl;
+    int counter = 0;
+    while((int)ap->get_state() != 2){
+        Sleep(500);
+        counter++;
+        if(counter == 100) break;
+    }
     bool connected = ap->ConnectSlot(playerName, password, 1); //TODO: see network protocol documentation for item handling flags. the library has ways to set them, which will implement later
-    
+    std::cout << "connected? " << (int)ap->get_state() << std::endl;
 
     //testing set up of uuid, URI & file read
     file << "UUID is: " << uuid << std::endl;
