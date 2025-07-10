@@ -24,7 +24,8 @@
             "compilerArgs": [
                 "-DASIO_STANDALONE",
                 "-DWSWRAP_NO_SSL",
-                "-DWSWRAP_NO_COMPRESSION"
+                "-DWSWRAP_NO_COMPRESSION",
+                "-DAPCLIENT_DEBUG"
             ]
         }
     ],
