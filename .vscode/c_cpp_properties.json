@@ -26,7 +26,7 @@
                 "-DWSWRAP_NO_SSL",
                 "-DWSWRAP_NO_COMPRESSION",
                 "-DAPCLIENT_DEBUG",
-                "-WSWRAP_SEND_EXCEPTIONS"
+                "-DWSWRAP_SEND_EXCEPTIONS"
             ]
         }
     ],
