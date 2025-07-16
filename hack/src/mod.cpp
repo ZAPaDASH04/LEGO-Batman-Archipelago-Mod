@@ -16,10 +16,10 @@
 
 
 #ifdef __EMSCRIPTEN__
-//#define DATAPACKAGE_CACHE "/settings/datapackage.json"
+#define DATAPACKAGE_CACHE "/settings/datapackage.json"
 #define UUID_FILE "/settings/uuid"
 #else
-//#define DATAPACKAGE_CACHE "datapackage.json" // TODO: place in %appdata%
+#define DATAPACKAGE_CACHE "datapackage.json" // TODO: place in %appdata%
 #define UUID_FILE "uuid" // TODO: place in %appdata%
 #endif
 
@@ -188,8 +188,16 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     file.open("a.txt");
     std::cout.rdbuf(file.rdbuf());
     std::cerr.rdbuf(file.rdbuf());
+    freopen("a.txt", "a", stdout);
+    // FILE* fp;
+    // if (freopen_s(&fp, "a.txt", "a", stdout) != 0) {
+    //     std::cerr << "Failed to redirect stdout\n";
+    //     return 1;
+    // }
+
     std::cout << "hello world" << std::endl;
     std::cerr << "error world" << std::endl;
+    printf("does this work\n");
     file << "ThreadProc started" << std::endl;
 
     // DWORD BASE_ADDR;// = (DWORD)GetModuleHandle(nullptr);
@@ -336,20 +344,21 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         std::getline(connectionFile, password);   
     connectionFile.close();
 
-    std::string uuid = ap_get_uuid(UUID_FILE); // UUID is a Unique identifier for player client. I believe it is 1 per player, doesn't change between seeds
     std::string URI = serverURL + ":" + serverPort; // {SERVER_IP}:{SERVER_PORT}
-    ap = new APClient(uuid, "Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/, URI);
+    std::string uuid = ap_get_uuid(UUID_FILE, URI); // UUID is a Unique identifier for player client. I believe it is 1 per player, doesn't change between seeds
+    ap = new APClient(uuid, "Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/, "ws://archipelago.gg:53514");
     ap->set_socket_connected_handler([]() {
 		});
 	ap->set_socket_disconnected_handler([]() {
-	 	});
+		});
     std::cout << "connected? " << (int)ap->get_state() << std::endl;
+    //ap->set_slot_connected_handler([](const json& data){}); //this is the function where slot data is read and information passed back and forth
     int counter = 0;
-    while((int)ap->get_state() != 2){
-        Sleep(500);
-        counter++;
-        if(counter == 100) break;
-    }
+    // while((int)ap->get_state() != 2){
+    //     Sleep(500);
+    //     counter++;
+    //     if(counter == 100) break;
+    // }
     bool connected = ap->ConnectSlot(playerName, password, 1); //TODO: see network protocol documentation for item handling flags. the library has ways to set them, which will implement later
     std::cout << "connected? " << (int)ap->get_state() << std::endl;
 
