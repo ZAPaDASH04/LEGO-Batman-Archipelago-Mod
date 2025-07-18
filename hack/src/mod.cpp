@@ -189,6 +189,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     std::cout.rdbuf(file.rdbuf());
     std::cerr.rdbuf(file.rdbuf());
     freopen("a.txt", "a", stdout);
+    freopen("a.txt", "a", stderr);    
     // FILE* fp;
     // if (freopen_s(&fp, "a.txt", "a", stdout) != 0) {
     //     std::cerr << "Failed to redirect stdout\n";
@@ -344,7 +345,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         std::getline(connectionFile, password);   
     connectionFile.close();
 
-    std::string URI = serverURL + ":" + serverPort; // {SERVER_IP}:{SERVER_PORT}
+    std::string URI = "ws://" + serverURL + ":" + serverPort; // {SERVER_IP}:{SERVER_PORT}
     std::string uuid = ap_get_uuid(UUID_FILE, URI); // UUID is a Unique identifier for player client. I believe it is 1 per player, doesn't change between seeds
     ap = new APClient(uuid, "Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/, URI);
     std::cout << "connected? " << (int)ap->get_state() << std::endl;

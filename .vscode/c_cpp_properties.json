@@ -24,7 +24,6 @@
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-gcc-x64",
             "compilerArgs": [
-                "-DASIO_STANDALONE",
                 "-DAPCLIENT_DEBUG",
                 "-DWSWRAP_SEND_EXCEPTIONS"
             ]
