@@ -26,8 +26,8 @@
             "compilerArgs": [
                 "-DASIO_STANDALONE",
                 "-DAPCLIENT_DEBUG",
-                "-DWSWRAP_SEND_EXCEPTIONS",
-                "-D_WEBSOCKETPP_CPP11_THREAD_"
+                "-DWSWRAP_SEND_EXCEPTIONS"
+                //"-D_WEBSOCKETPP_CPP11_THREAD_"
             ]
         }
     ],
