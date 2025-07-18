@@ -346,7 +346,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     std::string URI = serverURL + ":" + serverPort; // {SERVER_IP}:{SERVER_PORT}
     std::string uuid = ap_get_uuid(UUID_FILE, URI); // UUID is a Unique identifier for player client. I believe it is 1 per player, doesn't change between seeds
-    ap = new APClient(uuid, "Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/, "ws://archipelago.gg:53514");
+    ap = new APClient(uuid, "Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/, URI);
     ap->set_socket_connected_handler([]() {
 		});
 	ap->set_socket_disconnected_handler([]() {

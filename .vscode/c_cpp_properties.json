@@ -9,7 +9,9 @@
                 "${workspaceFolder}/hack/inc/websocketpp/**",
                 "${workspaceFolder}/hack/inc/wswrap/include/**",
                 "${workspaceFolder}/hack/inc/json/include/**",
-                "${workspaceFolder}/hack/inc/valijson/include/**"
+                "${workspaceFolder}/hack/inc/openssl/include/**",
+                "${workspaceFolder}/hack/inc/valijson/include/**",
+                "${workspaceFolder}/hack/inc/zlib/include/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -23,8 +25,6 @@
             "intelliSenseMode": "windows-gcc-x64",
             "compilerArgs": [
                 "-DASIO_STANDALONE",
-                "-DWSWRAP_NO_SSL",
-                "-DWSWRAP_NO_COMPRESSION",
                 "-DAPCLIENT_DEBUG",
                 "-DWSWRAP_SEND_EXCEPTIONS"
             ]

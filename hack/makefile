@@ -2,7 +2,7 @@
 PROGRAM_NAME = ap.dll # lb1mod.dll
 
 # Compiler
-CXX = i686-w64-mingw32-g++ -m32 -DASIO_STANDALONE -DWSWRAP_NO_SSL -DWSWRAP_NO_COMPRESSION -DAPCLIENT_DEBUG -DWSWRAP_SEND_EXCEPTIONS
+CXX = i686-w64-mingw32-g++ -m32 -DASIO_STANDALONE -DAPCLIENT_DEBUG -DWSWRAP_SEND_EXCEPTIONS -DWno-deprecated-declarations
 
 # Directories
 SRC_DIR = ./src
@@ -11,14 +11,16 @@ OBJ_DIR = ./obj
 DEP_DIR = ./obj
 RELEASE_DIR = ./
 INCLUDE_DIR = inc
-LIBS = -lws2_32
+LIBS = -lws2_32 -lssl -lcrypto -lcrypt32 -llibz
 INCLUDES = \
 	-Iinc/apclientpp \
 	-Iinc/asio/include  \
 	-Iinc/websocketpp \
 	-Iinc/wswrap/include \
 	-Iinc/json/include \
-	-Iinc/valijson/include 
+	-Iinc/openssl/include \
+	-Iinc/valijson/include \
+	-Iinc/zlib/include
 # Bools
 
 
