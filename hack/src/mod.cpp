@@ -316,33 +316,40 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     //TODO: will need to be fool-proofed, remove duplicate code, and probably can modularize this, but testing initial connection & proof of concept
     std::ifstream connectionFile("APConnect.txt");
-
-    std::string serverURL {};
-    std::getline(connectionFile, serverURL); //to skip pass the header line
-    std::getline(connectionFile, serverURL);
-    std::string serverPort {};
-    std::getline(connectionFile, serverPort);
-    std::string playerName {};
-    std::getline(connectionFile, playerName);
-    std::string password = ""; //TODO: to test how a password with an archi server works. Initial read through of the documentation appears to have the server tell the player?
-    if(!connectionFile.eof())
-        std::getline(connectionFile, password);   
+    std::cout << "Connector File open" << std::endl;
+    std::string line {};
+    std::getline(connectionFile, line); //to skip pass the header line
+    std::getline(connectionFile, line);
+    line.push_back(':');
+    char serverURL[line.length() + 1];
+    strcpy(serverURL, line.c_str());
+    std::getline(connectionFile, line);
+    char serverPort[line.length() + 1];
+    strcpy(serverPort, line.c_str());
+    std::getline(connectionFile, line);
+    char playerName[line.length() + 1];
+    strcpy(playerName, line.c_str());
+    if(!connectionFile.eof()){ //TODO: to test how a password with an archi server works. Initial read through of the documentation appears to have the server tell the player?
+        std::getline(connectionFile, line);   
+        char password[line.length() + 1]; //TODO: when modularizing/researching this, need to have password survive the scope.
+        strcpy(password, line.c_str());
+    }
     connectionFile.close();
+    char* serverIP = strcat(serverURL, serverPort);
     std::cout << "Finished reading file" << std::endl;
     std::cout << "Attempting initial connect" << std::endl;
-    AP_Init("archipelago.gg:34565", "Manual_LegoBatmanTheVideoGame_SnolidIce", "Player1","");
+    AP_Init(serverIP, "Manual_LegoBatmanTheVideoGame_SnolidIce", playerName,"");
     AP_SetItemClearCallback([](){
-        std::cout << "Calling ItemClearCallback Function" << std::endl;
+        printf("Calling ItemClearCallback Function\n");
     });
 
     AP_SetItemRecvCallback([&](int64_t itemID,bool notify){
         itemID = 0;
         notify = true;
-        std::cout << "Calling SetItemRecvCallback" << std::endl;
+        printf("Calling SetItemRecvCallback\n");
     });
     //AP_SetLocationInfoCallback();
     AP_Start();
-    while(true){};
 
     //Turn off damage player function
     file << "Patching damage function..." << std::endl;
