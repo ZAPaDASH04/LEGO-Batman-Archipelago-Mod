@@ -2,7 +2,7 @@
 PROGRAM_NAME = ap.dll # lb1mod.dll
 
 # Compiler
-CXX = i686-w64-mingw32-g++ -m32 -DASIO_STANDALONE -DAPCLIENT_DEBUG -DWSWRAP_SEND_EXCEPTIONS -Wno-deprecated-declarations
+CXX = i686-w64-mingw32-g++ -m32
 
 # Directories
 SRC_DIR = ./src
@@ -11,16 +11,9 @@ OBJ_DIR = ./obj
 DEP_DIR = ./obj
 RELEASE_DIR = ./
 INCLUDE_DIR = inc
-LIBS = -lws2_32 -lssl -lcrypto -lcrypt32 -llibz
+LIBS = -lws2_32 -LAPCpp
 INCLUDES = \
-	-Iinc/apclientpp \
-	-Iinc/asio/include  \
-	-Iinc/websocketpp \
-	-Iinc/wswrap/include \
-	-Iinc/json/include \
-	-Iinc/openssl/include \
-	-Iinc/valijson/include \
-	-Iinc/zlib/include
+	-Iinc/APCpp
 # Bools
 
 
@@ -51,10 +44,13 @@ EXECUTABLE = $(FINAL_DIR)/$(PROGRAM_NAME)
 # Default rule
 all: clean_unused $(EXECUTABLE)
 
+APCPP_LIB:=inc/APCpp/libAPCpp
+APCPP_LIB:=$(APCPP_LIB).dll
+
 # Linking
 $(EXECUTABLE): $(OBJ_FILES) | $(BIN_DIR) $(RELEASE_DIR)
 	@echo "linking."
-	$(CXX) -shared $(OBJ_FILES) -o $(EXECUTABLE) $(LIBS)
+	$(CXX) -shared $(OBJ_FILES) -o $(EXECUTABLE) $(LIBS) $(APCPP_LIB)
 
 # Compilation rule with dependency generation
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
@@ -71,7 +67,7 @@ $(BIN_DIR) $(OBJ_DIR) $(RELEASE_DIR):
 
 # Clean rule
 clean:
-	rm -rf $(OBJ_DIR)/*.o $(OBJ_DIR)/*.d $(BIN_DIR)/${PROGRAM_NAME} $(RELEASE_DIR)/${PROGRAM_NAME}
+	rm -rf $(OBJ_DIR)/*.o $(OBJ_DIR)/*.d $(BIN_DIR)/${PROGRAM_NAME} $(RELEASE_DIR)/${PROGRAM_NAME} $(APCPP_LIB)
 
 # Remove orphaned .o files (ones not matching known sources)
 clean_unused:

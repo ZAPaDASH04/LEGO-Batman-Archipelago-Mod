@@ -4,14 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/hack/inc/apclientpp/**",
-                "${workspaceFolder}/hack/inc/asio/include/**",
-                "${workspaceFolder}/hack/inc/websocketpp/**",
-                "${workspaceFolder}/hack/inc/wswrap/include/**",
-                "${workspaceFolder}/hack/inc/json/include/**",
-                "${workspaceFolder}/hack/inc/openssl/include/**",
-                "${workspaceFolder}/hack/inc/valijson/include/**",
-                "${workspaceFolder}/hack/inc/zlib/include/**"
+                "${workspaceFolder}/hack/inc/**"
             ],
             "defines": [
                 "_DEBUG",

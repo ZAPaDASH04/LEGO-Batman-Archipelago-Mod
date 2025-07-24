@@ -7,22 +7,12 @@
  * 
  */
 
-#include <apclient.hpp>
-#include <apuuid.hpp>
+#include "../inc/APCpp/Archipelago.h"
+#include <iostream>
 
 #include <windows.h>
 #include <fstream>
 #include <shlobj.h> // For SHGetFolderPath
-
-
-#ifdef __EMSCRIPTEN__
-#define DATAPACKAGE_CACHE "/settings/datapackage.json"
-#define UUID_FILE "/settings/uuid"
-#else
-#define DATAPACKAGE_CACHE "datapackage.json" // TODO: place in %appdata%
-#define UUID_FILE "uuid" // TODO: place in %appdata%
-#endif
-
 
 std::ofstream file;
 
@@ -323,12 +313,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // AP testing.
     // TODO: This whole section should be broken out into its own cpp file & modularized. This is just an initial test.
 
-    APClient* ap; //in dark souls, this variable is initialized outside of the function.
-    /* I think this code below is used for first time connections to reset the datapackage_cache (which I think holds all locations completed & 
-    items received that were completed), but if you disconnect from the server due to internet issues, the cache doesn't need to be reset*/
-    if(ap != nullptr) 
-        ap->reset(); 
-
 
     //TODO: will need to be fool-proofed, remove duplicate code, and probably can modularize this, but testing initial connection & proof of concept
     std::ifstream connectionFile("APConnect.txt");
@@ -344,33 +328,21 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     if(!connectionFile.eof())
         std::getline(connectionFile, password);   
     connectionFile.close();
+    std::cout << "Finished reading file" << std::endl;
+    std::cout << "Attempting initial connect" << std::endl;
+    AP_Init("archipelago.gg:34565", "Manual_LegoBatmanTheVideoGame_SnolidIce", "Player1","");
+    AP_SetItemClearCallback([](){
+        std::cout << "Calling ItemClearCallback Function" << std::endl;
+    });
 
-    std::string URI = "ws://" + serverURL + ":" + serverPort; // {SERVER_IP}:{SERVER_PORT}
-    std::string uuid = ap_get_uuid(UUID_FILE, URI); // UUID is a Unique identifier for player client. I believe it is 1 per player, doesn't change between seeds
-    ap = new APClient(uuid, "Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/, URI);
-    std::cout << "connected? " << (int)ap->get_state() << std::endl;
-        int counter = 0;
-    while((int)ap->get_state() != 2){
-        Sleep(500);
-        counter++;
-        if(counter == 100) break;
-    }
-    ap->set_socket_connected_handler([]() {
-		});
-	ap->set_socket_disconnected_handler([]() {
-		});
-    std::cout << "connected? " << (int)ap->get_state() << std::endl;
-    //ap->set_slot_connected_handler([](const json& data){}); //this is the function where slot data is read and information passed back and forth
-
-    bool connected = ap->ConnectSlot(playerName, password, 1); //TODO: see network protocol documentation for item handling flags. the library has ways to set them, which will implement later
-    std::cout << "connected? " << (int)ap->get_state() << std::endl;
-
-    //testing set up of uuid, URI & file read
-    file << "UUID is: " << uuid << std::endl;
-    file << "URI is: " << URI << std::endl;
-    file << "Player name is: " << playerName << std::endl;
-    file << "Password is: " << password << std::endl;
-    file << "Did the connection successfully work? " << connected << std::endl;
+    AP_SetItemRecvCallback([&](int64_t itemID,bool notify){
+        itemID = 0;
+        notify = true;
+        std::cout << "Calling SetItemRecvCallback" << std::endl;
+    });
+    //AP_SetLocationInfoCallback();
+    AP_Start();
+    while(true){};
 
     //Turn off damage player function
     file << "Patching damage function..." << std::endl;
