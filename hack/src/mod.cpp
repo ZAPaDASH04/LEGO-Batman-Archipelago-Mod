@@ -185,7 +185,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //     std::cerr << "Failed to redirect stdout\n";
     //     return 1;
     // }
-
+    setvbuf(stdout, NULL, _IONBF, 0);
     std::cout << "hello world" << std::endl;
     std::cerr << "error world" << std::endl;
     printf("does this work\n");
