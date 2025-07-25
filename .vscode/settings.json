@@ -92,7 +92,9 @@
         "regex": "cpp",
         "future": "cpp",
         "semaphore": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "coroutine": "cpp",
+        "source_location": "cpp"
     },
     "C_Cpp.default.compilerPath": "C:/msys64/mingw32/bin/i686-w64-mingw32-g++.exe",
     "todohighlight.keywords": [
