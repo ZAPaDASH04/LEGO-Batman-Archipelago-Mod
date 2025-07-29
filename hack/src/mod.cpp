@@ -7,9 +7,7 @@
  * 
  */
 
-#include "../inc/APCpp/Archipelago.h"
-#include <iostream>
-#include <map>
+#include "LB1AP.h"
 
 #include <windows.h>
 #include <fstream>
@@ -167,10 +165,6 @@ void HookFunc() {
 
 }
 
-void check_location(std::map<int64_t, bool>& locations, int64_t location_id){
-    locations[location_id] = true;
-}
-
 DWORD WINAPI ThreadProc(LPVOID lpParam) {
     HMODULE hSelf = (HMODULE)lpParam;
 
@@ -255,19 +249,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     file << "levelBeatenH1_2: " << std::hex << (int)*levelBeatenH1_2 << std::endl;
     file << "levelUnlockedH1_1: " << std::hex << (int)*levelUnlockedH1_1 << std::endl;
     file << "levelUnlockedH1_2: " << std::hex << (int)*levelUnlockedH1_2 << std::endl;
-    
-    //initial test to send/receive items from archipelago. Probably best to move this into a struct that is part of a multiword class (individual instance of a game)
-    //int is the item code to match the item code in archipelago(items are sent/received using ints), bool is for whether is has been checked or not
-    std::map<int64_t, bool> locations; 
-    locations[45035996011] = false; //You Can Bank on Batman
-    locations[45035996020] = false; //An Icy Reception
-
-    std::map<int64_t, bool> items;
-    items[45035996242] = false; //You Can Bank on Batman
-    items[45035996243] = false; //An Icy Reception
-    
-    std::map<int64_t, int> collectibles;
-    collectibles[45035996200] = 0; //Mini-kit (current implementation in the AP world, we can adjust as desired)
 
     BYTE* batman =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x00;
     BYTE* robin  =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x01;
@@ -333,10 +314,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
     // AP testing.
-    // TODO: This whole section should be broken out into its own cpp file & modularized. This is just an initial test.
-
-
-
 
     //TODO: will need to be fool-proofed, remove duplicate code, and probably can modularize this, but testing initial connection & proof of concept
     std::ifstream connectionFile("APConnect.txt");
@@ -362,27 +339,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     char* serverIP = strcat(serverURL, serverPort);
     std::cout << "Finished reading file" << std::endl;
     std::cout << "Attempting initial connect" << std::endl;
-    AP_Init(serverIP, "Manual_LegoBatmanTheVideoGame_SnolidIce", playerName,"");
-    AP_SetItemClearCallback([](){
-        printf("Calling ItemClearCallback Function\n");
-    });
-
-    AP_SetItemRecvCallback([&](int64_t itemID, bool notify){ //I believe this is what to do when items are received
-        
-        if(itemID == 45035996200){
-            collectibles[itemID] += 1;
-        } else {
-            items[itemID] = true;
-        }
-
-        if(notify){ //if the player has notify turned out, how do we want to out put it
-            std::cout << itemID << " was received. " << std::endl; //TODO: will need to somehow convert from item ID to name. Potentially, can add it to the map, but may make sending receiving items more difficult
-        }
-
-    });
-    //AP_SetLocationInfoCallback(check_location(int64_t itemID)); //What to do when a location is checked? //TODO: need to set this up to get sending items working, takes a network item
-    AP_Start();
-
+    LB1AP_Init(serverIP, playerName, "");
+    
     //Turn off damage player function
     //file << "Patching damage function..." << std::endl;
     //WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
@@ -410,10 +368,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         // AP STUFF
 
-        if(*levelBeatenH1_1 == 1 && locations[45035996011] == false){ //TODO: make this a better check rather than an if statement
-            locations[45035996011] = true;
-            AP_SendItem(45035996011); //TODO: make this not hardcoded
-            std::cout << "Sent levelBeatenH1_1" << std::endl;
+        if(*levelBeatenH1_1 == 1 && LB1AP_location_checked(45035996011) == false){ //TODO: make this a better check rather than an if statement
+            LB1AP_send_item(45035996011); //TODO: make this not hardcoded
+            LB1AP_CheckLocation(45035996011);
+            printf("Sent levelBeatenH1_1\n");
         }
 
         // cou = cou % 3;
