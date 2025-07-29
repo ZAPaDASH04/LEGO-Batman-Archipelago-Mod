@@ -368,9 +368,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         // AP STUFF
 
-        if(*levelBeatenH1_1 == 1 && LB1AP_location_checked(45035996011) == false){ //TODO: make this a better check rather than an if statement
-            LB1AP_send_item(45035996011); //TODO: make this not hardcoded
-            LB1AP_CheckLocation(45035996011);
+        if(*levelBeatenH1_1 == 1 && LB1AP_location_checked(15868690003) == false){ //TODO: make this a better check rather than an if statement
+            LB1AP_send_item(15868690003); //TODO: make this not hardcoded
+            LB1AP_CheckLocation(15868690003);
             printf("Sent levelBeatenH1_1\n");
         }
 

@@ -1,7 +1,7 @@
 #include "LB1AP.h"
 
-bool lb1AP_locations[400]; //array with the total number of locations. Currently not all sequential in the apworld - currently larger than we need because not all sequential
-bool lb1AP_items[200]; //array with the in game items - currently larger than we need because not all sequential
+bool lb1AP_locations[LB1AP_NUM_LOCS]; //array with the total number of locations. Currently not all sequential in the apworld - currently larger than we need because not all sequential
+bool lb1AP_items[LB1AP_NUM_ITEMS]; //array with the in game items - currently larger than we need because not all sequential
 int minikits = 0;
 int gold_bricks = 0;
 
