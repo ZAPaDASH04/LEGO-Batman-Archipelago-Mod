@@ -9,7 +9,7 @@ int gold_bricks = 0;
 void LB1AP_Init(const char* serverIP, const char* playerName, const char* password){
     AP_Init(serverIP, GAME_NAME, playerName, password);
     AP_SetItemClearCallback(&LB1AP_reset); //used to clear the state of the game. Called when connecting to server, not sure why but implemented like SM64 did
-    AP_SetItemRecvCallback([&](int64_t itemID, bool notify){ //I believe this is what to do when items are received WARNING: AP when initially connecting is sending an unrecognized item ID? 
+    AP_SetItemRecvCallback([&](int64_t itemID, bool notify){ //I believe this is what to do when items are received TODO: break out into own function
         itemID -= LB1AP_ITEM_ID_OFFSET;
         if(itemID == 0){
             minikits++;
