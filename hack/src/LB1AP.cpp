@@ -1,3 +1,14 @@
+/**
+ * @file LB1AP.cpp
+ * @author your name (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2025-07-30
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
+
 #include "LB1AP.h"
 
 bool lb1AP_locations[LB1AP_NUM_LOCS]; //array with the total number of locations. Currently not all sequential in the apworld - currently larger than we need because not all sequential

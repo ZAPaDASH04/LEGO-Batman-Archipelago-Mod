@@ -1,8 +1,9 @@
 /**
  * @file mod.cpp
- * @author ZAPaDASH04 (ZAPaDASH04@gmail.com)
+ * @authors ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
+ * @authors jr () @jradcode23
  * @brief 
- * @version 0.2
+ * @version 0.3
  * @date 2025-07-07
  * 
  */
