@@ -36,19 +36,19 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
     AP_Start();
 }
 
-void LB1AP_CheckLocation(int64_t location_id){
+void LB1AP_CheckLocation(int64_t location_id){ //function to mark a location checked 
     lb1AP_locations[location_id - LB1AP_LOCATION_ID_OFFSET] = true;
 }
 
-void LB1AP_send_item(int64_t location_id){
+void LB1AP_send_item(int64_t location_id){  //function to send an item
     AP_SendItem(location_id);
 }
 
-bool LB1AP_location_checked(int64_t location_id){
+bool LB1AP_location_checked(int64_t location_id){ //function to verify if a location has been checked
     return lb1AP_locations[location_id - LB1AP_LOCATION_ID_OFFSET];
 }
 
-void LB1AP_reset(){
+void LB1AP_reset(){ 
     for(int i = 0; i < LB1AP_NUM_LOCS; i++){
         lb1AP_locations[i] = false;
     }

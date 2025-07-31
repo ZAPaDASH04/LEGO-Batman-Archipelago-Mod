@@ -324,20 +324,20 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     std::getline(connectionFile, line);
     line.push_back(':');
     char serverURL[line.length() + 1];
-    strcpy(serverURL, line.c_str());
+    strncpy(serverURL, line.c_str(), line.length() + 1);
     std::getline(connectionFile, line);
     char serverPort[line.length() + 1];
-    strcpy(serverPort, line.c_str());
+    strncpy(serverPort, line.c_str(), line.length() + 1);
     std::getline(connectionFile, line);
     char playerName[line.length() + 1];
-    strcpy(playerName, line.c_str());
+    strncpy(playerName, line.c_str(), line.length() + 1);
     if(!connectionFile.eof()){ //TODO: to test how a password with an archi server works. Initial read through of the documentation appears to have the server tell the player?
         std::getline(connectionFile, line);   
         char password[line.length() + 1]; //TODO: when modularizing/researching this, need to have password survive the scope.
-        strcpy(password, line.c_str());
+        strncpy(password, line.c_str(), line.length() + 1);
     }
     connectionFile.close();
-    char* serverIP = strcat(serverURL, serverPort);
+    char* serverIP = strncat(serverURL, serverPort, strlen(serverPort));
     std::cout << "Finished reading file" << std::endl;
     std::cout << "Attempting initial connect" << std::endl;
     LB1AP_Init(serverIP, playerName, "");
