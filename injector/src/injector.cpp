@@ -1,14 +1,195 @@
 
-// /**
-//  * @file injector.cpp
-//  * @author UNCLEAR. given by: pasdalover on discord https://discord.com/channels/539431629718945793/765144687479750676/1381908151514697730 who claims 50% ai generated.
-//  * @brief 
-//  * @version 0.1
-//  * @date 2025-06-11
-//  * 
-//  * @copyright Copyright (c) 2025
-//  * 
-//  */
+/**
+ * @file injector.cpp
+ * @author ZAPaDASH04 (ZAPaDASH04@gmail.com)
+ * @brief 
+ * @version 1.0
+ * @date 2025-06-11
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
+
+
+
+#include <windows.h>
+#include <tlhelp32.h>
+#include <iostream>
+#include <tchar.h>
+#include <psapi.h>
+
+// Modify as needed
+const wchar_t* TARGET_PROCESS = L"LEGOBatman.exe";
+const wchar_t* DLL_PATH = L"ap.dll"; // Use full absolute path?
+
+DWORD FindProcessId(const wchar_t* procName) {
+    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (snapshot == INVALID_HANDLE_VALUE) return 0;
+
+    PROCESSENTRY32W entry;
+    entry.dwSize = sizeof(entry);
+
+    DWORD pid = 0;
+    if (Process32FirstW(snapshot, &entry)) {
+        do {
+            if (_wcsicmp(entry.szExeFile, procName) == 0) {
+                pid = entry.th32ProcessID;
+                break;
+            }
+        } while (Process32NextW(snapshot, &entry));
+    }
+
+    CloseHandle(snapshot);
+    return pid;
+}
+
+
+bool IsMainModuleLoaded(DWORD pid, const wchar_t* moduleName) {
+    HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, pid);
+    if (hSnapshot == INVALID_HANDLE_VALUE) return false;
+
+    MODULEENTRY32W me;
+    me.dwSize = sizeof(me);
+
+    if (Module32FirstW(hSnapshot, &me)) {
+        do {
+            if (_wcsicmp(me.szModule, moduleName) == 0) {
+                CloseHandle(hSnapshot);
+                return true;
+            }
+        } while (Module32NextW(hSnapshot, &me));
+    }
+
+    CloseHandle(hSnapshot);
+    return false;
+}
+
+int main() {
+    std::wcout << L"[*] Waiting for process: " << TARGET_PROCESS << std::endl;
+
+    DWORD pid = 0;
+    while ((pid = FindProcessId(TARGET_PROCESS)) == 0) {
+        Sleep(500); // Wait until the game is running
+    }
+
+    std::wcout << L"[+] Found process PID: " << pid << std::endl;
+    std::wcout << L"[+] Waiting for module: LEGOBatman.exe" << std::endl;
+
+    while (!IsMainModuleLoaded(pid, L"LEGOBatman.exe")) {
+        std::wcout << L"[*] Waiting for main module...\n"; // TODO: Got stuck looping here.
+        Sleep(500);
+    }
+    std::wcout << L"[+] Main module is loaded" << std::endl;
+
+    // // TODO: Test this
+    // while (!IsMainModuleLoaded(pid, L"xinput1_3.dll")) {
+    //     std::wcout << L"[*] Waiting for final module...\n";
+    //     Sleep(500);
+    // }
+
+    // std::wcout << L"[*] Waiting for game window..." << std::endl;
+    // HWND hWnd = nullptr;
+    // while ((hWnd = FindMainWindow(pid)) == nullptr) {
+    //     Sleep(500);
+    // }
+    // std::wcout << L"[+] Found game window: 0x" << std::hex << (uintptr_t)hWnd << std::endl;
+
+
+    //TODO: DETECT WHEN THE GAME HAS LOADED.
+    
+    // try code signatures
+    // detect level then save file
+    // save file should hopefully have a unique default that tells us that a file hasn't been selected
+
+    // level ptr
+    // legobatman.exe+6C98C4
+    // 0x00 is title screen. (alternative uses unknown)
+    // 0x09 is batcave. TODO: check new save. it puts you in a certain level right? there should be a byte for new save
+
+    // loaded save ptr
+    // LEGOBatman.exe+56801C
+    // 0xFF no save. set when pressing start on title screen. kept when making new game.
+    // 0x00 save 1
+    // etc
+
+    // IDEAS
+    // when games starts for first time or when start is pressed on menu loaded save ptr is set to -1
+    // this does not include when player exits to menu but in that case you can check that the level is 00
+
+    // NEW GAME ISSUE
+    // when doing new game.
+    // a save file is only created when beating level
+    
+
+
+    HANDLE hProcess = OpenProcess(
+        PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |
+        PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ,
+        FALSE, pid);
+
+    if (!hProcess) {
+        std::cerr << "[-] Failed to open target process." << std::endl;
+        return 1;
+    }
+
+    size_t pathLen = (wcslen(DLL_PATH) + 1) * sizeof(wchar_t);
+    LPVOID remoteMem = VirtualAllocEx(hProcess, NULL, pathLen, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (!remoteMem) {
+        std::cerr << "[-] Failed to allocate memory in target process." << std::endl;
+        CloseHandle(hProcess);
+        return 1;
+    }
+
+    if (!WriteProcessMemory(hProcess, remoteMem, DLL_PATH, pathLen, NULL)) {
+        std::cerr << "[-] Failed to write DLL path to target process memory." << std::endl;
+        VirtualFreeEx(hProcess, remoteMem, 0, MEM_RELEASE);
+        CloseHandle(hProcess);
+        return 1;
+    }
+
+    HMODULE hKernel32 = GetModuleHandleW(L"Kernel32.dll");
+    FARPROC loadLibraryAddr = GetProcAddress(hKernel32, "LoadLibraryW");
+
+    HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0,
+        (LPTHREAD_START_ROUTINE)loadLibraryAddr,
+        remoteMem, 0, NULL);
+
+    if (!hThread) {
+        std::cerr << "[-] Failed to create remote thread." << std::endl;
+        VirtualFreeEx(hProcess, remoteMem, 0, MEM_RELEASE);
+        CloseHandle(hProcess);
+        return 1;
+    }
+
+    std::cout << "[+] DLL injection thread created." << std::endl;
+
+    WaitForSingleObject(hThread, INFINITE);
+
+    DWORD exitCode;
+    GetExitCodeThread(hThread, &exitCode);
+    std::cout << "[*] LoadLibraryW return (HMODULE): 0x" << std::hex << exitCode << std::endl;
+
+    VirtualFreeEx(hProcess, remoteMem, 0, MEM_RELEASE);
+    CloseHandle(hThread);
+    CloseHandle(hProcess);
+
+    std::cout << "[*] Done." << std::endl;
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+// THE below is either ai generated or not mine.
+
+
 
 
 // #include <stdlib.h> // Not strictly needed now, but std headers are good practice
@@ -197,169 +378,3 @@
 //     printf("[*] Injector finished.\n");
 //     return 0; // Indicate success
 // }
-
-
-#include <windows.h>
-#include <tlhelp32.h>
-#include <iostream>
-#include <tchar.h>
-#include <psapi.h>
-
-// Modify as needed
-const wchar_t* TARGET_PROCESS = L"LEGOBatman.exe";
-const wchar_t* DLL_PATH = L"ap.dll"; // Use full absolute path?
-
-DWORD FindProcessId(const wchar_t* procName) {
-    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    if (snapshot == INVALID_HANDLE_VALUE) return 0;
-
-    PROCESSENTRY32W entry;
-    entry.dwSize = sizeof(entry);
-
-    DWORD pid = 0;
-    if (Process32FirstW(snapshot, &entry)) {
-        do {
-            if (_wcsicmp(entry.szExeFile, procName) == 0) {
-                pid = entry.th32ProcessID;
-                break;
-            }
-        } while (Process32NextW(snapshot, &entry));
-    }
-
-    CloseHandle(snapshot);
-    return pid;
-}
-
-
-bool IsMainModuleLoaded(DWORD pid, const wchar_t* moduleName) {
-    HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, pid);
-    if (hSnapshot == INVALID_HANDLE_VALUE) return false;
-
-    MODULEENTRY32W me;
-    me.dwSize = sizeof(me);
-
-    if (Module32FirstW(hSnapshot, &me)) {
-        do {
-            if (_wcsicmp(me.szModule, moduleName) == 0) {
-                CloseHandle(hSnapshot);
-                return true;
-            }
-        } while (Module32NextW(hSnapshot, &me));
-    }
-
-    CloseHandle(hSnapshot);
-    return false;
-}
-
-int main() {
-    std::wcout << L"[*] Waiting for process: " << TARGET_PROCESS << std::endl;
-
-    DWORD pid = 0;
-    while ((pid = FindProcessId(TARGET_PROCESS)) == 0) {
-        Sleep(500); // Wait until the game is running
-    }
-
-    std::wcout << L"[+] Found process PID: " << pid << std::endl;
-    std::wcout << L"[+] Waiting for module: LEGOBatman.exe" << std::endl;
-
-    while (!IsMainModuleLoaded(pid, L"LEGOBatman.exe")) {
-        std::wcout << L"[*] Waiting for main module...\n"; // TODO: Got stuck looping here.
-        Sleep(500);
-    }
-    std::wcout << L"[+] Main module is loaded" << std::endl;
-
-    // // TODO: Test this
-    // while (!IsMainModuleLoaded(pid, L"xinput1_3.dll")) {
-    //     std::wcout << L"[*] Waiting for final module...\n";
-    //     Sleep(500);
-    // }
-
-    // std::wcout << L"[*] Waiting for game window..." << std::endl;
-    // HWND hWnd = nullptr;
-    // while ((hWnd = FindMainWindow(pid)) == nullptr) {
-    //     Sleep(500);
-    // }
-    // std::wcout << L"[+] Found game window: 0x" << std::hex << (uintptr_t)hWnd << std::endl;
-
-
-    //TODO: DETECT WHEN THE GAME HAS LOADED.
-    
-    // try code signatures
-    // detect level then save file
-    // save file should hopefully have a unique default that tells us that a file hasn't been selected
-
-    // level ptr
-    // legobatman.exe+6C98C4
-    // 0x00 is title screen. (alternative uses unknown)
-    // 0x09 is batcave. TODO: check new save. it puts you in a certain level right? there should be a byte for new save
-
-    // loaded save ptr
-    // LEGOBatman.exe+56801C
-    // 0xFF no save. set when pressing start on title screen. kept when making new game.
-    // 0x00 save 1
-    // etc
-
-    // IDEAS
-    // when games starts for first time or when start is pressed on menu loaded save ptr is set to -1
-    // this does not include when player exits to menu but in that case you can check that the level is 00
-
-    // NEW GAME ISSUE
-    // when doing new game.
-    // a save file is only created when beating level
-    
-
-
-    HANDLE hProcess = OpenProcess(
-        PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |
-        PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ,
-        FALSE, pid);
-
-    if (!hProcess) {
-        std::cerr << "[-] Failed to open target process." << std::endl;
-        return 1;
-    }
-
-    size_t pathLen = (wcslen(DLL_PATH) + 1) * sizeof(wchar_t);
-    LPVOID remoteMem = VirtualAllocEx(hProcess, NULL, pathLen, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-    if (!remoteMem) {
-        std::cerr << "[-] Failed to allocate memory in target process." << std::endl;
-        CloseHandle(hProcess);
-        return 1;
-    }
-
-    if (!WriteProcessMemory(hProcess, remoteMem, DLL_PATH, pathLen, NULL)) {
-        std::cerr << "[-] Failed to write DLL path to target process memory." << std::endl;
-        VirtualFreeEx(hProcess, remoteMem, 0, MEM_RELEASE);
-        CloseHandle(hProcess);
-        return 1;
-    }
-
-    HMODULE hKernel32 = GetModuleHandleW(L"Kernel32.dll");
-    FARPROC loadLibraryAddr = GetProcAddress(hKernel32, "LoadLibraryW");
-
-    HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0,
-        (LPTHREAD_START_ROUTINE)loadLibraryAddr,
-        remoteMem, 0, NULL);
-
-    if (!hThread) {
-        std::cerr << "[-] Failed to create remote thread." << std::endl;
-        VirtualFreeEx(hProcess, remoteMem, 0, MEM_RELEASE);
-        CloseHandle(hProcess);
-        return 1;
-    }
-
-    std::cout << "[+] DLL injection thread created." << std::endl;
-
-    WaitForSingleObject(hThread, INFINITE);
-
-    DWORD exitCode;
-    GetExitCodeThread(hThread, &exitCode);
-    std::cout << "[*] LoadLibraryW return (HMODULE): 0x" << std::hex << exitCode << std::endl;
-
-    VirtualFreeEx(hProcess, remoteMem, 0, MEM_RELEASE);
-    CloseHandle(hThread);
-    CloseHandle(hProcess);
-
-    std::cout << "[*] Done." << std::endl;
-    return 0;
-}
