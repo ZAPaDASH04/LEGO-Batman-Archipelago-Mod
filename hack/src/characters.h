@@ -26,6 +26,14 @@ enum CharacterName {
 
     Riddler_Goon,           Riddler_Henchman,   Penguin_Goon,       Penguin_Henchman,       Penguin_Minion,     Joker_Goon,   
     Joker_Henchman,         Clown_Goon,         Hush,               Ras_Al_Ghul,            Hero_1,             Hero_2
+
+    // TODO: add vehicles.
+
+    // landcraft
+
+    // watercraft
+
+    // aircraft
 };
 
 
