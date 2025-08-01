@@ -18,7 +18,7 @@ INCLUDES = \
 
 
 # Build modes
-DEBUG_FLAGS = $(INCLUDES) -shared -static-libgcc -static-libstdc++ -static $(LIBS) #-static-libgcc -static-libstdc++ -Wl,--subsystem,windows #-Wall -Wextra -g -I$(INCLUDE_DIR) -std=c++17 -MMD -MP
+DEBUG_FLAGS = $(INCLUDES) -g -shared -static-libgcc -static-libstdc++ -static $(LIBS) #-static-libgcc -static-libstdc++ -Wl,--subsystem,windows #-Wall -Wextra -g -I$(INCLUDE_DIR) -std=c++17 -MMD -MP
 RELEASE_FLAGS = -Wall -Wextra -O3 -DNDEBUG -I$(INCLUDE_DIR) -std=c++17 -static -MMD -MP
 DLL_FLAGS = -shared
 

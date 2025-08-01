@@ -37,13 +37,20 @@ private:
     
     // uncertain if the special levels work properly
     // first 15 hero. next 1 manor?. next 15 villain. next 1 asylum
-    BYTE* _levelUnlocked[32];
-    BYTE* _levelBeaten[32];
-    BYTE* _levelKitCount[32];
-    BYTE* _levelRedBrick[32];
-    DWORD32* _hostages;
+    // BYTE* levelUnlocked[32];
+    // BYTE* levelBeaten[32];
+    // BYTE* levelKitCount[32];
+    // BYTE* levelRedBrick[32];
+    // DWORD32* hostages;
     
 public:
+
+    BYTE* levelUnlocked[32];
+    BYTE* levelBeaten[32];
+    BYTE* levelKitCount[32];
+    BYTE* levelRedBrick[32];
+    DWORD32* hostages;
+
     /**
      * @brief Construct a new Levels object
      * 

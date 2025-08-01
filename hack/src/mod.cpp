@@ -168,6 +168,55 @@ void HookFunc() {
 
 }
 
+
+void hugeTest(Game game) {
+    std::cout << "Huge test" << std::endl;
+    std::cout << "saveSlot " << game.saveSlot << std::endl;
+    
+    
+}
+
+void loopTest(Game game, DWORD loops) {
+    if (loops%50 == 0) {
+        std::cout << "Loop test" << std::endl 
+                  << "levels:" << std::endl
+                  << "Hero:" << std::endl;
+        
+        for (size_t i = 0; i < 16; i++)
+        {
+            std::cout << " lev" << std::dec << i << std::hex;
+            std::cout << " " << (int) *game.levels.levelUnlocked[i] 
+                      << " " << (int) *game.levels.levelBeaten[i] 
+                      << " " << (int) *game.levels.levelKitCount[i]
+                      << " " << (int) *game.levels.levelRedBrick[i]
+                      << " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
+            
+        }
+        std::cout << std::endl << "Villain:" << std::endl;
+        for (size_t i = 16; i < 32; i++)
+        {
+            std::cout << " lev" << std::dec << i << std::hex;
+            std::cout << " " << (int) *game.levels.levelUnlocked[i] 
+                      << " " << (int) *game.levels.levelBeaten[i] 
+                      << " " << (int) *game.levels.levelKitCount[i]
+                      << " " << (int) *game.levels.levelRedBrick[i]
+                      << " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
+        }
+
+        std::cout << std::endl << "inlevel stuff" << std::endl << std::hex << (int) *game.currentLevel << " " << std::hex << (int) *game.inLevelKitCount << std::endl;
+        for (size_t i = 0; i < *game.inLevelKitCount; i++)
+        {
+            std::cout << " " << std::hex << (int) *game.inLevelKitLocations[i] << " " << game.inLevelKits[i];
+        }
+        std::cout << std::endl;
+        
+        
+    }
+    
+    
+}
+
+
 DWORD WINAPI ThreadProc(LPVOID lpParam) {
     HMODULE hSelf = (HMODULE)lpParam;
 
@@ -220,7 +269,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     Game game(BASE_ADDR + UP);
 
     // example
-    BYTE* char21 = game.characters[CharacterName::Bane]; // same as game.characters[20];
+    hugeTest(game);
+    //BYTE* char21 = game.characters[CharacterName::Bane]; // same as game.characters[20];
 
 
 
@@ -326,11 +376,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     file << "About to loop." << std::endl;
 
+    DWORD loops = 0;
     while (true) {
         // file.open("a.txt", std::ios::app);
         // file << std::hex << (int) batman << " -> " << (int) (*batman) << std::endl; // write whether enabled.
         // file.close();
         
+        loopTest(game,loops);
 
         // AP STUFF
 
@@ -353,6 +405,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         // cou++;
 
         Sleep(500);
+        loops++;
     }
 
     file.close(); // close file before infinite loop. //temporarily moved to test sending/receiving items via archi

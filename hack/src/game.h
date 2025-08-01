@@ -19,15 +19,16 @@ class Game
 {
 private:
     const DWORD BASE_ADDR;
+
+public:
+    Levels levels;
+    Characters characters;
+    
     const BYTE* currentLevel; // TODO: test
     const BYTE* saveSlot; // TODO: test
     const BYTE* inLevelKitCount; // TODO: test
     const char* inLevelKits[10]; // TODO: test. size is uncertain
     const BYTE* inLevelKitLocations[10]; // TODO: test. size is uncertain
-
-public:
-    Levels levels;
-    Characters characters;
 
     Game(DWORD BASE_ADDR);
 
