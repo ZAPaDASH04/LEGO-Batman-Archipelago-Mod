@@ -44,6 +44,11 @@ private:
     DWORD32* _hostages;
     
 public:
+    /**
+     * @brief Construct a new Levels object
+     * 
+     * @param BASE_ADDR includes offsets due to updates.
+     */
     Levels(DWORD BASE_ADDR);
     ~Levels();
 

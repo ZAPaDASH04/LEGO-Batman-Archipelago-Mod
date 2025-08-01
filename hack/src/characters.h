@@ -47,7 +47,7 @@ public:
     /**
      * @brief Construct a new Characters object
      * 
-     * @param BASE_ADDR 
+     * @param BASE_ADDR includes offsets due to updates.
      */
     Characters(DWORD BASE_ADDR);
 

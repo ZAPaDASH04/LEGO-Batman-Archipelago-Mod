@@ -14,7 +14,7 @@
 #include <fstream>
 #include <shlobj.h> // For SHGetFolderPath
 
-#include "characters.h"
+#include "game.h"
 
 std::ofstream file;
 
@@ -217,10 +217,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     DWORD UP1 = 0x1000; // 7/9/2025 update | WARN: LEGO Batman suddenly updated and I assume this +0x1000 is the general fix for it at least when it comes to data addresses. code addresses vary.
     DWORD UP = UP0 + UP1;
     
-    Characters characters(BASE_ADDR + UP);
+    Game game(BASE_ADDR + UP);
 
     // example
-    BYTE* char21 = characters[CharacterName::Bane]; // same as characters[20];
+    BYTE* char21 = game.characters[CharacterName::Bane]; // same as game.characters[20];
 
 
 
