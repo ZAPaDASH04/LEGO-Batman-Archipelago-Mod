@@ -188,8 +188,8 @@ void loopTest(Game game, DWORD loops) {
             std::cout << " " << (int) *game.levels.levelUnlocked[i] 
                       << " " << (int) *game.levels.levelBeaten[i] 
                       << " " << (int) *game.levels.levelKitCount[i]
-                      << " " << (int) *game.levels.levelRedBrick[i]
-                      << " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
+                      << " " << (int) *game.levels.levelRedBrick[i];
+                      //<< " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
             
         }
         std::cout << std::endl << "Villain:" << std::endl;
@@ -199,8 +199,8 @@ void loopTest(Game game, DWORD loops) {
             std::cout << " " << (int) *game.levels.levelUnlocked[i] 
                       << " " << (int) *game.levels.levelBeaten[i] 
                       << " " << (int) *game.levels.levelKitCount[i]
-                      << " " << (int) *game.levels.levelRedBrick[i]
-                      << " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
+                      << " " << (int) *game.levels.levelRedBrick[i];
+                      //<< " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
         }
 
         std::cout << std::endl << "inlevel stuff" << std::endl << std::hex << (int) *game.currentLevel << " " << std::hex << (int) *game.inLevelKitCount << std::endl;
@@ -210,6 +210,14 @@ void loopTest(Game game, DWORD loops) {
         }
         std::cout << std::endl;
         
+
+        // kit stuff
+        std::cout << "Kit save data stuff" << std::endl;
+        std::cout << std::hex << game.levels.levelKitSaveData << std::endl;
+        std::cout << std::hex << &(game.levels.levelKitSaveData[0x12]) << std::endl;
+        std::cout << (char*)game.levels.levelKitSaveData[0x12].kits[0] << std::endl << std::endl;
+
+
         
     }
     
@@ -266,6 +274,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     DWORD UP1 = 0x1000; // 7/9/2025 update | WARN: LEGO Batman suddenly updated and I assume this +0x1000 is the general fix for it at least when it comes to data addresses. code addresses vary.
     DWORD UP = UP0 + UP1;
     
+    std::cout << std::hex << (DWORD32)(BASE_ADDR + UP) << std::endl;
+    std::cout << std::hex << (DWORD32)(BASE_ADDR + UP + -0x1000 + 0x006CA8FC) << std::endl;
     Game game(BASE_ADDR + UP);
 
     // example
