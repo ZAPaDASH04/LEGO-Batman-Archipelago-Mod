@@ -179,6 +179,7 @@ void hugeTest(Game game) {
 void loopTest(Game game, DWORD loops) {
     if (loops%50 == 0) {
         std::cout << "Loop test" << std::endl 
+                  //<< std::hex << game.currentLevel << std::endl
                   << "levels:" << std::endl
                   << "Hero:" << std::endl;
         
@@ -203,7 +204,10 @@ void loopTest(Game game, DWORD loops) {
                       //<< " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
         }
 
-        std::cout << std::endl << "inlevel stuff" << std::endl << std::hex << (int) *game.currentLevel << " " << std::hex << (int) *game.inLevelKitCount << std::endl;
+        std::cout << std::endl << "inlevel stuff" << std::endl 
+                  << std::hex << (int) game.currentLevel << " " 
+                  << std::hex << (int) *game.inLevelTotalKitCount << " " 
+                  << std::hex << (int) *game.inLevelKitCount << std::endl;
         for (size_t i = 0; i < *game.inLevelKitCount; i++)
         {
             std::cout << " " << std::hex << (int) *game.inLevelKitLocations[i] << " " << game.inLevelKits[i];
@@ -274,16 +278,22 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     DWORD UP1 = 0x1000; // 7/9/2025 update | WARN: LEGO Batman suddenly updated and I assume this +0x1000 is the general fix for it at least when it comes to data addresses. code addresses vary.
     DWORD UP = UP0 + UP1;
     
-    std::cout << std::hex << (DWORD32)(BASE_ADDR + UP) << std::endl;
-    std::cout << std::hex << (DWORD32)(BASE_ADDR + UP + -0x1000 + 0x006CA8FC) << std::endl;
     Game game(BASE_ADDR + UP);
 
     // example
     hugeTest(game);
     //BYTE* char21 = game.characters[CharacterName::Bane]; // same as game.characters[20];
-
-
-
+    
+    // example: when you collect a kit it is saved to active save data. does not duplicate kits but it shouldn't need to.
+    // if (*game.inLevelKitCount != game.inLevelKitCountPrev) {
+    //     if (*game.inLevelKitCount > game.inLevelKitCountPrev) {
+    //         SubLevelKits sd = game.levels.levelKitSaveData[(int)*game.inLevelKitLocations];
+    //         strncpy(sd.kits[sd.count], game.inLevelKits[(int)*game.inLevelKitCount], 8);
+    //         (sd.count) += 1;
+    //     } else {
+    //         game.inLevelKitCountPrev = *game.inLevelKitCount;
+    //     }
+    // }
 
 
     

@@ -24,8 +24,12 @@ public:
     Levels levels;
     Characters characters;
     
-    const BYTE* currentLevel; // TODO: test
+    // TODO: test volatile functionality
+    volatile BYTE& currentLevel; // TODO: test
+    
+    // some of these may be 4 bytes in size but only ever use 1 byte.
     const BYTE* saveSlot; // TODO: test
+    const BYTE* inLevelTotalKitCount; // this is saved kit count + inLevelKitCount
     const BYTE* inLevelKitCount; // TODO: test
     const char* inLevelKits[10]; // TODO: test. size is uncertain
     const BYTE* inLevelKitLocations[10]; // TODO: test. size is uncertain
