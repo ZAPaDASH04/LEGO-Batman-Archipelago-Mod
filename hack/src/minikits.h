@@ -158,7 +158,7 @@
 3	HotelSign	AC m_pup4 
 3	GrayPipe	AD mk_0 
 3	SilverValves	AD mk_2 
-3	Gargoyles	"AE GAR_MK1
+3	Gargoyles	"AE GAR_MK1             ?????????
 AE GAR_MK2
 AE GAR_MK3"
 3	BarrelPuzzle	AD m_BAR 
@@ -175,7 +175,7 @@ B8 m_tur3 "
 4	Graffiti	BA HI_KIT 
 4	3rdSewerLid	BA m_pup2
 4	Generator	BB m_pup1
-4	Ladder	B8 m_jkr 
+4	Ladder	B8 m_jkr                        ???????
 5	3SilverGargoyles	"C6 mK_G1
 C6 mK_G2
 C6 mK_G3"
@@ -306,6 +306,68 @@ C6 mK_G3"
 5	SilverObject	98 MK_9 
 5	UnderIceBerg	98 m_pup1
 5	SilverCagePuzzle	98 MK_10
+
+1	LeftSideofSpawn	B2 MINI01
+1	Glass	B2 MINI05
+1	3WatersIntoFrozenIce	"B2 MINI_I1
+B2 MINI_I2
+B3 MINI_I3"
+1	Machine	B2 MINI_03
+1	Grapple	B2 MINI04 
+1	Roller Coaster	B2 m_pup2
+1	MagnetWall	B3 MINI06
+1	DuckPond	B4 m_pup1
+1	DrivingCars	B4 MINI07
+1	IceCreamCarGarage	B4 pup2 
+2	Break10Towers	D4 MK1K  
+2	Chapel	D2 mk_PULL
+2	ActivateRadioSignal	D2 mk_3
+2	3Jokeralloons	D2 MKFT1 
+2	3JokerShields	"D3 MK_JH1
+D3 MK_JH2
+D3 MK_JH3"
+2	Blownbyfan	D3 GENmk 
+2	SouthScarcrowBillboard	D3 m_pup1 
+2	BehindCrane	D3 mk_4
+2	SilverCylinder	D4 m_pup2
+2	SilverCage	D4 m_pup1 
+3	3Containers	"D9 m_pup11
+D9 m_pup12
+D8 m_pup13"
+3	BehindLaser	D8 mk_1 
+3	PunshingStatue	D8 m_pup1
+3	Painting	D8 mk_0 
+3	GlassContainer	D9 mk_0 
+3	PushableWall	D9 mk_1
+3	Joker'sFace	D9 m_pup1D
+3	HypnoSwitch	DA m_pup1
+3	RightSideRoom	DA mk_0 
+3	ConvarBeltTwice	DA mk_1 
+4	HypnoSilverBox	C0 MCONTRO
+4	BuildQuestionMark	C0 Q_KIT
+4	PushingBattery	C0 ROOF
+4	RidingBoat	C0 WATER
+4	MagnetWall	C1 m_pup2
+4	ChainedDoor	C1 m_pup1
+4	5Hydrent	"C1 1
+C1 2
+C1 3
+C1 4
+C1 5"
+4	BehindTree	C1 m_pup3
+4	SilverDoor	C2 m_pup1
+4	WaterGlassCage	C2 SONA1
+5	Tightrope	CC mk_0
+5	Glass	CC mk_2
+5	BothSidesofTable	CC mK_ALT
+5	InsideLeftPillar	CD mk_0
+5	MagnetWall	CD m_pup1
+5	WoodenCage	CD MK_WEIG
+5	NearHostage	CD mk_1
+5	IceStatue	CD mK_FRZ
+5	LeftBell	CE mK_FBEL
+5	HitBellWithTurret	CE mk_BELL
+
 */
 
 /**
@@ -343,7 +405,10 @@ C6 mK_G3"
 //     SubLevelKits lev[6];
 // };
 
-
+struct Minikit {
+    BYTE sublevel;
+    char id[8];
+};
 
 class Minikits
 {

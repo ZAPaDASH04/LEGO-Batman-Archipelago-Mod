@@ -15,6 +15,7 @@
 
 
 enum LevelName {
+    UnknownLevelName,
     H1_1, H1_2, H1_3, H1_4, H1_5,
     H2_1, H2_2, H2_3, H2_4, H2_5,
     H3_1, H3_2, H3_3, H3_4, H3_5,
@@ -25,7 +26,7 @@ enum LevelName {
     Arkham_Asylum
 };
 
-
+BYTE sublevelToLevel(BYTE);
 
 #pragma pack(push, 1) // restricts size
 
