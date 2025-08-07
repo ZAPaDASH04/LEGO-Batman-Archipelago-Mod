@@ -40,9 +40,9 @@ enum CharacterName {
 class Characters {
 private:
     const DWORD BASE_ADDR; // may eventually make global.
-    static const DWORD32 _offsets[48];
-    BYTE* _characterBytes[48]; // = {char01, char02, char03, char04, char05, char06, char07, char08, char09, char10, char11, char12, char13, char14, char15, char16, char17, char18, char19, char20, char21, char22, char23, char24, char25, char26, char27, char28, char29, char30, char31, char32, char33, char34, char35, char36, char37, char38, char39, char40, char41, char42, char43, char44, char45, char46, char47, char48};
-    static const std::string _names[48];
+    static const DWORD characterCount = 48 + 12 + 10 + 10;
+    static const DWORD32 _offsets[characterCount];
+    BYTE* _characterBytes[characterCount];
 public:
     /**
      * @brief Construct a new Characters object

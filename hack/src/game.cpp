@@ -17,10 +17,12 @@ Game::Game(DWORD BASE_ADDR) :
     characters(BASE_ADDR),
     minikits(BASE_ADDR),
     //currentLevel((BYTE*)(BASE_ADDR + 0x006C98C4)),
-    currentLevel(*(volatile BYTE*)(BASE_ADDR + 0x006C98C4)), // TODO: test
+    currentLevel(*(volatile BYTE*)(BASE_ADDR + 0x006C98C4)),
     saveSlot(*(volatile BYTE*)(BASE_ADDR + 0x0056801C)), // TODO: test
-    inLevelTotalKitCount(*(volatile BYTE*)(BASE_ADDR + 0x006C9424)), // TODO: test
-    inLevelKitCount(*(volatile BYTE*)(BASE_ADDR + 0x006C9428)), // TODO: test
+    inLevelTotalKitCount(*(volatile BYTE*)(BASE_ADDR + 0x006C9424)),
+    inLevelKitCount(*(volatile BYTE*)(BASE_ADDR + 0x006C9428)),
+    powerBrickPurchased(*(volatile DWORD*)(BASE_ADDR + 0x006D01C8)), // TODO: test
+    powerBrickEnabled(*(volatile DWORD*)(BASE_ADDR + 0x00536DE0)), // TODO: test
     inLevelKitCountPrev(0)
 {
     //currentLevel = ((volatile BYTE*)(BASE_ADDR + 0x006C98C4));

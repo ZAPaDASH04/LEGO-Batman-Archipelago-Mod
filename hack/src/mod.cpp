@@ -391,6 +391,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     ///////// TODO: do a loop of all memory for missed checks.
 
+    // auto minkit detector
+    
+
     /*//////////////////////////////
     -////  Pre Loop Setup End  ////-
     //////////////////////////////*/

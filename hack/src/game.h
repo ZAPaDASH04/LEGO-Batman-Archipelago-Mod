@@ -38,6 +38,8 @@ public:
     volatile BYTE& inLevelKitCount;
     const char* inLevelKits[10]; // TODO: test. size is uncertain
     const BYTE* inLevelKitLocations[10]; // TODO: test. size is uncertain
+    volatile DWORD& powerBrickPurchased;
+    volatile DWORD& powerBrickEnabled;
     //volatile BYTE* inLevelKitLocations[10];
     
     BYTE inLevelKitCountPrev;
