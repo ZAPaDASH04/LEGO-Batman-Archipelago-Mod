@@ -34,6 +34,7 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
     });
     AP_SetLocationCheckedCallback(&LB1AP_CheckLocation); //What to do when a location is checked
     AP_Start();
+    
 }
 
 void LB1AP_CheckLocation(int64_t location_id){ //function to mark a location checked 

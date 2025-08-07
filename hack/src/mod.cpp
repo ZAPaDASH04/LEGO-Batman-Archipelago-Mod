@@ -206,11 +206,11 @@ void loopTest(Game game, DWORD loops) {
 
         std::cout << std::endl << "inlevel stuff" << std::endl 
                   << std::hex << (int) game.currentLevel << " " 
-                  << std::hex << (int) *game.inLevelTotalKitCount << " " 
-                  << std::hex << (int) *game.inLevelKitCount << std::endl;
-        for (size_t i = 0; i < *game.inLevelKitCount; i++)
+                  << std::hex << (int) game.inLevelTotalKitCount << " " 
+                  << std::hex << (int) game.inLevelKitCount << std::endl;
+        for (size_t i = 0; i < game.inLevelKitCount; i++)
         {
-            std::cout << " " << std::hex << (int) *game.inLevelKitLocations[i] << " " << game.inLevelKits[i];
+            std::cout << " " << std::hex << (int) game.inLevelKitLocations[i] << " " << game.inLevelKits[i];
         }
         std::cout << std::endl;
         
@@ -389,6 +389,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     // int cou = -1; // count for cycling
 
+    ///////// TODO: do a loop of all memory for missed checks.
+
     /*//////////////////////////////
     -////  Pre Loop Setup End  ////-
     //////////////////////////////*/
@@ -397,6 +399,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     file << "About to loop." << std::endl;
 
     DWORD loops = 0;
+    SubLevelKits* saveKitData = game.levels.levelKitSaveData;
+    SubLevelKits levelKitData;
     while (true) {
         // file.open("a.txt", std::ios::app);
         // file << std::hex << (int) batman << " -> " << (int) (*batman) << std::endl; // write whether enabled.
@@ -406,11 +410,29 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         // AP STUFF
 
-        if(*levelBeatenH1_1 == 1 && LB1AP_location_checked(15868690003) == false){ //TODO: make this a better check rather than an if statement
-            LB1AP_send_item(15868690003); //TODO: make this not hardcoded
-            LB1AP_CheckLocation(15868690003);
-            printf("Sent levelBeatenH1_1\n");
+        // if(*levelBeatenH1_1 == 1 && LB1AP_location_checked(15868690003) == false){ //TODO: make this a better check rather than an if statement
+        //     LB1AP_send_item(15868690003); //TODO: make this not hardcoded
+        //     LB1AP_CheckLocation(15868690003);
+        //     printf("Sent levelBeatenH1_1\n");
+        // }
+        for (BYTE i = game.inLevelKitCountPrev; i < game.inLevelKitCount; i++)
+        {
+            // new kit picked up.
+            std::cout  
+                << (int) *game.inLevelKitLocations[i] << " " << game.inLevelKits[i] << " : "
+                << (int) game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i])
+                << std::endl;
+            LB1AP_send_item(400000 + 100 + game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i]));
+            // levelKitData = game.levels.levelKitSaveData[*game.inLevelKitLocations[i]];
+            // strncpy(levelKitData.kits[levelKitData.count], game.inLevelKits[i], 8);
+            game.inLevelKitCountPrev++;
+        } 
+        if (game.inLevelKitCount < game.inLevelKitCountPrev) {
+            // left level
+            // TODO: test
+            game.inLevelKitCountPrev = 0;
         }
+
 
         // cou = cou % 3;
         // for (DWORD i = 0; i < 48; i++) {

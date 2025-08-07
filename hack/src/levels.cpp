@@ -119,6 +119,65 @@ BYTE sublevelToLevel(BYTE id) {
     }
 }
 
+
+Table::Table(DWORD size):
+    size(size),
+    count(0)
+{
+    table = new Entry[size];
+}
+
+Table::~Table()
+{
+    free(table);
+}
+
+void Table::insert(Entry entry)
+{
+    table[count] = entry;
+    count++;
+    // if (count == 0) {
+    //     table[0] = entry;
+    //     count++;
+    // }
+    // Entry head = table[count/2];
+    // if (head.key > entry.key) {
+
+    // } else {
+
+    // }
+}
+
+DWORD Table::operator[](DWORD64 key)
+{
+    DWORD low = 0;
+    DWORD high = count;
+    DWORD mid;
+
+    while (low < high) {
+        mid = low + (high - low) / 2;
+        const Entry& entry = table[mid];
+
+        if (key < entry.key) {
+            high = mid;
+        } else if (key > entry.key) {
+            low = mid + 1;
+        } else {
+            return entry.value;
+        }
+    }
+
+    return 0; // not found
+}
+
+DWORD Table::operator[](BYTE* name)
+{
+    DWORD64 num = 0;
+    memcpy(&num, name, strnlen((char*)name, 8));
+    return this->operator[](num);
+}
+
+
 Levels::Levels(DWORD BASE_ADDR) :
     BASE_ADDR(BASE_ADDR)
 {
@@ -138,5 +197,7 @@ Levels::Levels(DWORD BASE_ADDR) :
     levelKitSaveData = *reinterpret_cast<SubLevelKits**>(BASE_ADDR + 0x006C98FC);
     //std::cout << std::hex;
     //std::cout << "[DEBUG] levelKitSaveData = " << reinterpret_cast<DWORD>(levelKitSaveData) << "\n";
+    
 }
 Levels::~Levels() = default; // TODO: why did I have to add this???
+

@@ -12,6 +12,57 @@
 #pragma once
 
 #include <windows.h>
+#include <unordered_map>
+#include <string>
+
+struct Key {
+    BYTE level;
+    std::string name;
+
+    bool operator==(const Key& other) const {
+        return level == other.level && name == other.name;
+    }
+};
+
+struct KeyHash {
+    std::size_t operator()(const Key& k) const {
+        std::hash<std::string> str_hash;
+        return std::hash<BYTE>()(k.level) ^ (str_hash(k.name) << 1);
+    }
+};
+
+
+struct Minikit {
+    BYTE sublevel;
+    char id[8];
+};
+
+class Minikits
+{
+private:
+    const DWORD BASE_ADDR;
+    static const DWORD tableSize = 50;
+    // Entry kitTable[tableSize]; // original kitTable
+    // std::unordered_map<Key, size_t, KeyHash> indexMap;
+
+    // // Call this once to populate the map
+    // void BuildIndex() {
+    //     indexMap.clear();
+    //     for (size_t i = 0; i < tableSize; ++i) {
+    //         const Entry& entry = kitTable[i];
+    //         size_t len = strnlen(entry.name, 8); // safe length
+    //         Key key{ entry.level, std::string(entry.name, len) };
+    //         indexMap[key] = i;
+    //     }
+    // }
+    std::unordered_map<Key, DWORD, KeyHash> kitTable;
+
+    // Lookup by level + name
+public:
+    Minikits(DWORD BASE_ADDR);
+    DWORD findKitIndex(BYTE level, const char* name);
+
+};
 
 
 /* 
@@ -405,19 +456,6 @@ C1 5"
 //     SubLevelKits lev[6];
 // };
 
-struct Minikit {
-    BYTE sublevel;
-    char id[8];
-};
-
-class Minikits
-{
-private:
-    const DWORD BASE_ADDR;
-public:
-    Minikits(DWORD BASE_ADDR);
-
-};
 
 
 

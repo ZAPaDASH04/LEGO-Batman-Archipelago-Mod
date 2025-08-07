@@ -15,11 +15,13 @@ Game::Game(DWORD BASE_ADDR) :
     BASE_ADDR(BASE_ADDR),
     levels(BASE_ADDR),
     characters(BASE_ADDR),
+    minikits(BASE_ADDR),
     //currentLevel((BYTE*)(BASE_ADDR + 0x006C98C4)),
     currentLevel(*(volatile BYTE*)(BASE_ADDR + 0x006C98C4)), // TODO: test
-    saveSlot((BYTE*)(BASE_ADDR + 0x0056801C)), // TODO: test
-    inLevelTotalKitCount((BYTE*)(BASE_ADDR + 0x006C9424)), // TODO: test
-    inLevelKitCount((BYTE*)(BASE_ADDR + 0x006C9428)) // TODO: test
+    saveSlot(*(volatile BYTE*)(BASE_ADDR + 0x0056801C)), // TODO: test
+    inLevelTotalKitCount(*(volatile BYTE*)(BASE_ADDR + 0x006C9424)), // TODO: test
+    inLevelKitCount(*(volatile BYTE*)(BASE_ADDR + 0x006C9428)), // TODO: test
+    inLevelKitCountPrev(0)
 {
     //currentLevel = ((volatile BYTE*)(BASE_ADDR + 0x006C98C4));
     for (size_t i = 0; i < 10; i++)

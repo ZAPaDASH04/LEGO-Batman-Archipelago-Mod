@@ -15,7 +15,6 @@
 
 
 enum LevelName {
-    UnknownLevelName,
     H1_1, H1_2, H1_3, H1_4, H1_5,
     H2_1, H2_2, H2_3, H2_4, H2_5,
     H3_1, H3_2, H3_3, H3_4, H3_5,
@@ -23,7 +22,8 @@ enum LevelName {
     V1_1, V1_2, V1_3, V1_4, V1_5,
     V2_1, V2_2, V2_3, V2_4, V2_5,
     V3_1, V3_2, V3_3, V3_4, V3_5,
-    Arkham_Asylum
+    Arkham_Asylum,
+    UnknownLevelName
 };
 
 BYTE sublevelToLevel(BYTE);
@@ -59,14 +59,22 @@ struct SubLevelKits {
 #pragma pack(pop)
 
 
-
-// class Level
-// {
-// private:
-//     /* data */
-// public:
-//     Level(/* args */);
-// };
+class Table {
+private:
+    const DWORD size;
+    DWORD count;
+    struct Entry {
+        DWORD64 key;
+        DWORD value;
+    };
+    Entry* table;
+public:
+    Table(DWORD);
+    ~Table();
+    void insert(Entry);
+    DWORD operator[](DWORD64);
+    DWORD operator[](BYTE*);
+};
 
 
 class Levels
@@ -95,7 +103,7 @@ public:
     //DWORD32* hostages; // messed up initializer
     // usage: levelKitSaveData[levelid]
     SubLevelKits* levelKitSaveData; // WARN: this should not be public.
-
+    
     /**
      * @brief Construct a new Levels object
      * 
