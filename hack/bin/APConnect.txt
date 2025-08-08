@@ -1,3 +1,4 @@
-On the following lines, please enter the Server URL, Server Port, Player Name, & Password like so. If there is no password, please delete the line.
-
+On the following lines, please enter the Server URL:Server Port, Player Name, & Password like so. If there is no password, please delete the line.
+archipelago.gg:50672
+Player1
 
