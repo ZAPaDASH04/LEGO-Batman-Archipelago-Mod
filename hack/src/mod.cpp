@@ -292,7 +292,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     // AP testing.
     LB1AP_Connect();
-
     
     //Turn off damage player function
     //file << "Patching damage function..." << std::endl;

@@ -59,6 +59,10 @@ void LB1AP_reset(){
     minikits = 0;
 }
 
+void LB1AP_Complete(){ //TODO: look into integrating this as part of the set reply handler
+    AP_StoryComplete();
+}
+
 void LB1AP_Connect(){
     std::ifstream connectionFile("APConnect.txt");
     if(!connectionFile){
