@@ -1,11 +1,10 @@
 /**
  * @file LB1AP.h
- * @author your name (you@domain.com)
+ * @author jrad (jradcode23@gmail.com) @jrad5768
  * @brief 
  * @version 0.1
  * @date 2025-07-30
  * 
- * @copyright Copyright (c) 2025
  * 
  */
 
@@ -29,3 +28,5 @@ void LB1AP_CheckLocation(int64_t location_id);
 bool LB1AP_location_checked(int64_t location_id);
 void LB1AP_send_item(int64_t location_id);
 void LB1AP_reset();
+void LB1AP_Connect();
+char* readFile(std::ifstream& file);

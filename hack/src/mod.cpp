@@ -1,7 +1,7 @@
 /**
  * @file mod.cpp
  * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
- * @authors jr () @jradcode23
+ * @authors jr (jradcode23@gmail.com) @jr5768
  * @brief 
  * @version 0.3
  * @date 2025-07-07
@@ -350,32 +350,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
     // AP testing.
+    LB1AP_Connect();
 
-    //TODO: will need to be fool-proofed, remove duplicate code, and probably can modularize this, but testing initial connection & proof of concept
-    std::ifstream connectionFile("APConnect.txt");
-    std::cout << "Connector File open" << std::endl;
-    std::string line {};
-    std::getline(connectionFile, line); //to skip pass the header line
-    std::getline(connectionFile, line);
-    line.push_back(':');
-    char serverURL[line.length() + 1];
-    strncpy(serverURL, line.c_str(), line.length() + 1);
-    std::getline(connectionFile, line);
-    char serverPort[line.length() + 1];
-    strncpy(serverPort, line.c_str(), line.length() + 1);
-    std::getline(connectionFile, line);
-    char playerName[line.length() + 1];
-    strncpy(playerName, line.c_str(), line.length() + 1);
-    if(!connectionFile.eof()){ //TODO: to test how a password with an archi server works. Initial read through of the documentation appears to have the server tell the player?
-        std::getline(connectionFile, line);   
-        char password[line.length() + 1]; //TODO: when modularizing/researching this, need to have password survive the scope.
-        strncpy(password, line.c_str(), line.length() + 1);
-    }
-    connectionFile.close();
-    char* serverIP = strncat(serverURL, serverPort, strlen(serverPort));
-    std::cout << "Finished reading file" << std::endl;
-    std::cout << "Attempting initial connect" << std::endl;
-    LB1AP_Init(serverIP, playerName, "");
     
     //Turn off damage player function
     //file << "Patching damage function..." << std::endl;
