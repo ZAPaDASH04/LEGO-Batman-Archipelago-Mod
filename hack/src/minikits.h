@@ -42,22 +42,9 @@ class Minikits
 private:
     const DWORD BASE_ADDR;
     static const DWORD tableSize = 50;
-    // Entry kitTable[tableSize]; // original kitTable
-    // std::unordered_map<Key, size_t, KeyHash> indexMap;
 
-    // // Call this once to populate the map
-    // void BuildIndex() {
-    //     indexMap.clear();
-    //     for (size_t i = 0; i < tableSize; ++i) {
-    //         const Entry& entry = kitTable[i];
-    //         size_t len = strnlen(entry.name, 8); // safe length
-    //         Key key{ entry.level, std::string(entry.name, len) };
-    //         indexMap[key] = i;
-    //     }
-    // }
     std::unordered_map<Key, DWORD, KeyHash> kitTable;
 
-    // Lookup by level + name
 public:
     Minikits(DWORD BASE_ADDR);
     DWORD findKitIndex(BYTE level, const char* name);
@@ -445,17 +432,6 @@ C1 5"
  * IT IS.
  * 
  */
-
-// struct SubLevelKits {
-//     char kits[10][8];
-//     DWORD32 count;
-// };
-
-// struct LevelKits
-// {
-//     SubLevelKits lev[6];
-// };
-
 
 
 

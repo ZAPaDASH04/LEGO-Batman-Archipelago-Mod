@@ -42,7 +42,6 @@ public: // WHY >:(
     static const DWORD characterCount = 48 + 12 + 10 + 10;
 private:
     const DWORD BASE_ADDR; // may eventually make global.
-    //public static const DWORD characterCount = 48 + 12 + 10 + 10;
     static const DWORD32 _offsets[characterCount];
 public:
     BYTE* _characterBytes[characterCount];
@@ -67,52 +66,3 @@ public:
 
 
 
-
-// BYTE* char01 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x00;
-// BYTE* char02 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x01;
-// BYTE* char03 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x18;
-// BYTE* char04 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x13;
-// BYTE* char05 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x02;
-// BYTE* char06 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x11;
-// BYTE* char07 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x1B;
-// BYTE* char08 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x40;
-// BYTE* char09 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0xCB;
-// BYTE* char10 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x32;
-// BYTE* char11 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x30;
-// BYTE* char12 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x42;
-// BYTE* char13 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x2B;
-// BYTE* char14 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x2D;
-// BYTE* char15 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x43;
-// BYTE* char16 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x0F;
-// BYTE* char17 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x16;
-// BYTE* char18 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x15;
-// BYTE* char19 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x07;
-// BYTE* char20 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x0D;
-// BYTE* char21 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x19;
-// BYTE* char22 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x04;
-// BYTE* char23 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x05;
-// BYTE* char24 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x0E;
-// BYTE* char25 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x10;
-// BYTE* char26 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x0C;
-// BYTE* char27 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x0B;
-// BYTE* char28 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x14;
-// BYTE* char29 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x1A;
-// BYTE* char30 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x21;
-// BYTE* char31 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x09;
-// BYTE* char32 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x0A;
-// BYTE* char33 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x44;
-// BYTE* char34 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x46;
-// BYTE* char35 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x3B;
-// BYTE* char36 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x3D;
-// BYTE* char37 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x39;
-// BYTE* char38 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x3A;
-// BYTE* char39 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x33;
-// BYTE* char40 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x34;
-// BYTE* char41 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x29;
-// BYTE* char42 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x36;
-// BYTE* char43 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x37;
-// BYTE* char44 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x38;
-// BYTE* char45 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x08;
-// BYTE* char46 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x12;
-// BYTE* char47 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x49;
-// BYTE* char48 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x4A;
