@@ -65,23 +65,24 @@ void LB1AP_Connect(){
         std::cout << "Failed to Open Connection File. Please ensure that APConnect.txt is in the same folder as the Lego Batman exe." << std::endl;
     }
     if(connectionFile){
-        char* header = readFile(connectionFile);
-        char* serverIP = readFile(connectionFile);
-        char* playerName = readFile(connectionFile);
-        // if(!connectionFile.eof()){ //TODO: to test how a password with an archi server works. Initial read through of the documentation appears to have the server tell the player?
-        //     char* password = readFile(connectionFile); //TODO: to make this variable survive the scope
-        // }
+        const char* header = readFile(connectionFile);
+        const char* serverIP = readFile(connectionFile);
+        const char* playerName = readFile(connectionFile);
+        const char* password = readFile(connectionFile);
         connectionFile.close();
-        std::cout << serverIP << " " << playerName << std::endl; //cout statement for bug testing
-        LB1AP_Init(serverIP, playerName, "");
+        std::cout << serverIP << " " << playerName << " " << password << std::endl; //cout statement for bug testing
+        LB1AP_Init(serverIP, playerName, password);
         delete[] header;
         delete[] serverIP;
         delete[] playerName;
-
+        delete[] password;
     }
 }
 
-char* readFile(std::ifstream& file){
+const char* readFile(std::ifstream& file){
+    if(file.eof()){
+        return "";
+    }
     std::string line {};
     std::getline(file, line);
     char* buffer = new char[line.length() + 1];

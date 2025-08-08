@@ -29,4 +29,4 @@ bool LB1AP_location_checked(int64_t location_id);
 void LB1AP_send_item(int64_t location_id);
 void LB1AP_reset();
 void LB1AP_Connect();
-char* readFile(std::ifstream& file);
+const char* readFile(std::ifstream& file);
