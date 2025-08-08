@@ -29,12 +29,12 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
         }
 
         if(notify){ //if the player has notify turned out, how we want to out put it
-            printf("Item ID was received: %011d\n", itemID); //TODO: notify via in game hint text
+            LB1AP_GetMessage();
         }
     });
     AP_SetLocationCheckedCallback(&LB1AP_CheckLocation); //What to do when a location is checked
     AP_Start();
-    
+    LB1AP_GetMessage();
 }
 
 void LB1AP_CheckLocation(int64_t location_id){ //function to mark a location checked 
@@ -43,6 +43,7 @@ void LB1AP_CheckLocation(int64_t location_id){ //function to mark a location che
 
 void LB1AP_send_item(int64_t location_id){  //function to send an item
     AP_SendItem(location_id);
+    AP_GetLatestMessage();
 }
 
 bool LB1AP_location_checked(int64_t location_id){ //function to verify if a location has been checked
@@ -92,4 +93,22 @@ const char* readFile(std::ifstream& file){
     char* buffer = new char[line.length() + 1];
     strncpy(buffer, line.c_str(), line.length() + 1);
     return buffer;
+}
+
+void LB1AP_GetMessage(){
+    if(AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused){
+        std::cout << "Connection Refused, please correct the parameters and restart the game" << std::endl;
+    }
+    if(!AP_IsMessagePending()) return;
+    AP_Message* msg = AP_GetLatestMessage();
+    if(msg->type == AP_MessageType::ItemSend){
+        AP_ItemSendMessage* s_msg = (AP_ItemSendMessage*) msg;
+        std::cout << s_msg->item << " was sent to " << s_msg->recvPlayer << std::endl;
+    }
+    if(msg->type == AP_MessageType::ItemRecv){
+        AP_ItemRecvMessage* s_msg = (AP_ItemRecvMessage*) msg;
+        std::cout << "You received " << s_msg->item << " from " << s_msg->sendPlayer << std::endl;
+    }
+
+    AP_ClearLatestMessage();
 }

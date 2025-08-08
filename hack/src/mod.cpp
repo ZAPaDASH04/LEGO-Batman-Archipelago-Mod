@@ -17,6 +17,8 @@
 #include "game.h"
 
 std::ofstream file;
+std::ofstream b_file;
+
 
 bool IsMemoryReadable(void* addr, size_t size) {
     MEMORY_BASIC_INFORMATION mbi;
@@ -220,10 +222,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     
 
     file.open("a.txt");
+    b_file.open("b.txt");
     std::cout.rdbuf(file.rdbuf());
     std::cerr.rdbuf(file.rdbuf());
-    freopen("a.txt", "a", stdout);
-    freopen("a.txt", "a", stderr);
+    freopen("b.txt", "a", stdout);
+    freopen("b.txt", "a", stderr);
     setvbuf(stdout, NULL, _IONBF, 0);
     std::cout << "hello world" << std::endl;
     std::cerr << "error world" << std::endl;
