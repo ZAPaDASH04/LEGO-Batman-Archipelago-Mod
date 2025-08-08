@@ -362,6 +362,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         }
 
 
+        //LB1AP_GetMessage();
+        if (AP_IsMessagePending()) {
+
+            AP_Message* message = AP_GetLatestMessage();
+            std::cout << message->text << std::endl;
+
+            AP_ClearLatestMessage();
+        }
 
         Sleep(500);
         loops++;

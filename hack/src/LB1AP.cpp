@@ -27,7 +27,7 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
         }
 
         if(notify){ //if the player has notify turned out, how we want to out put it
-            LB1AP_GetMessage();
+            // LB1AP_GetMessage();
         }
     });
     AP_SetLocationCheckedCallback(&LB1AP_CheckLocation); //What to do when a location is checked
