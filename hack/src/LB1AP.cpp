@@ -9,8 +9,6 @@
  */
 
 #include "LB1AP.h"
-#include <fstream>
-#include <cstring>
 
 bool lb1AP_locations[LB1AP_NUM_LOCS]; //array with the total number of locations. Currently not all sequential in the apworld - currently larger than we need because not all sequential
 bool lb1AP_items[LB1AP_NUM_ITEMS]; //array with the in game items - currently larger than we need because not all sequential
@@ -33,8 +31,8 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
         }
     });
     AP_SetLocationCheckedCallback(&LB1AP_CheckLocation); //What to do when a location is checked
+    AP_EnableQueueItemRecvMsgs(true);
     AP_Start();
-    LB1AP_GetMessage();
 }
 
 void LB1AP_CheckLocation(int64_t location_id){ //function to mark a location checked 
@@ -97,7 +95,7 @@ const char* readFile(std::ifstream& file){
 
 void LB1AP_GetMessage(){
     if(AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused){
-        std::cout << "Connection Refused, please correct the parameters and restart the game" << std::endl;
+        std::cout << "Connection Refused, please correct the connection file and restart the game" << std::endl;
     }
     if(!AP_IsMessagePending()) return;
     AP_Message* msg = AP_GetLatestMessage();
@@ -112,3 +110,4 @@ void LB1AP_GetMessage(){
 
     AP_ClearLatestMessage();
 }
+

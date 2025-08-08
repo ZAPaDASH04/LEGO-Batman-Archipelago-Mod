@@ -16,6 +16,8 @@
 #include <cstdint>
 #include "../inc/APCpp/Archipelago.h"
 #include <iostream>
+#include <fstream>
+#include <cstring>
 
 #define LB1AP_LOCATION_ID_OFFSET 400000 //TODO: work with snolid to get this adjusted - ideally they are all sequential
 #define LB1AP_ITEM_ID_OFFSET 400000 //TODO: minikits are currently ID 0, to adjust it to be after the array
