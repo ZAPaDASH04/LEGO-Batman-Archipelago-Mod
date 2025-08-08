@@ -54,24 +54,6 @@ bool IsMemoryWritable(void* addr, size_t size) {
     return false;
 }
 
-// bool IsMemoryExecutable(void* addr, size_t size) {
-//     MEMORY_BASIC_INFORMATION mbi;
-//     if (!VirtualQuery(addr, &mbi, sizeof(mbi)))
-//         return false;
-
-//     if (mbi.State != MEM_COMMIT)
-//         return false;
-
-//     if (mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD))
-//         return false;
-
-//     // Check if protection allows execution
-//     if (mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY))
-//         return true;
-
-//     return false;
-// }
-
 bool WaitForExecutableMemory(void* addr, DWORD timeoutMs = 10000) {
     DWORD elapsed = 0;
     MEMORY_BASIC_INFORMATION mbi;
@@ -241,31 +223,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     std::cout.rdbuf(file.rdbuf());
     std::cerr.rdbuf(file.rdbuf());
     freopen("a.txt", "a", stdout);
-    freopen("a.txt", "a", stderr);    
-    // FILE* fp;
-    // if (freopen_s(&fp, "a.txt", "a", stdout) != 0) {
-    //     std::cerr << "Failed to redirect stdout\n";
-    //     return 1;
-    // }
+    freopen("a.txt", "a", stderr);
     setvbuf(stdout, NULL, _IONBF, 0);
     std::cout << "hello world" << std::endl;
     std::cerr << "error world" << std::endl;
     printf("does this work\n");
     file << "ThreadProc started" << std::endl;
 
-    // DWORD BASE_ADDR;// = (DWORD)GetModuleHandle(nullptr);
     
-    // while ((BASE_ADDR = (DWORD)GetModuleHandle(nullptr)) == 0) {
-    //     Sleep(50);
-    // }
-    
-
-    // // Wait for LEGOBatman.exe to load.
-    // HMODULE hModule = nullptr;
-    // while (hModule == nullptr) {
-    //     hModule = GetModuleHandleA("LEGOBatman.exe"); // use your exe's real name here
-    //     Sleep(50);
-    // }
     
     HMODULE hModule = nullptr;
     while ((hModule = GetModuleHandleA("LEGOBatman.exe")) == nullptr) {
@@ -282,19 +247,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     // example
     hugeTest(game);
-    //BYTE* char21 = game.characters[CharacterName::Bane]; // same as game.characters[20];
-    
-    // example: when you collect a kit it is saved to active save data. does not duplicate kits but it shouldn't need to.
-    // if (*game.inLevelKitCount != game.inLevelKitCountPrev) {
-    //     if (*game.inLevelKitCount > game.inLevelKitCountPrev) {
-    //         SubLevelKits sd = game.levels.levelKitSaveData[(int)*game.inLevelKitLocations];
-    //         strncpy(sd.kits[sd.count], game.inLevelKits[(int)*game.inLevelKitCount], 8);
-    //         (sd.count) += 1;
-    //     } else {
-    //         game.inLevelKitCountPrev = *game.inLevelKitCount;
-    //     }
-    // }
-
 
     
     BYTE NOP[16] = {0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90};
@@ -322,17 +274,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         // preexisting save file.
     }
 
-
-    // Temporary pointers for testing. will be moved later.
-    // BYTE* levelBeatenH1_1 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4C5; // you can bank on batman beaten
-    // BYTE* levelBeatenH1_2 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4B9;
-    // BYTE* levelUnlockedH1_1 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4C6;
-    // BYTE* levelUnlockedH1_2 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4BA; // An icy reception unlocked.
-
-    // file << "levelBeatenH1_1: " << std::hex << (int)*levelBeatenH1_1 << std::endl;
-    // file << "levelBeatenH1_2: " << std::hex << (int)*levelBeatenH1_2 << std::endl;
-    // file << "levelUnlockedH1_1: " << std::hex << (int)*levelUnlockedH1_1 << std::endl;
-    // file << "levelUnlockedH1_2: " << std::hex << (int)*levelUnlockedH1_2 << std::endl;
 
     
     // 7 byte add function
@@ -390,9 +331,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     SubLevelKits* saveKitData = game.levels.levelKitSaveData;
     SubLevelKits levelKitData;
     while (true) {
-        // file.open("a.txt", std::ios::app);
-        // file << std::hex << (int) batman << " -> " << (int) (*batman) << std::endl; // write whether enabled.
-        // file.close();
         
         loopTest(game,loops);
 
@@ -422,17 +360,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         }
 
 
-        // cou = cou % 3;
-        // for (DWORD i = 0; i < 48; i++) {
-        //     if ((i+cou+(i/12))%3 == 0) {// even
-        //         *(characters[i]) = 0x03;
-        //         //if (*(characters[i]) == 0x00) *(characters[i]) = 0x03; else *(characters[i]) = 0x00;
-        //     } else {
-        //         *(characters[i]) = 0x00;
-        //         //if (*(characters[i]) == 0x03) *(characters[i]) = 0x00; else *(characters[i]) = 0x03;
-        //     }
-        // }
-        // cou++;
 
         Sleep(500);
         loops++;
