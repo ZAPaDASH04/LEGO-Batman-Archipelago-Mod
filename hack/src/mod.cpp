@@ -367,7 +367,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         loops++;
     }
 
-    file.close(); // close file before infinite loop. //temporarily moved to test sending/receiving items via archi
+    file.close();
+    b_file.close(); // close file before infinite loop. //temporarily moved to test sending/receiving items via archi
 
     // Never reached but good practice
     FreeLibraryAndExitThread(hSelf, 0);
