@@ -1,20 +1,20 @@
 /**
  * @file LB1AP.cpp
- * @author your name (you@domain.com)
+ * @author jrad (jradcode23@gmail.com) @jrad5768
  * @brief 
  * @version 0.1
  * @date 2025-07-30
  * 
- * @copyright Copyright (c) 2025
  * 
  */
 
 #include "LB1AP.h"
+#include <fstream>
+#include <cstring>
 
 bool lb1AP_locations[LB1AP_NUM_LOCS]; //array with the total number of locations. Currently not all sequential in the apworld - currently larger than we need because not all sequential
 bool lb1AP_items[LB1AP_NUM_ITEMS]; //array with the in game items - currently larger than we need because not all sequential
 int minikits = 0;
-int gold_bricks = 0;
 
 
 void LB1AP_Init(const char* serverIP, const char* playerName, const char* password){
@@ -57,5 +57,34 @@ void LB1AP_reset(){
         lb1AP_items[i] = false;
     }
     minikits = 0;
-    gold_bricks = 0;
+}
+
+void LB1AP_Connect(){
+    std::ifstream connectionFile("APConnect.txt");
+    if(!connectionFile){
+        std::cout << "Failed to Open Connection File. Please ensure that APConnect.txt is in the same folder as the Lego Batman exe." << std::endl;
+    }
+    if(connectionFile){
+        char* header = readFile(connectionFile);
+        char* serverIP = readFile(connectionFile);
+        char* playerName = readFile(connectionFile);
+        // if(!connectionFile.eof()){ //TODO: to test how a password with an archi server works. Initial read through of the documentation appears to have the server tell the player?
+        //     char* password = readFile(connectionFile); //TODO: to make this variable survive the scope
+        // }
+        connectionFile.close();
+        std::cout << serverIP << " " << playerName << std::endl; //cout statement for bug testing
+        LB1AP_Init(serverIP, playerName, "");
+        delete[] header;
+        delete[] serverIP;
+        delete[] playerName;
+
+    }
+}
+
+char* readFile(std::ifstream& file){
+    std::string line {};
+    std::getline(file, line);
+    char* buffer = new char[line.length() + 1];
+    strncpy(buffer, line.c_str(), line.length() + 1);
+    return buffer;
 }
