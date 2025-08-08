@@ -115,9 +115,10 @@ const DWORD32 Characters::_offsets[characterCount] =
 
 
 Characters::Characters(DWORD BASE_ADDR) : 
-    BASE_ADDR(BASE_ADDR + 0x006CA830)
+    BASE_ADDR(BASE_ADDR)
 {
-    for (size_t i = 0; i < 48; i++) _characterBytes[i] = *((BYTE**)(BASE_ADDR)) + _offsets[i];
+    for (size_t i = 0; i < characterCount; i++) 
+        _characterBytes[i] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + _offsets[i];
 };
 
 BYTE* Characters::operator[](int i) {

@@ -171,7 +171,7 @@ void HookFunc() {
 
 void hugeTest(Game game) {
     std::cout << "Huge test" << std::endl;
-    std::cout << "saveSlot " << game.saveSlot << std::endl;
+    std::cout << "saveSlot " << std::hex << (int) game.saveSlot << std::endl;
     
     
 }
@@ -305,17 +305,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     ///////////////TODO: This sucks but I just can't find a good way to do this :(
     // WARN: does not work yet. just inject after in level.
     //Sleep(30000);
-    BYTE* saveFile = (BYTE*)(BASE_ADDR + UP + (0x56801C));
-    BYTE* level = (BYTE*)(BASE_ADDR + UP + (0x6C98C4)); // This may not be working somehow
+    volatile BYTE saveFile = game.saveSlot; // (BYTE*)(BASE_ADDR + UP + (0x56801C));
+    volatile BYTE level = game.currentLevel; // This may not be working somehow
 
-    while (*level == 0x00) {
+    while (level == 0x00) {
         Sleep(500); 
         // this is flawed as it often crashes on batman robin loading
     }
-    file << "Level is " << std::hex << (int)*level << std::endl;
-    file << "Save file is " << (int)*saveFile << std::endl;
+    file << "Level is " << std::hex << (int)level << std::endl;
+    file << "Save file is " << (int)saveFile << std::endl;
     // TODO: wait for player to gain control?
-    if (*saveFile == 0xFF) {
+    if (saveFile == 0xFF) {
         // NEW GAME started
         // TODO: Find some way to make the player save.
     } else {
@@ -324,15 +324,15 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
     // Temporary pointers for testing. will be moved later.
-    BYTE* levelBeatenH1_1 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4C5; // you can bank on batman beaten
-    BYTE* levelBeatenH1_2 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4B9;
-    BYTE* levelUnlockedH1_1 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4C6;
-    BYTE* levelUnlockedH1_2 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4BA; // An icy reception unlocked.
+    // BYTE* levelBeatenH1_1 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4C5; // you can bank on batman beaten
+    // BYTE* levelBeatenH1_2 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4B9;
+    // BYTE* levelUnlockedH1_1 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4C6;
+    // BYTE* levelUnlockedH1_2 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4BA; // An icy reception unlocked.
 
-    file << "levelBeatenH1_1: " << std::hex << (int)*levelBeatenH1_1 << std::endl;
-    file << "levelBeatenH1_2: " << std::hex << (int)*levelBeatenH1_2 << std::endl;
-    file << "levelUnlockedH1_1: " << std::hex << (int)*levelUnlockedH1_1 << std::endl;
-    file << "levelUnlockedH1_2: " << std::hex << (int)*levelUnlockedH1_2 << std::endl;
+    // file << "levelBeatenH1_1: " << std::hex << (int)*levelBeatenH1_1 << std::endl;
+    // file << "levelBeatenH1_2: " << std::hex << (int)*levelBeatenH1_2 << std::endl;
+    // file << "levelUnlockedH1_1: " << std::hex << (int)*levelUnlockedH1_1 << std::endl;
+    // file << "levelUnlockedH1_2: " << std::hex << (int)*levelUnlockedH1_2 << std::endl;
 
     
     // 7 byte add function
@@ -382,16 +382,25 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
     //file << "Patched damage function." << std::endl;
 
-    // for (DWORD i = 0; i < 48; i++) {
-    //     if (*(characters[i]) == 0x03) *(characters[i]) = 0x00;
-    //     //if (i%2 == 0) *(characters[i]) = 0x03;
-    // }
-
-    // int cou = -1; // count for cycling
-
     ///////// TODO: do a loop of all memory for missed checks.
 
-    // auto minkit detector
+
+    // WARN: temporary setup for testing.
+
+    for (size_t i = 0; i < 32; i++)
+    {
+        //*game.levels.levelUnlocked[i] = 1;
+        *game.levels.levelBeaten[i] = 1;
+    }
+    
+    for (size_t i = 0; i < game.characters.characterCount; i++)
+    {
+        //std::cout << "char " << std::hex << (int) game.characters._characterBytes[i] << std::endl;
+        *game.characters._characterBytes[i] = 0x03;
+        //*game.characters[i] = 0x03;
+    }
+
+    // TODO: auto minkit detector
     
 
     /*//////////////////////////////

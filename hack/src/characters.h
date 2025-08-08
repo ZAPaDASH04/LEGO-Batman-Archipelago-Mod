@@ -38,12 +38,14 @@ enum CharacterName {
 
 
 class Characters {
+public: // WHY >:(
+    static const DWORD characterCount = 48 + 12 + 10 + 10;
 private:
     const DWORD BASE_ADDR; // may eventually make global.
-    static const DWORD characterCount = 48 + 12 + 10 + 10;
+    //public static const DWORD characterCount = 48 + 12 + 10 + 10;
     static const DWORD32 _offsets[characterCount];
-    BYTE* _characterBytes[characterCount];
 public:
+    BYTE* _characterBytes[characterCount];
     /**
      * @brief Construct a new Characters object
      * 
@@ -56,6 +58,7 @@ public:
      * @param i index of character. See Characters.
      * @return BYTE* 
      */
+    // TODO: see if this can return volatile reference.
     BYTE* operator[](int i);// { return _characterBytes[i]; };
 
 };
