@@ -361,7 +361,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             game.inLevelKitCountPrev = 0;
         }
 
-
+        Sleep(500);
         //LB1AP_GetMessage();
         if (AP_IsMessagePending()) {
 

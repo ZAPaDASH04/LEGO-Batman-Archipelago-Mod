@@ -41,7 +41,7 @@ void LB1AP_CheckLocation(int64_t location_id){ //function to mark a location che
 
 void LB1AP_send_item(int64_t location_id){  //function to send an item
     AP_SendItem(location_id);
-    AP_GetLatestMessage();
+    //AP_GetLatestMessage();
 }
 
 bool LB1AP_location_checked(int64_t location_id){ //function to verify if a location has been checked
