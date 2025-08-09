@@ -31,6 +31,7 @@ HintMessageBox::HintMessageBox(DWORD BASE_ADDR):
     std::cout << "initializing timer" << std::endl;
     timer = 7.55;
     timerPrev = timer;
+    setText("Holy Archipelago Batman!!!");
     std::cout << "initialized hintmessage box" << std::endl;
 }
 
