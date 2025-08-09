@@ -23,15 +23,15 @@ HintMessageBox::HintMessageBox(DWORD BASE_ADDR):
         reinterpret_cast<char*>(
             reinterpret_cast<uintptr_t>(
                 *reinterpret_cast<char**>(BASE_ADDR + 0x006947F8)
-            ) + 0x203
+            ) + 0x2039
         )
     ),
     hold(false)
 {
-    std::cout << "initializing timer" << std::endl;
-    timer = 7.55;
-    timerPrev = timer;
     setText("Holy Archipelago Batman!!!");
+    std::cout << "initializing timer" << std::endl;
+    timer = 0;
+    timerPrev = timer;
     std::cout << "initialized hintmessage box" << std::endl;
 }
 
