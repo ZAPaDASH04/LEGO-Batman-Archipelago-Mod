@@ -361,14 +361,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             game.inLevelKitCountPrev = 0;
         }
 
-        //LB1AP_GetMessage();
-        if (AP_IsMessagePending()) {
+        LB1AP_GetMessage();
+        // if (AP_IsMessagePending()) {
 
-            AP_Message* message = AP_GetLatestMessage();
-            std::cout << message->text << std::endl;
+        //     AP_Message* message = AP_GetLatestMessage();
+        //     std::cout << message->text << std::endl;
 
-            AP_ClearLatestMessage();
-        }
+        //     AP_ClearLatestMessage();
+        // }
 
         Sleep(500);
         loops++;
