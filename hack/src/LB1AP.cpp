@@ -94,6 +94,8 @@ const char* readFile(std::ifstream& file){
 }
 
 AP_Message* LB1AP_GetMessage(){
+    if(AP_GetConnectionStatus() == AP_ConnectionStatus::Disconnected) {return nullptr;}
+    if(AP_GetConnectionStatus() == AP_ConnectionStatus::Connected) {return nullptr;}
     if(AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused){
         std::cout << "Connection Refused, please correct the connection file and restart the game" << std::endl;
     }
