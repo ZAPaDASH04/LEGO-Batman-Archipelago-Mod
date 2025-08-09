@@ -78,8 +78,8 @@ void HintMessageBox::tick() {
     if (timer >= 7.5) {
         std::cout << "next hint" << std::endl;
         // next hint.
-        AP_Message* message;
-        if ( !(message = LB1AP_GetMessage()) ) {
+        AP_Message* message = LB1AP_GetMessage();
+        if ( message != nullptr) {
             // there is a new message
             switch (message->type)
             {
