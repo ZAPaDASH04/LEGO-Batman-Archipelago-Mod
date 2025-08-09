@@ -26,6 +26,7 @@ HintMessageBox::HintMessageBox(DWORD BASE_ADDR):
             ) + 0x2039
         )
     ),
+    messageSpacing(1.0),
     hold(false)
 {
     setText("Holy Archipelago Batman!!!");
@@ -76,25 +77,18 @@ void HintMessageBox::tick() {
 
     // subtract timer.
     // check if hint has expired
-    if (timer >= 7.5) {
-        std::cout << "next hint" << std::endl;
+    if (timer >= 7.5 + messageSpacing) {
         // next hint.
         AP_Message* message = LB1AP_GetMessage();
         if ( message != nullptr) {
+            std::cout << "next hint" << std::endl;
             // there is a new message
             switch (message->type)
             {
-            case AP_MessageType::Countdown: { // WARN: what is this?
-                // theme = 5;
-                std::cout << "what is countdown?" << std::endl;
-                tick(); // skip?
-                return;
-                break;
-            }
             case AP_MessageType::Plaintext: { // WARN: what is this?
                 // theme = 4;
-                setText("Plaintext: " + message->text);
-                break;
+                //setText("Plaintext: " + message->text);
+                return;
             }
             case AP_MessageType::ItemSend: {
                 // theme = (theme + 1) % 4;
@@ -114,6 +108,13 @@ void HintMessageBox::tick() {
                 setText("Hint: " + msg->text);
                 break;
             }
+            case AP_MessageType::Countdown: { // WARN: what is this?
+                // theme = 5;
+                std::cout << "what is countdown?" << std::endl;
+                tick(); // skip?
+                return;
+                break;
+            }
 
             default:
                 // Unkown message type
@@ -124,7 +125,7 @@ void HintMessageBox::tick() {
             timer = 0.0;
         }
     } else {
-        timer += 0.5; // TODO: adjust
+        timer += 0.05; // TODO: adjust
         timerPrev = timer;
     }
 }

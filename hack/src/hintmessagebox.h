@@ -29,6 +29,7 @@
     char* text; // TODO: test
 
     float timerPrev;
+    float messageSpacing;
     bool hold;
 
     // code that sets the hint id. LEGOBatman.exe+1D522D - 89 35 246FAC00        - mov [LEGOBatman.exe+6C6F24],esi
