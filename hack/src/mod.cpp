@@ -15,6 +15,7 @@
 #include <shlobj.h> // For SHGetFolderPath
 
 #include "game.h"
+#include "hintmessagebox.h"
 
 std::ofstream file;
 std::ofstream b_file;
@@ -78,7 +79,7 @@ bool WaitForExecutableMemory(void* addr, DWORD timeoutMs = 10000) {
     return false;
 }
 
-bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byteCount){
+bool WriteCode(LPVOID pAddress, void* bytesOld, void* bytes, int byteCount){
     int maxWaitMs = 20000;
        // Resolve multilevel pointer, if depth > 0
     //std::ofstream file("a.txt", std::ios::app);
@@ -247,6 +248,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     DWORD UP = UP0 + UP1;
     
     Game game(BASE_ADDR + UP);
+    HintMessageBox messageBox(BASE_ADDR + UP);
 
     // example
     hugeTest(game);
@@ -286,6 +288,15 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     BYTE* dmgFuncAddr = (BYTE*)(BASE_ADDR + (0x20) + (0x1C356D)); // not the damage function instead it's a pointer to an add function that adds -1 to health.
     
 
+    // Message box code nops
+
+    // code that sets the hint id. LEGOBatman.exe+1D522D - 89 35 246FAC00        - mov [LEGOBatman.exe+6C6F24],esi
+    WriteCode((BYTE*)(BASE_ADDR + 0x001D522D),(BYTE[]){0x89,0x35,0x24,0x6F,0xAC,0x00},NOP,6);
+    // code that lowers timer. LEGOBatman.exe+1D5550 - D9 1D 346FAC00        - fstp dword ptr [LEGOBatman.exe+6C6F34]
+    WriteCode((BYTE*)(BASE_ADDR + 0x001D5550),(BYTE[]){0xD9,0x1D,0x34,0x6F,0xAC,0x00},NOP,6);
+    // code that resets timer to 0. LEGOBatman.exe+1D5221 - D9 15 346FAC00        - fst dword ptr [LEGOBatman.exe+6C6F34]
+    WriteCode((BYTE*)(BASE_ADDR + 0x001D5221),(BYTE[]){0xD9,0x15,0x34,0x6F,0xAC,0x00},NOP,6);
+
 
 
     /*////////////////////////////////
@@ -319,7 +330,16 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         //*game.characters[i] = 0x03;
     }
 
+    // std::cout << "extra purch " << std::hex
+    //       << reinterpret_cast<uintptr_t>(&game.extraPurchased)
+    //       << std::endl;
+    // purchase all kits.
+    for (size_t i = 0; i < 21; i++)
+    {
+        game.extraPurchased |= (1 << i);
+    }
     // TODO: auto minkit detector
+    
     
 
     /*//////////////////////////////
@@ -361,7 +381,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             game.inLevelKitCountPrev = 0;
         }
 
-        LB1AP_GetMessage();
+        //LB1AP_GetMessage();
         // if (AP_IsMessagePending()) {
 
         //     AP_Message* message = AP_GetLatestMessage();
@@ -369,6 +389,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         //     AP_ClearLatestMessage();
         // }
+        messageBox.tick();
 
         Sleep(500);
         loops++;

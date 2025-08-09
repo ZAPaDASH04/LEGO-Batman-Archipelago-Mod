@@ -98,9 +98,9 @@ public:
     // TODO: maybe const
     BYTE* levelUnlocked[32];
     BYTE* levelBeaten[32];
-    BYTE* levelKitCount[32];
-    BYTE* levelRedBrick[32];
-    //DWORD32* hostages; // messed up initializer
+    BYTE* levelKitCount[32]; // TODO: test
+    BYTE* levelRedBrick[32]; // TODO: test
+    DWORD32* hostages; // TODO: test
     // usage: levelKitSaveData[levelid]
     SubLevelKits* levelKitSaveData; // WARN: this should not be public.
     

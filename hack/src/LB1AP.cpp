@@ -93,22 +93,23 @@ const char* readFile(std::ifstream& file){
     return buffer;
 }
 
-void LB1AP_GetMessage(){
+AP_Message* LB1AP_GetMessage(){
     if(AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused){
         std::cout << "Connection Refused, please correct the connection file and restart the game" << std::endl;
     }
-    if(!AP_IsMessagePending()) return;
+    if(!AP_IsMessagePending()) return nullptr;
     AP_Message* msg = AP_GetLatestMessage();
-    if(msg->type == AP_MessageType::ItemSend){
-        AP_ItemSendMessage* s_msg = static_cast<AP_ItemSendMessage*>(msg);
-        std::cout << s_msg->item << " was sent to " << s_msg->recvPlayer << std::endl;
-    } else if(msg->type == AP_MessageType::ItemRecv){
-        AP_ItemRecvMessage* s_msg = static_cast<AP_ItemRecvMessage*>(msg);
-        std::cout << "You received " << s_msg->item << " from " << s_msg->sendPlayer << std::endl;
-    } else {
-        std::cout << msg->text << std::endl;
-    }
+    // if(msg->type == AP_MessageType::ItemSend){
+    //     AP_ItemSendMessage* s_msg = static_cast<AP_ItemSendMessage*>(msg);
+    //     std::cout << s_msg->item << " was sent to " << s_msg->recvPlayer << std::endl;
+    // } else if(msg->type == AP_MessageType::ItemRecv){
+    //     AP_ItemRecvMessage* s_msg = static_cast<AP_ItemRecvMessage*>(msg);
+    //     std::cout << "You received " << s_msg->item << " from " << s_msg->sendPlayer << std::endl;
+    // } else {
+    //     std::cout << msg->text << std::endl;
+    // }
 
     AP_ClearLatestMessage();
+    return msg;
 }
 

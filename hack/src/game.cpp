@@ -11,18 +11,24 @@
 
 #include "game.h"
 
+
 Game::Game(DWORD BASE_ADDR) : 
     BASE_ADDR(BASE_ADDR),
     levels(BASE_ADDR),
     characters(BASE_ADDR),
     minikits(BASE_ADDR),
-    //currentLevel((BYTE*)(BASE_ADDR + 0x006C98C4)),
     currentLevel(*(volatile BYTE*)(BASE_ADDR + 0x006C98C4)),
     saveSlot(*(volatile BYTE*)(BASE_ADDR + 0x0056801C)), // TODO: test
     inLevelTotalKitCount(*(volatile BYTE*)(BASE_ADDR + 0x006C9424)),
     inLevelKitCount(*(volatile BYTE*)(BASE_ADDR + 0x006C9428)),
-    powerBrickPurchased(*(volatile DWORD*)(BASE_ADDR + 0x006D01C8)), // TODO: test
-    powerBrickEnabled(*(volatile DWORD*)(BASE_ADDR + 0x00536DE0)), // TODO: test
+    extraPurchased(
+        *reinterpret_cast<volatile DWORD*>(
+            reinterpret_cast<uintptr_t>(
+                *reinterpret_cast<void**>(BASE_ADDR + 0x006D01C8)
+            ) + 0x80
+        )
+    ),
+    //powerBrickEnabled(*(volatile DWORD*)(BASE_ADDR + 0x00536DE0)), // TODO: test
     inLevelKitCountPrev(0)
 {
     //currentLevel = ((volatile BYTE*)(BASE_ADDR + 0x006C98C4));
@@ -32,6 +38,10 @@ Game::Game(DWORD BASE_ADDR) :
         inLevelKitLocations[i] = ((BYTE*)(BASE_ADDR + 0x006D00E8 + i*0x0C)); // TODO: test. size is uncertain
         
 
+    }
+
+    for (size_t i = 0; i < 21; i++) {
+        extraEnabled[i] = ((BYTE*)(BASE_ADDR + 0x00536DE0 + i*0x1C));
     }
     
 };

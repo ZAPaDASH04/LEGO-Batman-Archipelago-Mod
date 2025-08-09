@@ -16,6 +16,34 @@
 #include "characters.h"
 #include "minikits.h"
 
+enum ExtraName {
+    Adaptive_Difficulty,
+
+    Silhouettes,
+    Beep_Beep,
+    Ice_Rink,
+    Disguise,
+    Extra_Toggle,
+
+    Score_x2,
+    Score_x4,
+    Score_x6,
+    Score_x8,
+    Score_x10,
+
+    Stud_Magnet,
+    Character_Studs,
+    Minikit_Detector,
+    Power_Brick_Detector,
+    Always_Score_Multiply,
+
+    Fast_Build,
+    Immune_To_Freeze,
+    Regenerate_Hearts,
+    Extra_Hearts,
+    Invincibility
+};
+
 class Game
 {
 private:
@@ -38,8 +66,9 @@ public:
     volatile BYTE& inLevelKitCount;
     const char* inLevelKits[10]; // TODO: test. size is uncertain
     const BYTE* inLevelKitLocations[10]; // TODO: test. size is uncertain
-    volatile DWORD& powerBrickPurchased;
-    volatile DWORD& powerBrickEnabled;
+    volatile DWORD& extraPurchased;
+    const BYTE* extraEnabled[21]; // TODO: test
+    //volatile DWORD& powerBrickEnabled;
     //volatile BYTE* inLevelKitLocations[10];
     
     BYTE inLevelKitCountPrev;

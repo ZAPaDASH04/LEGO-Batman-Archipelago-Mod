@@ -33,4 +33,4 @@ void LB1AP_reset();
 void LB1AP_Complete();
 void LB1AP_Connect();
 const char* readFile(std::ifstream& file);
-void LB1AP_GetMessage();
+AP_Message* LB1AP_GetMessage();
