@@ -7,7 +7,7 @@ This beta test is essentially an episode 1 kits only test. A kit hunt if you wil
 - Make sure to pay attention to the hint text to see if it skips anything. (check that kits aren't being missed)
 
 ** Instructions
-- Set up an AP game (Beta test is not intended for multiple players or serious games. You can play multiple games if you wish.)
+- Set up an AP game using the lego_batman_1.apworld (Beta test is not intended for multiple players or serious games. You can play multiple games if you wish.)
 - place all files in this folder into the folder of the exe for Lego Batman 1. (LB1I.exe should end up in the same folder as LEGOBatman.exe)
 - open the APConnect.txt file and add the AP info. follow instructions on the first line.
 - run lego batman (tested methods: through steam. directly through the exe. using DXWND).
