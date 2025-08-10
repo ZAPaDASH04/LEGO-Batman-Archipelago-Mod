@@ -162,7 +162,7 @@ void hugeTest(Game game) {
 }
 
 void loopTest(Game game, DWORD loops) {
-    if (loops%50 == 0) {
+    if (loops%500 == 0) {
         std::cout << "Loop test" << std::endl 
                   //<< std::hex << game.currentLevel << std::endl
                   << "levels:" << std::endl
@@ -384,6 +384,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 << (int) *game.inLevelKitLocations[i] << " " << game.inLevelKits[i] << " : "
                 << (int) game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i])
                 << std::endl;
+            
             LB1AP_send_item(400000 + 100 + game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i]));
             // levelKitData = game.levels.levelKitSaveData[*game.inLevelKitLocations[i]];
             // strncpy(levelKitData.kits[levelKitData.count], game.inLevelKits[i], 8);
