@@ -72,7 +72,7 @@ void HintMessageBox::tick() {
     // 
     if (timer != timerPrev) {
         std::cout << "timer doesn't match prev " << (float) timer << " " << timerPrev << std::endl;
-        timer = 0;
+        timer = -2.0;
     }
 
 
