@@ -28,6 +28,15 @@ Game::Game(DWORD BASE_ADDR) :
             ) + 0x80
         )
     ),
+    suitUnlocked1(*reinterpret_cast<volatile WORD*>(BASE_ADDR + 0x006C9450)),
+    //suitUnlocked3(*reinterpret_cast<volatile WORD*>(BASE_ADDR + 0x005C9294)),
+    suitUnlocked2(
+        *reinterpret_cast<volatile WORD*>(
+            reinterpret_cast<uintptr_t>(
+                *reinterpret_cast<void**>(BASE_ADDR + 0x005C49CC)
+            ) + 0x7BB4
+        )
+    ),
     //powerBrickEnabled(*(volatile DWORD*)(BASE_ADDR + 0x00536DE0)), // TODO: test
     inLevelKitCountPrev(0)
 {

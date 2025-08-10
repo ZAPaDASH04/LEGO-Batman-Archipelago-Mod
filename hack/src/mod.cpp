@@ -336,14 +336,25 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // std::cout << "extra purch " << std::hex
     //       << reinterpret_cast<uintptr_t>(&game.extraPurchased)
     //       << std::endl;
+
     // purchase all kits.
     for (size_t i = 0; i < 21; i++)
     {
         game.extraPurchased |= (1 << i);
     }
-    // TODO: auto minkit detector
+    // auto minkit detector on
+    *game.extraEnabled[ExtraName::Minikit_Detector] = 1;
     
-    
+    std::cout << "suit unlock " << std::hex
+          << reinterpret_cast<uintptr_t>(&game.suitUnlocked1)
+          << std::endl;
+
+    // unlock all suits
+    for (size_t i = 0; i < 10; i++) 
+    {
+        game.suitUnlocked1 |= (WORD)(1 << i);
+        game.suitUnlocked2 |= (WORD)(1 << i);
+    }
 
     /*//////////////////////////////
     -////  Pre Loop Setup End  ////-

@@ -44,6 +44,19 @@ enum ExtraName {
     Invincibility
 };
 
+enum SuitName {
+    Batsuit =      0,
+    Demosuit =     3,
+    Glidesuit =    2,
+    Sonarsuit =    4,
+    Heatsuit =     1,
+    Robinsuit =    5,
+    Techsuit =     7,
+    Magnetsuit =   8,
+    Attractosuit = 9,
+    Divesuit =     6
+};
+
 class Game
 {
 private:
@@ -67,7 +80,9 @@ public:
     const char* inLevelKits[10]; // TODO: test. size is uncertain
     const BYTE* inLevelKitLocations[10]; // TODO: test. size is uncertain
     volatile DWORD& extraPurchased;
-    const BYTE* extraEnabled[21]; // TODO: test
+    BYTE* extraEnabled[21]; 
+    volatile WORD& suitUnlocked1; // active value
+    volatile WORD& suitUnlocked2; // loaded value. (when loading sets unlocked1 to unlocked2)
     //volatile DWORD& powerBrickEnabled;
     //volatile BYTE* inLevelKitLocations[10];
     
