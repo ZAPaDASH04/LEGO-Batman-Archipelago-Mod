@@ -199,6 +199,7 @@ void loopTest(Game game, DWORD loops) {
         }
         std::cout << std::endl;
         
+        
 
         // kit stuff
         std::cout << "Kit save data stuff" << std::endl;

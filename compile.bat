@@ -1,3 +1,4 @@
+echo off
 
 rem start "" cmd /c "i686-w64-mingw32-g++ -m32 -o \"C:\Program Files (x86)\Steam\steamapps\common\Lego Batman\injector.exe\" .\injector\src\injector.cpp 1>injector_log.txt 2>&1"
 rem start "" cmd /c "i686-w64-mingw32-g++ -shared -m32 -o \"C:\Program Files (x86)\Steam\steamapps\common\Lego Batman\mod.dll\" .\hack\src\mod.cpp -static-libgcc -static-libstdc++ 1>mod_log.txt 2>&1"

@@ -5,6 +5,7 @@ This beta test is essentially an episode 1 kits only test. A kit hunt if you wil
 - You must use unmodified steam version of LEGO Batman: The Videogame
 - Is not compatible with reconnecting. You will have to restart the game, load the save then ONLY once you have control of the characters, run the LB1I.exe again.
 - Make sure to pay attention to the hint text to see if it skips anything. (check that kits aren't being missed)
+- debug messages are logged in a.txt (ours) and b.txt (ap's)
 
 ** Instructions
 - Set up an AP game using the lego_batman_1.apworld (Beta test is not intended for multiple players or serious games. You can play multiple games if you wish.)
