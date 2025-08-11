@@ -50,7 +50,7 @@ APCPP_LIB:=$(APCPP_LIB).dll
 # Linking
 $(EXECUTABLE): $(OBJ_FILES) | $(BIN_DIR) $(RELEASE_DIR)
 	@echo "linking."
-	$(CXX) -shared -static-libgcc -static-libstdc++ $(OBJ_FILES) -o $(EXECUTABLE) $(LIBS) $(APCPP_LIB)
+	$(CXX) -shared -static -static-libgcc -static-libstdc++ $(OBJ_FILES) -o $(EXECUTABLE) $(LIBS) $(APCPP_LIB)
 
 # Compilation rule with dependency generation
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
