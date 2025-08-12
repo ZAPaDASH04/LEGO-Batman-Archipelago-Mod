@@ -12,4 +12,5 @@ rem i686-w64-mingw32-g++ -m32 -o "C:\Program Files (x86)\Steam\steamapps\common\
 rem make -C .\injector && cp .\injector\bin\LB1I.exe  "C:\Program Files (x86)\Steam\steamapps\common\Lego Batman\LB1I.exe"
 
 rem i686-w64-mingw32-g++ -shared -m32 -o "C:\Program Files (x86)\Steam\steamapps\common\Lego Batman\ap.dll" .\hack\src\mod.cpp -static-libgcc -static-libstdc++ -static 1>mod_log.txt 2>&1
-make -C .\hack && cp .\hack\bin\ap.dll "C:\Program Files (x86)\Steam\steamapps\common\Lego Batman\ap.dll"
+rem make -C .\hack && cp .\hack\bin\ap.dll "C:\Program Files (x86)\Steam\steamapps\common\Lego Batman\ap.dll"
+make -C .\hack && cp .\hack\bin\ap.dll .\Reloadedii\legobatman1.apsupport

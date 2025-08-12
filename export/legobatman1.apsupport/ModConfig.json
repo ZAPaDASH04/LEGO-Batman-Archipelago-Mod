@@ -1,0 +1,28 @@
+{
+  "ModId": "legobatman1.apsupport",
+  "ModName": "LB1 Archipelago",
+  "ModAuthor": "ZAPaDASH04",
+  "ModVersion": "0.1.0",
+  "ModDescription": "Provides Archipelago Support to Lego Batman 1",
+  "ModDll": "",
+  "ModIcon": "",
+  "ModR2RManagedDll32": "",
+  "ModR2RManagedDll64": "",
+  "ModNativeDll32": "ap.dll",
+  "ModNativeDll64": "",
+  "Tags": [],
+  "CanUnload": null,
+  "HasExports": null,
+  "IsLibrary": false,
+  "ReleaseMetadataFileName": "legobatman1.apsupport.ReleaseMetadata.json",
+  "PluginData": {},
+  "IsUniversalMod": false,
+  "ModDependencies": [
+    "legobatman1.apconnectsupport"
+  ],
+  "OptionalDependencies": [],
+  "SupportedAppId": [
+    "legobatman.exe"
+  ],
+  "ProjectUrl": ""
+}

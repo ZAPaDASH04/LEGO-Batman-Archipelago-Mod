@@ -27,7 +27,7 @@ This beta test is essentially an episode 1 kits only test. A kit hunt if you wil
 - Run lego batman (tested methods: through steam. directly through the exe. using DXWND).
 - Make a new game AND EXIT THE LEVEL.
 - Once in the hub go to Reloaded II and click lego batman on the left side.
-- In Configure Mods enable only "Reloaded II Server", "APCpp library", and "Archipelago Support". (they should have a red plus while disabled mods if any have a grey minus).
+- In Configure Mods enable only "Reloaded II Server" and "LB1 Archipelago". (they should have a red plus while disabled mods if any have a grey minus).
 - In the bottom left under Processes there should be process to select.
 - there should now be an inject button click it and switch back to the game.
 - check that a message appeared in the hint box indicating that the program connected.
