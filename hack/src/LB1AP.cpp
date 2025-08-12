@@ -12,22 +12,14 @@
 
 bool lb1AP_locations[LB1AP_NUM_LOCS]; //array with the total number of locations. Currently not all sequential in the apworld - currently larger than we need because not all sequential
 bool lb1AP_items[LB1AP_NUM_ITEMS]; //array with the in game items - currently larger than we need because not all sequential
-int minikits = 0;
-
 
 void LB1AP_Init(const char* serverIP, const char* playerName, const char* password){
     AP_Init(serverIP, GAME_NAME, playerName, password);
     AP_SetItemClearCallback(&LB1AP_reset); //used to clear the state of the game. Called when connecting to server, not sure why but implemented like SM64 did
     AP_SetItemRecvCallback([&](int64_t itemID, bool notify){ //I believe this is what to do when items are received TODO: break out into own function
         itemID -= LB1AP_ITEM_ID_OFFSET;
-        if(itemID == 0){
-            minikits++;
-        } else if(itemID > 0){
+        if(itemID > 0){
             lb1AP_items[itemID] = true;
-        }
-
-        if(notify){ //if the player has notify turned out, how we want to out put it
-            // LB1AP_GetMessage();
         }
     });
     AP_SetLocationCheckedCallback(&LB1AP_CheckLocation); //What to do when a location is checked
@@ -41,7 +33,6 @@ void LB1AP_CheckLocation(int64_t location_id){ //function to mark a location che
 
 void LB1AP_send_item(int64_t location_id){  //function to send an item
     AP_SendItem(location_id);
-    //AP_GetLatestMessage();
 }
 
 bool LB1AP_location_checked(int64_t location_id){ //function to verify if a location has been checked
@@ -55,7 +46,6 @@ void LB1AP_reset(){
     for(int i = 0; i < LB1AP_NUM_ITEMS; i++){
         lb1AP_items[i] = false;
     }
-    minikits = 0;
 }
 
 void LB1AP_Complete(){ //TODO: look into integrating this as part of the set reply handler
