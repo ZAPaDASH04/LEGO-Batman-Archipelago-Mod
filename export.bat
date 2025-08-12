@@ -7,4 +7,4 @@ rem xcopy /Y /E /I .\injector\bin\* .\export\
 rem Copy files from hack\bin to export
 rem xcopy /Y /E /I .\hack\bin\* .\export\
 rem cp .\hack\bin\ap.dll
-xcopy /Y /E /I .\Reloadedii\* .\export\
+xcopy /Y /E /I .\Reloadedii\* .\export\LB1AP
