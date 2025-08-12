@@ -10,8 +10,8 @@
 
 #include "LB1AP.h"
 
-bool lb1AP_locations[LB1AP_NUM_LOCS]; //array with the total number of locations. Currently not all sequential in the apworld - currently larger than we need because not all sequential
-bool lb1AP_items[LB1AP_NUM_ITEMS]; //array with the in game items - currently larger than we need because not all sequential
+bool lb1AP_locations[LB1AP_NUM_LOCS_AND_ITEMS]; //array with the total number of locations.
+bool lb1AP_items[LB1AP_NUM_LOCS_AND_ITEMS]; //array with the in game items
 
 void LB1AP_Init(const char* serverIP, const char* playerName, const char* password){
     AP_Init(serverIP, GAME_NAME, playerName, password);
@@ -40,10 +40,10 @@ bool LB1AP_location_checked(int64_t location_id){ //function to verify if a loca
 }
 
 void LB1AP_reset(){ 
-    for(int i = 0; i < LB1AP_NUM_LOCS; i++){
+    for(int i = 0; i < LB1AP_NUM_LOCS_AND_ITEMS; i++){
         lb1AP_locations[i] = false;
     }
-    for(int i = 0; i < LB1AP_NUM_ITEMS; i++){
+    for(int i = 0; i < LB1AP_NUM_LOCS_AND_ITEMS; i++){
         lb1AP_items[i] = false;
     }
 }
@@ -53,22 +53,32 @@ void LB1AP_Complete(){ //TODO: look into integrating this as part of the set rep
 }
 
 void LB1AP_Connect(){
-    std::ifstream connectionFile("APConnect.txt");
-    if(!connectionFile){
-        std::cout << "Failed to Open Connection File. Please ensure that APConnect.txt is in the same folder as the Lego Batman exe." << std::endl;
-    }
-    if(connectionFile){
-        const char* header = readFile(connectionFile);
-        const char* serverIP = readFile(connectionFile);
-        const char* playerName = readFile(connectionFile);
-        const char* password = readFile(connectionFile);
-        connectionFile.close();
-        std::cout << serverIP << " " << playerName << " " << password << std::endl; //cout statement for bug testing
-        LB1AP_Init(serverIP, playerName, password);
-        delete[] header;
-        delete[] serverIP;
-        delete[] playerName;
-        delete[] password;
+    bool connected = false;
+    while(!connected){
+        std::ifstream connectionFile("APConnect.txt");
+        if(!connectionFile){
+            std::cout << "Failed to Open Connection File. Please ensure that APConnect.txt is in the same folder as the Lego Batman exe." << std::endl;
+            Sleep(30000); //wait 30 second before trying again
+        }
+        if(connectionFile){
+            const char* header = readFile(connectionFile);
+            const char* serverIP = readFile(connectionFile);
+            const char* playerName = readFile(connectionFile);
+            const char* password = readFile(connectionFile);
+            connectionFile.close();
+            std::cout << serverIP << " " << playerName << " " << password << std::endl; //cout statement for bug testing
+            LB1AP_Init(serverIP, playerName, password);
+            delete[] header;
+            delete[] serverIP;
+            delete[] playerName;
+            delete[] password;
+        }
+        if(AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused || AP_GetConnectionStatus() == AP_ConnectionStatus::Disconnected){ //WARNING: this gets called early and so it will always loop 1 extra time currently
+            std::cout << "Connection Refused, please correct the connection file" << std::endl;
+            Sleep(30000); //wait 30 second before trying again
+        } else if(AP_GetConnectionStatus() == AP_ConnectionStatus::Authenticated || AP_GetConnectionStatus() == AP_ConnectionStatus::Connected){
+            connected = true;
+        }
     }
 }
 
