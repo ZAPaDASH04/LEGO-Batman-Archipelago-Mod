@@ -1,9 +1,9 @@
 {
   "ModId": "legobatman1.apsupport",
-  "ModName": "Archipelago Support",
+  "ModName": "LB1 Archipelago",
   "ModAuthor": "ZAPaDASH04",
-  "ModVersion": "1.0.0",
-  "ModDescription": "Create a mod for archipelago support",
+  "ModVersion": "0.1.0",
+  "ModDescription": "Provides Archipelago Support to Lego Batman 1",
   "ModDll": "",
   "ModIcon": "",
   "ModR2RManagedDll32": "",

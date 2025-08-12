@@ -1,9 +1,9 @@
 {
   "ModId": "legobatman1.apconnectsupport",
-  "ModName": "APCpp library",
-  "ModAuthor": "N00bK1ng",
+  "ModName": "LB1 Client Connector",
+  "ModAuthor": "N00bKing",
   "ModVersion": "1.0.0",
-  "ModDescription": "Template for a Reloaded Mod Configuration",
+  "ModDescription": "Lego Batman 1 Client Connector Support",
   "ModDll": "",
   "ModIcon": "",
   "ModR2RManagedDll32": "",
@@ -13,14 +13,16 @@
   "Tags": [],
   "CanUnload": null,
   "HasExports": null,
-  "IsLibrary": false,
+  "IsLibrary": true,
   "ReleaseMetadataFileName": "legobatman1.apconnectsupport.ReleaseMetadata.json",
   "PluginData": {},
   "IsUniversalMod": false,
-  "ModDependencies": [],
+  "ModDependencies": [
+    "legobatman1.apsupport"
+  ],
   "OptionalDependencies": [],
   "SupportedAppId": [
     "legobatman.exe"
   ],
-  "ProjectUrl": ""
+  "ProjectUrl": "https://github.com/N00byKing/APCpp"
 }
