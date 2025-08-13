@@ -323,7 +323,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     for (size_t i = 0; i < 32; i++)
     {
-        //*game.levels.levelUnlocked[i] = 1;
+        *game.levels.levelUnlocked[i] = 1;
         *game.levels.levelBeaten[i] = 1;
     }
     
