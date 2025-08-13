@@ -231,8 +231,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     freopen("b.txt", "a", stderr);
     setvbuf(stdout, NULL, _IONBF, 0);
     std::cout << "hello world" << std::endl;
-    std::cerr << "error world" << std::endl;
-    printf("does this work\n");
+    std::cerr << "Error world" << std::endl;
+    printf("Does this work\n");
     file << "ThreadProc started" << std::endl;
 
     

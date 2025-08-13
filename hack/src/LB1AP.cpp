@@ -73,6 +73,7 @@ void LB1AP_Connect(){
             delete[] playerName;
             delete[] password;
         }
+        //int counter = 0;
         // if(AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused || AP_GetConnectionStatus() == AP_ConnectionStatus::Disconnected){ //WARNING: this gets called early and so it will always loop 1 extra time currently
         //     std::cout << "Connection Refused, please correct the connection file" << std::endl;
         //     Sleep(30000); //wait 30 second before trying again
