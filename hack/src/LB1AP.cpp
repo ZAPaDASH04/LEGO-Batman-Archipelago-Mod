@@ -53,8 +53,8 @@ void LB1AP_Complete(){ //TODO: look into integrating this as part of the set rep
 }
 
 void LB1AP_Connect(){
-    bool connected = false;
-    while(!connected){
+    // bool connected = false;
+    // while(!connected){
         std::ifstream connectionFile("APConnect.txt");
         if(!connectionFile){
             std::cout << "Failed to Open Connection File. Please ensure that APConnect.txt is in the same folder as the Lego Batman exe." << std::endl;
@@ -73,13 +73,13 @@ void LB1AP_Connect(){
             delete[] playerName;
             delete[] password;
         }
-        if(AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused || AP_GetConnectionStatus() == AP_ConnectionStatus::Disconnected){ //WARNING: this gets called early and so it will always loop 1 extra time currently
-            std::cout << "Connection Refused, please correct the connection file" << std::endl;
-            Sleep(30000); //wait 30 second before trying again
-        } else if(AP_GetConnectionStatus() == AP_ConnectionStatus::Authenticated || AP_GetConnectionStatus() == AP_ConnectionStatus::Connected){
-            connected = true;
-        }
-    }
+        // if(AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused || AP_GetConnectionStatus() == AP_ConnectionStatus::Disconnected){ //WARNING: this gets called early and so it will always loop 1 extra time currently
+        //     std::cout << "Connection Refused, please correct the connection file" << std::endl;
+        //     Sleep(30000); //wait 30 second before trying again
+        // } else if(AP_GetConnectionStatus() == AP_ConnectionStatus::Authenticated || AP_GetConnectionStatus() == AP_ConnectionStatus::Connected){
+        //     connected = true;
+        // }
+    // }
 }
 
 const char* readFile(std::ifstream& file){
