@@ -33,6 +33,7 @@ bool LB1AP_location_checked(int64_t location_id);
 void LB1AP_send_item(int64_t location_id);
 void LB1AP_receiveItem(int itemID, bool notify);
 void LB1AP_reset();
+void LB1AP_CheckWinCon();
 void LB1AP_Complete();
 void LB1AP_Connect();
 const char* readFile(std::ifstream& file);

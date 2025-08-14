@@ -43,6 +43,7 @@ void LB1AP_receiveItem(int itemID, bool notify){
     }else{
         printf("Received Unknown Item: %d\n", itemID);
     }
+    LB1AP_CheckWinCon();
 }
 
 bool LB1AP_location_checked(int64_t location_id){ //function to verify if a location has been checked
@@ -59,8 +60,15 @@ void LB1AP_reset(){
     minikits = 0;
 }
 
+void LB1AP_CheckWinCon(){
+    if(minikits == 5){
+        LB1AP_Complete();
+    }
+}
+
 void LB1AP_Complete(){ //TODO: look into integrating this as part of the set reply handler
     AP_StoryComplete();
+    printf("You weren't just the hero this game deserved, you were the one it needed.\n");
 }
 
 void LB1AP_Connect(){
