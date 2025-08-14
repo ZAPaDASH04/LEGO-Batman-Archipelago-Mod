@@ -72,8 +72,20 @@ void LB1AP_Complete(){ //TODO: look into integrating this as part of the set rep
 }
 
 void LB1AP_Connect(){
-    // bool connected = false;
-    // while(!connected){
+    // Get the last write time of the file
+    namespace fs = std::filesystem; //TODO: break this out into its own function WARNING: will likely crash if the file does not exist
+    fs::path filePath("APConnect.txt");
+    auto oldTime = fs::last_write_time(filePath);
+
+    // Convert to system_clock time_point for standarization
+    auto sctp = std::chrono::system_clock::now() +
+                (oldTime - fs::file_time_type::clock::now());
+    // Convert to time_t for human legibility
+    std::time_t cftime = std::chrono::system_clock::to_time_t(sctp);
+    std::cout << "Last write time: " << std::put_time(std::localtime(&cftime), "%H:%M") << '\n';
+
+    bool connected = false;
+    while(!connected){
         std::ifstream connectionFile("APConnect.txt");
         if(!connectionFile){
             std::cout << "Failed to Open Connection File. Please ensure that APConnect.txt is in the same folder as the Lego Batman exe." << std::endl;
@@ -92,14 +104,22 @@ void LB1AP_Connect(){
             delete[] playerName;
             delete[] password;
         }
-        // int counter = 0;
-        // if(AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused || AP_GetConnectionStatus() == AP_ConnectionStatus::Disconnected){ //WARNING: this gets called early and so it will always loop 1 extra time currently
-        //     std::cout << "Connection Refused, please correct the connection file" << std::endl;
-        //     Sleep(30000); //wait 30 second before trying again
-        // } else if(AP_GetConnectionStatus() == AP_ConnectionStatus::Authenticated || AP_GetConnectionStatus() == AP_ConnectionStatus::Connected){
-        //     connected = true;
-        // }
-    // }
+        while(true){
+            auto newFtime = fs::last_write_time(filePath);
+            if(newFtime != oldTime){
+                oldTime = newFtime;
+                std::cout << "Connection file changed, reconnecting..." << std::endl;
+                break; // file has changed, break out of loop
+            }
+            if(AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused){
+                printf("Connection Refused, please correct the connection file. \n");
+            } else if(AP_GetConnectionStatus() == AP_ConnectionStatus::Authenticated){
+                connected = true;
+                break;
+            }
+            Sleep(2000); //wait 2 second before trying again
+        }
+    }
 }
 
 const char* readFile(std::ifstream& file){

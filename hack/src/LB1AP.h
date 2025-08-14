@@ -20,10 +20,11 @@
 #include <cstring>
 #include <windows.h>
 #include <chrono>
+#include <iomanip>
 #include <filesystem>
 
-#define LB1AP_LOCATION_ID_OFFSET 400000 //TODO: work with snolid to get this adjusted - ideally they are all sequential
-#define LB1AP_ITEM_ID_OFFSET 400000 //TODO: minikits are currently ID 0, to adjust it to be after the array
+#define LB1AP_LOCATION_ID_OFFSET 400000 
+#define LB1AP_ITEM_ID_OFFSET 400000 
 #define LB1AP_NUM_LOCS_AND_ITEMS 500 //number of total locations and items TODO: update once fully implemented
 #define GAME_NAME "Lego Batman: The Video Game"
 
