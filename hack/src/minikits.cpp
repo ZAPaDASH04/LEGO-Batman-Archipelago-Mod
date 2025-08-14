@@ -354,9 +354,11 @@ Minikits::Minikits(DWORD BASE_ADDR) :
 
         {{0xB2, "MINI01"    }, 250},
         {{0xB2, "MINI05"    }, 251},
-        {{0xB2, "MINI_I1"   }, 252},
+        {{0xB2, "MINI_I1"   }, 252}, // old
+        {{0xB2, "MINI10A"   }, 252}, // new
         {{0xB2, "MINI_I2"   }, 252},
-        {{0xB3, "MINI_I3"   }, 252},
+        {{0xB3, "MINI_I3"   }, 252}, // old
+        {{0xB4, "m_pupC"    }, 252}, // new
         {{0xB2, "MINI_03"   }, 253},
         {{0xB2, "MINI04"    }, 254},
         {{0xB2, "m_pup2"    }, 255},
