@@ -168,26 +168,26 @@ void loopTest(Game game, DWORD loops) {
                   << "levels:" << std::endl
                   << "Hero:" << std::endl;
         
-        for (size_t i = 0; i < 16; i++)
-        {
-            std::cout << " lev" << std::dec << i << std::hex;
-            std::cout << " " << (int) *game.levels.levelUnlocked[i] 
-                      << " " << (int) *game.levels.levelBeaten[i] 
-                      << " " << (int) *game.levels.levelKitCount[i]
-                      << " " << (int) *game.levels.levelRedBrick[i];
-                      //<< " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
+        // for (size_t i = 0; i < 16; i++)
+        // {
+        //     std::cout << " lev" << std::dec << i << std::hex;
+        //     std::cout << " " << (int) *game.levels.levelUnlocked[i] 
+        //               << " " << (int) *game.levels.levelBeaten[i] 
+        //               << " " << (int) *game.levels.levelKitCount[i]
+        //               << " " << (int) *game.levels.levelRedBrick[i];
+        //               //<< " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
             
-        }
-        std::cout << std::endl << "Villain:" << std::endl;
-        for (size_t i = 16; i < 32; i++)
-        {
-            std::cout << " lev" << std::dec << i << std::hex;
-            std::cout << " " << (int) *game.levels.levelUnlocked[i] 
-                      << " " << (int) *game.levels.levelBeaten[i] 
-                      << " " << (int) *game.levels.levelKitCount[i]
-                      << " " << (int) *game.levels.levelRedBrick[i];
-                      //<< " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
-        }
+        // }
+        // std::cout << std::endl << "Villain:" << std::endl;
+        // for (size_t i = 16; i < 32; i++)
+        // {
+        //     std::cout << " lev" << std::dec << i << std::hex;
+        //     std::cout << " " << (int) *game.levels.levelUnlocked[i] 
+        //               << " " << (int) *game.levels.levelBeaten[i] 
+        //               << " " << (int) *game.levels.levelKitCount[i]
+        //               << " " << (int) *game.levels.levelRedBrick[i];
+        //               //<< " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
+        // }
 
         std::cout << std::endl << "inlevel stuff" << std::endl 
                   << std::hex << (int) game.currentLevel << " " 
@@ -321,7 +321,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     // WARN: temporary setup for testing.
 
-    for (size_t i = 0; i < 32; i++)
+    for (size_t i = 0; i < 35; i++)
     {
         *game.levels.levelUnlocked[i] = 1;
         *game.levels.levelBeaten[i] = 1;
