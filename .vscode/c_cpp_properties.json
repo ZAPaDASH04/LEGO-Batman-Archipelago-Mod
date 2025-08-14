@@ -4,12 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/hack/inc/apclientpp/**",
-                "${workspaceFolder}/hack/inc/asio/include/**",
-                "${workspaceFolder}/hack/inc/websocketpp/**",
-                "${workspaceFolder}/hack/inc/wswrap/include/**",
-                "${workspaceFolder}/hack/inc/json/include/**",
-                "${workspaceFolder}/hack/inc/valijson/include/**"
+                "${workspaceFolder}/hack/inc/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -23,7 +18,9 @@
             "intelliSenseMode": "windows-gcc-x64",
             "compilerArgs": [
                 "-DASIO_STANDALONE",
-                "-DWSWRAP_NO_SSL"
+                "-DAPCLIENT_DEBUG",
+                "-DWSWRAP_SEND_EXCEPTIONS"
+                //"-D_WEBSOCKETPP_CPP11_THREAD_"
             ]
         }
     ],

@@ -1,30 +1,25 @@
 /**
  * @file mod.cpp
- * @author ZAPaDASH04 (ZAPaDASH04@gmail.com)
+ * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
+ * @authors jr (jradcode23@gmail.com) @jr5768
  * @brief 
- * @version 0.2
+ * @version 0.3
  * @date 2025-07-07
  * 
  */
 
-#include <apclient.hpp>
-#include <apuuid.hpp>
+#include "LB1AP.h"
 
 #include <windows.h>
 #include <fstream>
 #include <shlobj.h> // For SHGetFolderPath
 
-
-#ifdef __EMSCRIPTEN__
-//#define DATAPACKAGE_CACHE "/settings/datapackage.json"
-#define UUID_FILE "/settings/uuid"
-#else
-//#define DATAPACKAGE_CACHE "datapackage.json" // TODO: place in %appdata%
-#define UUID_FILE "uuid" // TODO: place in %appdata%
-#endif
-
+#include "game.h"
+#include "hintmessagebox.h"
 
 std::ofstream file;
+std::ofstream b_file;
+
 
 bool IsMemoryReadable(void* addr, size_t size) {
     MEMORY_BASIC_INFORMATION mbi;
@@ -62,24 +57,6 @@ bool IsMemoryWritable(void* addr, size_t size) {
     return false;
 }
 
-// bool IsMemoryExecutable(void* addr, size_t size) {
-//     MEMORY_BASIC_INFORMATION mbi;
-//     if (!VirtualQuery(addr, &mbi, sizeof(mbi)))
-//         return false;
-
-//     if (mbi.State != MEM_COMMIT)
-//         return false;
-
-//     if (mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD))
-//         return false;
-
-//     // Check if protection allows execution
-//     if (mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY))
-//         return true;
-
-//     return false;
-// }
-
 bool WaitForExecutableMemory(void* addr, DWORD timeoutMs = 10000) {
     DWORD elapsed = 0;
     MEMORY_BASIC_INFORMATION mbi;
@@ -102,7 +79,7 @@ bool WaitForExecutableMemory(void* addr, DWORD timeoutMs = 10000) {
     return false;
 }
 
-bool WriteCode(LPVOID pAddress, int depth, void* bytesOld, void* bytes, int byteCount){
+bool WriteCode(LPVOID pAddress, void* bytesOld, void* bytes, int byteCount){
     int maxWaitMs = 20000;
        // Resolve multilevel pointer, if depth > 0
     //std::ofstream file("a.txt", std::ios::app);
@@ -177,28 +154,88 @@ void HookFunc() {
 }
 
 
+void hugeTest(Game game) {
+    std::cout << "Huge test" << std::endl;
+    std::cout << "saveSlot " << std::hex << (int) game.saveSlot << std::endl;
+    
+    
+}
+
+void loopTest(Game game, DWORD loops) {
+    if (loops%500 == 0) {
+        std::cout << "Loop test" << std::endl 
+                  //<< std::hex << game.currentLevel << std::endl
+                  << "levels:" << std::endl
+                  << "Hero:" << std::endl;
+        
+        // for (size_t i = 0; i < 16; i++)
+        // {
+        //     std::cout << " lev" << std::dec << i << std::hex;
+        //     std::cout << " " << (int) *game.levels.levelUnlocked[i] 
+        //               << " " << (int) *game.levels.levelBeaten[i] 
+        //               << " " << (int) *game.levels.levelKitCount[i]
+        //               << " " << (int) *game.levels.levelRedBrick[i];
+        //               //<< " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
+            
+        // }
+        // std::cout << std::endl << "Villain:" << std::endl;
+        // for (size_t i = 16; i < 32; i++)
+        // {
+        //     std::cout << " lev" << std::dec << i << std::hex;
+        //     std::cout << " " << (int) *game.levels.levelUnlocked[i] 
+        //               << " " << (int) *game.levels.levelBeaten[i] 
+        //               << " " << (int) *game.levels.levelKitCount[i]
+        //               << " " << (int) *game.levels.levelRedBrick[i];
+        //               //<< " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
+        // }
+
+        std::cout << std::endl << "inlevel stuff" << std::endl 
+                  << std::hex << (int) game.currentLevel << " " 
+                  << std::hex << (int) game.inLevelTotalKitCount << " " 
+                  << std::hex << (int) game.inLevelKitCount << std::endl;
+        for (size_t i = 0; i < game.inLevelKitCount; i++)
+        {
+            std::cout << " " << std::hex << (int) game.inLevelKitLocations[i] << " " << game.inLevelKits[i];
+        }
+        std::cout << std::endl;
+        
+        
+
+        // kit stuff
+        std::cout << "Kit save data stuff" << std::endl;
+        std::cout << std::hex << game.levels.levelKitSaveData << std::endl;
+        std::cout << std::hex << &(game.levels.levelKitSaveData[0x12]) << std::endl;
+        std::cout << (char*)game.levels.levelKitSaveData[0x12].kits[0] << std::endl << std::endl;
+
+
+        
+    }
+    
+    
+}
+
+
 DWORD WINAPI ThreadProc(LPVOID lpParam) {
     HMODULE hSelf = (HMODULE)lpParam;
 
     // Prevent the DLL from being unloaded
     HMODULE dummy;
     GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)hSelf, &dummy);
+    
 
     file.open("a.txt");
+    b_file.open("b.txt");
+    std::cout.rdbuf(file.rdbuf());
+    std::cerr.rdbuf(file.rdbuf());
+    freopen("b.txt", "a", stdout);
+    freopen("b.txt", "a", stderr);
+    setvbuf(stdout, NULL, _IONBF, 0);
+    std::cout << "hello world" << std::endl;
+    std::cerr << "Error world" << std::endl;
+    printf("Does this work\n");
     file << "ThreadProc started" << std::endl;
 
-    // DWORD BASE_ADDR;// = (DWORD)GetModuleHandle(nullptr);
     
-    // while ((BASE_ADDR = (DWORD)GetModuleHandle(nullptr)) == 0) {
-    //     Sleep(50);
-    // }
-
-    // // Wait for LEGOBatman.exe to load.
-    // HMODULE hModule = nullptr;
-    // while (hModule == nullptr) {
-    //     hModule = GetModuleHandleA("LEGOBatman.exe"); // use your exe's real name here
-    //     Sleep(50);
-    // }
     
     HMODULE hModule = nullptr;
     while ((hModule = GetModuleHandleA("LEGOBatman.exe")) == nullptr) {
@@ -211,6 +248,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     DWORD UP1 = 0x1000; // 7/9/2025 update | WARN: LEGO Batman suddenly updated and I assume this +0x1000 is the general fix for it at least when it comes to data addresses. code addresses vary.
     DWORD UP = UP0 + UP1;
     
+    Game game(BASE_ADDR + UP);
+    HintMessageBox messageBox(BASE_ADDR + UP);
+
+    // example
+    hugeTest(game);
+
+    
     BYTE NOP[16] = {0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90};
 
 
@@ -219,17 +263,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     ///////////////TODO: This sucks but I just can't find a good way to do this :(
     // WARN: does not work yet. just inject after in level.
     //Sleep(30000);
-    BYTE* saveFile = (BYTE*)(BASE_ADDR + UP + (0x56801C));
-    BYTE* level = (BYTE*)(BASE_ADDR + UP + (0x6C98C4)); // This may not be working somehow
+    volatile BYTE saveFile = game.saveSlot; // (BYTE*)(BASE_ADDR + UP + (0x56801C));
+    volatile BYTE level = game.currentLevel; // This may not be working somehow
 
-    while (*level == 0x00) {
+    while (level == 0x00) {
         Sleep(500); 
         // this is flawed as it often crashes on batman robin loading
     }
-    file << "Level is " << std::hex << (int)*level << std::endl;
-    file << "Save file is " << (int)*saveFile << std::endl;
+    file << "Level is " << std::hex << (int)level << std::endl;
+    file << "Save file is " << (int)saveFile << std::endl;
     // TODO: wait for player to gain control?
-    if (*saveFile == 0xFF) {
+    if (saveFile == 0xFF) {
         // NEW GAME started
         // TODO: Find some way to make the player save.
     } else {
@@ -237,61 +281,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     }
 
 
-    // Temporary pointers for testing. will be moved later.
-    BYTE* levelBeatenH1_1 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4C5; // you can bank on batman beaten
-    BYTE* levelBeatenH1_2 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4B9;
-    BYTE* levelUnlockedH1_1 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4C6;
-    BYTE* levelUnlockedH1_2 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4BA; // An icy reception unlocked.
-
-    BYTE* batman =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x00;
-    BYTE* robin  =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x01;
-    BYTE* brucew =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x18;
-    BYTE* char04 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x13;
-    BYTE* char05 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x02;
-    BYTE* char06 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x11;
-    BYTE* char07 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x1B;
-    BYTE* char08 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x40;
-    BYTE* char09 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0xCB;
-    BYTE* char10 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x32;
-    BYTE* char11 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x30;
-    BYTE* char12 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x42;
-    BYTE* char13 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x2B;
-    BYTE* char14 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x2D;
-    BYTE* char15 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x43;
-    BYTE* char16 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x0F;
-    BYTE* char17 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x16;
-    BYTE* char18 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x15;
-    BYTE* char19 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x07;
-    BYTE* char20 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x0D;
-    BYTE* char21 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x19;
-    BYTE* char22 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x04;
-    BYTE* char23 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x05;
-    BYTE* char24 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x0E;
-    BYTE* char25 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x10;
-    BYTE* char26 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x0C;
-    BYTE* char27 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x0B;
-    BYTE* char28 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x14;
-    BYTE* char29 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x1A;
-    BYTE* char30 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x21;
-    BYTE* char31 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x09;
-    BYTE* char32 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x0A;
-    BYTE* char33 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x44;
-    BYTE* char34 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x46;
-    BYTE* char35 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x3B;
-    BYTE* char36 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x3D;
-    BYTE* char37 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x39;
-    BYTE* char38 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x3A;
-    BYTE* char39 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x33;
-    BYTE* char40 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x34;
-    BYTE* char41 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x29;
-    BYTE* char42 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x36;
-    BYTE* char43 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x37;
-    BYTE* char44 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x38;
-    BYTE* char45 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x08;
-    BYTE* char46 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x12;
-    BYTE* char47 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x49;
-    BYTE* char48 =      *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + 0x4A;
-    BYTE* characters[48] = {batman, robin, brucew, char04, char05, char06, char07, char08, char09, char10, char11, char12, char13, char14, char15, char16, char17, char18, char19, char20, char21, char22, char23, char24, char25, char26, char27, char28, char29, char30, char31, char32, char33, char34, char35, char36, char37, char38, char39, char40, char41, char42, char43, char44, char45, char46, char47, char48};
+    
     // 7 byte add function
     // subtracting offset UP1 and adding 0x20 added by update 1. this means that the new code added in update 1 is after the damage code.
     // U0 -> BASE_ADDR + 1C356D
@@ -299,6 +289,18 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     BYTE* dmgFuncAddr = (BYTE*)(BASE_ADDR + (0x20) + (0x1C356D)); // not the damage function instead it's a pointer to an add function that adds -1 to health.
     
 
+    // Message box code nops
+
+    // code that sets the hint id. LEGOBatman.exe+1D522D - 89 35 246FAC00        - mov [LEGOBatman.exe+6C6F24],esi
+    WriteCode((BYTE*)(BASE_ADDR + 0x001D522D),(BYTE[]){0x89,0x35,0x24,0x6F,0xAC,0x00},NOP,6);
+    // code that sets the hint id to 0 when timer > ~7.5. LEGOBatman.exe+1D5574 - C7 05 246FAC00 00000000 - mov [LEGOBatman.exe+6C6F24],00000000
+    WriteCode((BYTE*)(BASE_ADDR + 0x001D5574),(BYTE[]){0xC7,0x05,0x24,0x6F,0xAC,0x00,0x00,0x00,0x00,0x00},NOP,10);
+    // code that lowers timer. LEGOBatman.exe+1D5550 - D9 1D 346FAC00        - fstp dword ptr [LEGOBatman.exe+6C6F34]
+    WriteCode((BYTE*)(BASE_ADDR + 0x001D5550),(BYTE[]){0xD9,0x1D,0x34,0x6F,0xAC,0x00},NOP,6);
+    // code that resets timer to 0. LEGOBatman.exe+1D5221 - D9 15 346FAC00        - fst dword ptr [LEGOBatman.exe+6C6F34]
+    WriteCode((BYTE*)(BASE_ADDR + 0x001D5221),(BYTE[]){0xD9,0x15,0x34,0x6F,0xAC,0x00},NOP,6);
+    // code that resets time to 0 on level change? LEGOBatman.exe+1D4E3D - D9 15 346FAC00        - fst dword ptr [LEGOBatman.exe+6C6F34]
+    WriteCode((BYTE*)(BASE_ADDR + 0x001D4E3D),(BYTE[]){0xD9,0x15,0x34,0x6F,0xAC,0x00},NOP,6);
 
 
     /*////////////////////////////////
@@ -307,47 +309,53 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
     // AP testing.
-    //TODO: will need to be fool-proofed, remove duplicate code, and probably can modularize this, but testing initial connection & proof of concept
-    std::ifstream connectionFile("APConnect.txt");
-
-    std::string serverURL {};
-    std::getline(connectionFile, serverURL); //to skip pass the header line
-    std::getline(connectionFile, serverURL);
-    std::string serverPort {};
-    std::getline(connectionFile, serverPort);
-    std::string playerName {};
-    std::getline(connectionFile, playerName);
-    std::string password = ""; //TODO: to test how a password with an archi server works. Initial read through of the documentation appears to have the server tell the player?
-    if(!connectionFile.eof())
-        std::getline(connectionFile, password);   
-        
-    //from what I can find in the AP documentation, UUID is a Unique identifier for player client. 
-    //the ap client library has 2 input parameters, uuidFile & host (both &strings)
-    //host defaults to "" if not entered. Dark Souls III does not pass host into the function
-
-    std::string uuid = ap_get_uuid(UUID_FILE); 
-    std::string URI = serverURL + ":" + serverPort; // {SERVER_IP}:{SERVER_PORT}
-    connectionFile.close();
-    //ap = new APClient(uuid,"Manual_LegoBatmanTheVideoGame_SnolidIce"/*"Lego Batman: The Videogame"*/,URI);
+    LB1AP_Connect();
     
-
-    //testing set up of uuid, URI & file read
-    file << "UUID is: " << uuid << std::endl;
-    file << "URI is: " << URI << std::endl;
-    file << "Player name is: " << playerName << std::endl;
-    file << "Password is: " << password << std::endl;
-
     //Turn off damage player function
-    file << "Patching damage function..." << std::endl;
-    WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
-    file << "Patched damage function." << std::endl;
+    //file << "Patching damage function..." << std::endl;
+    //WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
+    //file << "Patched damage function." << std::endl;
 
-    // for (DWORD i = 0; i < 48; i++) {
-    //     if (*(characters[i]) == 0x03) *(characters[i]) = 0x00;
-    //     //if (i%2 == 0) *(characters[i]) = 0x03;
-    // }
+    ///////// TODO: do a loop of all memory for missed checks.
 
-    // int cou = -1; // count for cycling
+
+    // WARN: temporary setup for testing.
+
+    for (size_t i = 0; i < 32; i++)
+    {
+        *game.levels.levelUnlocked[i] = 1;
+        *game.levels.levelBeaten[i] = 1;
+    }
+    
+    for (size_t i = 0; i < game.characters.characterCount; i++)
+    {
+        //std::cout << "char " << std::hex << (int) game.characters._characterBytes[i] << std::endl;
+        *game.characters._characterBytes[i] = 0x03;
+        //*game.characters[i] = 0x03;
+    }
+
+    // std::cout << "extra purch " << std::hex
+    //       << reinterpret_cast<uintptr_t>(&game.extraPurchased)
+    //       << std::endl;
+
+    // purchase all kits.
+    for (size_t i = 0; i < 21; i++)
+    {
+        game.extraPurchased |= (1 << i);
+    }
+    // auto minkit detector on
+    *game.extraEnabled[ExtraName::Minikit_Detector] = 1;
+    
+    std::cout << "suit unlock " << std::hex
+          << reinterpret_cast<uintptr_t>(&game.suitUnlocked1)
+          << std::endl;
+
+    // unlock all suits
+    for (size_t i = 0; i < 10; i++) 
+    {
+        game.suitUnlocked1 |= (WORD)(1 << i);
+        game.suitUnlocked2 |= (WORD)(1 << i);
+    }
 
     /*//////////////////////////////
     -////  Pre Loop Setup End  ////-
@@ -355,33 +363,56 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
     file << "About to loop." << std::endl;
-    file.close(); // close file before infinite loop.
+
+    DWORD loops = 0;
+    SubLevelKits* saveKitData = game.levels.levelKitSaveData;
+    SubLevelKits levelKitData;
     while (true) {
-        // file.open("a.txt", std::ios::app);
-        // file << std::hex << (int) batman << " -> " << (int) (*batman) << std::endl; // write whether enabled.
-        // file.close();
         
+        loopTest(game,loops);
 
         // AP STUFF
 
-
-
-
-
-        // cou = cou % 3;
-        // for (DWORD i = 0; i < 48; i++) {
-        //     if ((i+cou+(i/12))%3 == 0) {// even
-        //         *(characters[i]) = 0x03;
-        //         //if (*(characters[i]) == 0x00) *(characters[i]) = 0x03; else *(characters[i]) = 0x00;
-        //     } else {
-        //         *(characters[i]) = 0x00;
-        //         //if (*(characters[i]) == 0x03) *(characters[i]) = 0x00; else *(characters[i]) = 0x03;
-        //     }
+        // if(*levelBeatenH1_1 == 1 && LB1AP_location_checked(15868690003) == false){ //TODO: make this a better check rather than an if statement
+        //     LB1AP_send_item(15868690003); //TODO: make this not hardcoded
+        //     LB1AP_CheckLocation(15868690003);
+        //     printf("Sent levelBeatenH1_1\n");
         // }
-        // cou++;
+        for (BYTE i = game.inLevelKitCountPrev; i < game.inLevelKitCount; i++)
+        {
+            // new kit picked up.
+            std::cout  
+                << (int) *game.inLevelKitLocations[i] << " " << game.inLevelKits[i] << " : "
+                << (int) game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i])
+                << std::endl;
+            
+            LB1AP_send_item(400000 + 100 + game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i]));
+            // levelKitData = game.levels.levelKitSaveData[*game.inLevelKitLocations[i]];
+            // strncpy(levelKitData.kits[levelKitData.count], game.inLevelKits[i], 8);
+            game.inLevelKitCountPrev++;
+        } 
+        if (game.inLevelKitCount < game.inLevelKitCountPrev) {
+            // left level
+            // TODO: test
+            game.inLevelKitCountPrev = 0;
+        }
 
-        Sleep(500);
+        //LB1AP_GetMessage();
+        // if (AP_IsMessagePending()) {
+
+        //     AP_Message* message = AP_GetLatestMessage();
+        //     std::cout << message->text << std::endl;
+
+        //     AP_ClearLatestMessage();
+        // }
+        messageBox.tick();
+
+        Sleep(50);
+        loops++;
     }
+
+    file.close();
+    b_file.close(); // close file before infinite loop. //temporarily moved to test sending/receiving items via archi
 
     // Never reached but good practice
     FreeLibraryAndExitThread(hSelf, 0);
