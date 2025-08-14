@@ -19,6 +19,8 @@
 #include <fstream>
 #include <cstring>
 #include <windows.h>
+#include <chrono>
+#include <filesystem>
 
 #define LB1AP_LOCATION_ID_OFFSET 400000 //TODO: work with snolid to get this adjusted - ideally they are all sequential
 #define LB1AP_ITEM_ID_OFFSET 400000 //TODO: minikits are currently ID 0, to adjust it to be after the array
@@ -29,6 +31,7 @@ void LB1AP_Init(const char* ip, const char* player_name, const char* passwd);
 void LB1AP_CheckLocation(int64_t location_id);
 bool LB1AP_location_checked(int64_t location_id);
 void LB1AP_send_item(int64_t location_id);
+void LB1AP_receiveItem(int itemID, bool notify);
 void LB1AP_reset();
 void LB1AP_Complete();
 void LB1AP_Connect();
