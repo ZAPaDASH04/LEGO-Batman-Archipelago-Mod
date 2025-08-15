@@ -118,6 +118,7 @@ void LB1AP_Connect(){
                 break;
             }
             Sleep(2000); //wait 2 second before trying again
+            std::cout << "Waiting for connection about to loop" << std::endl;
         }
     }
 }
