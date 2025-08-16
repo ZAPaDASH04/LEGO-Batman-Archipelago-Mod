@@ -3,6 +3,8 @@ With assistance from:
 - Snolid Ice
 - Spencenox
 
+Special shout out to N00byKing for developing the client library to connect to the Archipelago Server and the other SM64 Devs for being an good example of its implementation
+
 This alpha test is essentially a kits only test. A kit hunt if you will. All minikits are in the item pool. When you run the program it will run some setup for the sake of testing such as unlocking all levels, characters, suits, and red bricks to make the hunt faster.
 ## Important Notes
 - You must use unmodified steam version of LEGO Batman: The Videogame
@@ -35,4 +37,5 @@ This alpha test is essentially a kits only test. A kit hunt if you will. All min
 - Check that a message appeared in the hint box indicating that the program connected.
 - Check the AP game webpage to see that you have connected.
 - Get those kits!
+
 
