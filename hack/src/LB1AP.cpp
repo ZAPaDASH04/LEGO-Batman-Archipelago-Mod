@@ -61,7 +61,7 @@ void LB1AP_reset(){
 }
 
 void LB1AP_CheckWinCon(){
-    if(minikits == 5){
+    if(minikits == 300){
         LB1AP_Complete();
     }
 }
