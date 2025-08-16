@@ -181,7 +181,7 @@ DWORD Table::operator[](BYTE* name)
 Levels::Levels(DWORD BASE_ADDR) :
     BASE_ADDR(BASE_ADDR)
 {
-    for (size_t i = 0; i < 32; i++) {
+    for (size_t i = 0; i < 35; i++) {
         // 
         levelUnlocked[i] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C6 + i*0x0C);
         levelBeaten[i] =   *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C5 + i*0x0C);

@@ -42,4 +42,7 @@ public:
 
     void setText(std::string text); // TODO: test
     void tick(); // TODO: test
+    void holdMessage();
+    void holdMessage(std::string text);
+    void releaseMessage();
  };

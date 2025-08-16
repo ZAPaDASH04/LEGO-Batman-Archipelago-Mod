@@ -309,7 +309,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
     // AP testing.
+    messageBox.holdMessage("Holy Archipelago Batman!!! Attempting to connect...");
     LB1AP_Connect();
+    messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
+    messageBox.releaseMessage();
+
     
     //Turn off damage player function
     //file << "Patching damage function..." << std::endl;
@@ -321,8 +325,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     // WARN: temporary setup for testing.
 
-    for (size_t i = 0; i < 32; i++)
+    for (size_t i = 0; i < 35; i++)
     {
+        //std::cout << std::hex << (void*)game.levels.levelUnlocked[i] << std::endl;
         *game.levels.levelUnlocked[i] = 1;
         *game.levels.levelBeaten[i] = 1;
     }

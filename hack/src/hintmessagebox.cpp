@@ -29,7 +29,7 @@ HintMessageBox::HintMessageBox(DWORD BASE_ADDR):
     messageSpacing(1.0),
     hold(false)
 {
-    setText("Holy Archipelago Batman!!!");
+    // setText("Holy Archipelago Batman!!! Attempting to connect...");
     std::cout << "initializing timer" << std::endl;
     timer = 0;
     timerPrev = timer;
@@ -75,13 +75,15 @@ void HintMessageBox::tick() {
         timer = -2.0;
     }
 
+    if (hold) return;
+
 
     // subtract timer.
     // check if hint has expired
     if (timer >= 7.5 + messageSpacing) {
         // next hint.
         AP_Message* message = LB1AP_GetMessage();
-        if ( message != nullptr) {
+        if (message != nullptr) {
             std::cout << "next hint" << std::endl;
             // there is a new message
             switch (message->type)
@@ -131,4 +133,28 @@ void HintMessageBox::tick() {
     }
 }
 
+void HintMessageBox::holdMessage()
+{
+    hold = true;
+}
 
+void HintMessageBox::holdMessage(std::string text)
+{
+    if (text.empty()) { // TODO: is this correct?
+        std::cerr << "holdMessage text was empty." << std::endl;
+        return;
+    }
+    // may want to also store/restore previous message if used for other things.
+    shownHint = hintId;
+    setText(text);
+    //setText("Holy Archipelago Batman!!! Attempting to connect...");
+    std::cout << "holdMessage clearing timer" << std::endl;
+    timer = 0;
+    timerPrev = timer;
+    hold = true;
+}
+
+void HintMessageBox::releaseMessage()
+{
+    hold = false;
+}

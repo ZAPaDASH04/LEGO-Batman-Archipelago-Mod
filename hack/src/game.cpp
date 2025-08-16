@@ -45,7 +45,6 @@ Game::Game(DWORD BASE_ADDR) :
     {
         inLevelKits[i] = ((char*)(BASE_ADDR + 0x006D00E0 + i*0x0C)); // TODO: test. size is uncertain
         inLevelKitLocations[i] = ((BYTE*)(BASE_ADDR + 0x006D00E8 + i*0x0C)); // TODO: test. size is uncertain
-        
 
     }
 
