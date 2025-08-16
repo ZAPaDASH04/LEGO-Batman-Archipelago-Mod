@@ -1,3 +1,6 @@
+# These make files don't take account for changed .h files.
+
+
 # Program Name
 PROGRAM_NAME = ap.dll # lb1mod.dll
 
