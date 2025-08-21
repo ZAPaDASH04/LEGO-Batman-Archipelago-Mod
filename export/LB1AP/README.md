@@ -17,17 +17,17 @@ This alpha test is essentially a kits only test. A kit hunt if you will. All min
 #### Onetime Setup
 
 - Install [Reloaded II](https://reloaded-project.github.io/Reloaded-II/QuickStart)
-- Add lego batman either through setup or by clicking the + on the left. Must use the exe found in the legobatman folder of steam (LEGOBatman.exe).
+- Add lego batman either through setup or by clicking the + on the left. Must use the exe found in the steam legobatman folder (LEGOBatman.exe).
 - If you don't already have the mod "Reloaded II Server", click the Download Mods button in the top left and search for "Reloaded II Server" made by Sewer56 and download it.
 - Navigate to the "Mods" folder in wherever you installed Reloaded II (usually desktop .\Reloaded-II\Mods)
 - Move the 2 folders "legobatman1.apconnectsupport" and "legobatman1.apsupport" into the Reloaded II Mods folder.
 - Reloaded should be setup now.
-- Lastly move APConnect.txt from this folder to be in the same folder as LEGOBatman.exe (Steam folder, not Reloaded folder).
-    - You can easily access this folder by right clicking the game in Steam, "Manage", "Browse local files"
+- Lastly move APConnect.txt from this folder to be in the Steam folder that has the LEGOBatman.exe (Steam folder, NOT Reloaded folder).
+    - You can easily access this folder by right clicking the game in Steam, "Manage", then "Browse local files".
   
 #### Setup AP game
-- Set up an AP game using the lego_batman_1.apworld (Alpha test is not intended for multiple players or serious games as currently there are no spheres or logic. You can play multiple games if you wish.)
-- If you aren't familiar with archipelago, please use the command &apworld and/or &template in the archipelago discord server.
+- Set up an AP game using the lego_batman_1.apworld (Alpha test is not intended for multiple players or serious games as currently there are no spheres or logic. You can play with multiple games if you wish.)
+    - If you aren't familiar with archipelago, please use the command &apworld and/or &template in the archipelago discord server.
 - Open the APConnect.txt file (should be in the same folder as LEGOBatman.exe) and add the AP info. follow instructions on the first line.
 - Run lego batman (tested methods: through steam, directly through the LEGOBatman.exe, or using DXWND).
 - Make a new game and **EXIT THE LEVEL**. If you already have an AP game then just load the save.
