@@ -28,7 +28,6 @@ This alpha test is essentially a kits only test. A kit hunt if you will. All min
 #### Setup AP game
 - Set up an AP game using the lego_batman_1.apworld (Alpha test is not intended for multiple players or serious games as currently there are no spheres or logic. You can play multiple games if you wish.)
 - If you aren't familiar with archipelago, please use the command &apworld and/or &template in the archipelago discord server.
-
 - Open the APConnect.txt file (should be in the same folder as LEGOBatman.exe) and add the AP info. follow instructions on the first line.
 - Run lego batman (tested methods: through steam, directly through the LEGOBatman.exe, or using DXWND).
 - Make a new game and **EXIT THE LEVEL**. If you already have an AP game then just load the save.
