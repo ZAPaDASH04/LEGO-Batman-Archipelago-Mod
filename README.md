@@ -10,7 +10,7 @@ This alpha test is essentially a kits only test. A kit hunt if you will. All min
 - You must use unmodified steam version of LEGO Batman: The Videogame
 - You will be using a 3rd party tool, a mod loader called Reloaded II, to run. Installation instructions are included in the instructions below.
 - Make sure to pay attention to which locations are sent to verify it sends the correct location. (check that kit locations aren't being missed or swapped)
-- debug messages are logged in a.txt (ours) and b.txt (ap's) both of which will be located in the LEGOBatman.exe folder.
+- Debug messages are logged in a.txt (ours) and b.txt (ap's) both of which will be located in the LEGOBatman.exe folder.
 
 ### Instructions
 
@@ -22,10 +22,12 @@ This alpha test is essentially a kits only test. A kit hunt if you will. All min
 - Navigate to the "Mods" folder in wherever you installed Reloaded II (usually desktop .\Reloaded-II\Mods)
 - Move the 2 folders "legobatman1.apconnectsupport" and "legobatman1.apsupport" into the Reloaded II Mods folder.
 - Reloaded should be setup now.
-- Lastly move APConnect.txt from this folder to be in the same folder as LEGOBatman.exe.
+- Lastly move APConnect.txt from this folder to be in the same folder as LEGOBatman.exe (Steam folder, not Reloaded folder).
+    - You can easily access this folder by right clicking the game in Steam, "Manage", "Browse local files"
   
 #### Setup AP game
 - Set up an AP game using the lego_batman_1.apworld (Alpha test is not intended for multiple players or serious games as currently there are no spheres or logic. You can play multiple games if you wish.)
+- If you aren't familiar with archipelago, please use the command &apworld and/or &template in the archipelago discord server.
 
 - Open the APConnect.txt file (should be in the same folder as LEGOBatman.exe) and add the AP info. follow instructions on the first line.
 - Run lego batman (tested methods: through steam, directly through the LEGOBatman.exe, or using DXWND).
