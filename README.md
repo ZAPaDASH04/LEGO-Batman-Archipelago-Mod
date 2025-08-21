@@ -3,16 +3,16 @@ With assistance from:
 - Snolid Ice
 - Spencenox
 
-Special shout out to N00byKing for developing the client library to connect to the Archipelago Server and the other SM64 Devs for being an good example of its implementation
+Special shout out to N00byKing for developing the APCpp client library to connect to the Archipelago Server and the other SM64 Devs for being a good example of its implementation.
 
 This alpha test is essentially a kits only test. A kit hunt if you will. All minikits are in the item pool. When you run the program it will run some setup for the sake of testing such as unlocking all levels, characters, suits, and red bricks to make the hunt faster.
 ## Important Notes
-- You must use unmodified steam version of LEGO Batman: The Videogame
+- You must use unmodified steam version of [LEGO Batman: The Videogame](https://store.steampowered.com/app/21000/LEGO_Batman_The_Videogame).
 - You will be using a 3rd party tool, a mod loader called Reloaded II, to run. Installation instructions are included in the instructions below.
 - Make sure to pay attention to which locations are sent to verify it sends the correct location. (check that kit locations aren't being missed or swapped)
 - Debug messages are logged in a.txt (ours) and b.txt (ap's) both of which will be located in the LEGOBatman.exe folder.
 
-### Instructions
+## Instructions
 
 #### Onetime Setup
 
