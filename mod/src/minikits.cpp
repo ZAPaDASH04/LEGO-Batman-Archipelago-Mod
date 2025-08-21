@@ -413,7 +413,7 @@ Minikits::Minikits(DWORD BASE_ADDR) :
         {{0xCD, "mk_1"      }, 296},
         {{0xCD, "mK_FRZ"    }, 297},
         {{0xCE, "mK_FBEL"   }, 298},
-        {{0xCE, "mk_BELL"   }, 299}
+        {{0xCE, "mK_BELL"   }, 299}
     };
 }
 
