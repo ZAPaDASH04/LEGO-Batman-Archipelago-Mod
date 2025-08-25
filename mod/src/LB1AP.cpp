@@ -13,12 +13,16 @@
 bool lb1AP_locations[LB1AP_NUM_LOCS_AND_ITEMS]; //array with the total number of locations.
 bool lb1AP_items[LB1AP_NUM_LOCS_AND_ITEMS]; //array with the in game items
 int minikits = 0; //number of minikits received
+int lb1_End_Goal = 0; //0 = minikits which is currently default
+int lb1_minikits_to_win = 250; //number of minikits required to win. Default is 250
 
 void LB1AP_Init(const char* serverIP, const char* playerName, const char* password){
     AP_Init(serverIP, GAME_NAME, playerName, password);
     AP_SetItemClearCallback(&LB1AP_reset); //used to clear the state of the game. Called when connecting to server, not sure why but implemented like SM64 did
     AP_SetItemRecvCallback(LB1AP_receiveItem); //I believe this is what to do when items are received TODO: break out into own function
     AP_SetLocationCheckedCallback(&LB1AP_CheckLocation); //What to do when a location is checked
+    AP_RegisterSlotDataIntCallback("EndGoal", &LB1AP_SetCompletionType); //read slot data for completion type
+    AP_RegisterSlotDataIntCallback("MinikitsToWin", &LB1AP_SetMinikitsToWin); //read slot data for number of minikits to win
     AP_Start();
 }
 
@@ -61,7 +65,7 @@ void LB1AP_reset(){
 }
 
 void LB1AP_CheckWinCon(){
-    if(minikits == 300){
+    if(minikits == lb1_minikits_to_win && lb1_End_Goal == 0){
         LB1AP_Complete();
     }
 }
@@ -156,3 +160,16 @@ AP_Message* LB1AP_GetMessage(){
     return msg;
 }
 
+void LB1AP_SetCompletionType(int type){
+    lb1_End_Goal = type;
+    std::cout << "Completion type set to " << lb1_End_Goal << std::endl;
+}
+
+void LB1AP_SetMinikitsToWin(int num){
+    if(num < 50 || num > 300){
+        std::cout << "Could not read the number of minikits to win. Please report this to the devs." << std::endl;
+        return;
+    }
+    lb1_minikits_to_win = num;
+    std::cout << "Minikits to win set to " << lb1_minikits_to_win << std::endl;
+}
