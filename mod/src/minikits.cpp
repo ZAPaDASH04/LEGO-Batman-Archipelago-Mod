@@ -81,8 +81,8 @@ Minikits::Minikits(DWORD BASE_ADDR) :
         // 33 CARROTB
         // 33 CARROTC"
         {{0x33, "MINI09"    },  37},
-        {{0x33, "CARROTB"   },  37},
-        {{0x33, "CARROTC"   },  37},
+        {{0x31, "CARROTB"   },  37}, // fixed sublevel
+        {{0x32, "CARROTC"   },  37}, // fixed sublevel
         {{0x33, "m_pup1"    },  38},        
         {{0x33, "MINI10"    },  39},        
         {{0x48, "M_BOLL"    },  40},        
@@ -129,7 +129,7 @@ Minikits::Minikits(DWORD BASE_ADDR) :
         {{0x75, "MK_DRAG"   },  65},
         {{0x75, "PIPE_MK"   },  66},
         {{0x75, "BUOYMK2"   },  67},
-        {{0x75, "BUOYMK3"   },  67},
+        {{0x74, "BUOYMK3"   },  67}, // fixed sublevel
         {{0x75, "BUOYMK1"   },  67},
         {{0x77, "mk_1"      },  68},
         {{0x77, "MK_DB"     },  69},
@@ -188,12 +188,14 @@ Minikits::Minikits(DWORD BASE_ADDR) :
         {{0xA8, "MINI_7"    }, 117},
         {{0xA8, "MINI_8"    }, 118},
         {{0xA8, "MINI_10"   }, 119},
-        {{0xAC, "m_pup6"    }, 120},
-        {{0xAC, "m_pup2"    }, 121},
+        //{{0xAC, "m_pup6"    }, 120},
+        {{0xAC, "m_pup2"    }, 120},
+        {{0xAC, "m_pup6"    }, 121},
         {{0xAC, "m_pupER"   }, 122},
         {{0xAC, "m_pup4"    }, 123},
         {{0xAD, "mk_0"      }, 124},
-        {{0xAD, "mk_2"      }, 125},
+        // {{0xAD, "mk_2"      }, 125},
+        {{0xAD, "mk_1"      }, 125},
         {{0xAE, "GAR_MK1"   }, 126},
         {{0xAE, "GAR_MK2"   }, 126},
         {{0xAE, "GAR_MK3"   }, 126},
@@ -206,7 +208,7 @@ Minikits::Minikits(DWORD BASE_ADDR) :
         {{0xB8, "m_tur2"    }, 132},
         {{0xB8, "m_tur3"    }, 132},
         {{0xB9, "AQUARIU"   }, 133},
-        {{0xB9, "COP_KI"    }, 134},
+        {{0xB9, "COP_KIT"   }, 134}, // missed the T
         {{0xBA, "W_KIT"     }, 135},
         {{0xBA, "HI_KIT"    }, 136},
         {{0xBA, "m_pup2"    }, 137},
