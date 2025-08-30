@@ -1,7 +1,12 @@
+# Lego Batman: The Videogame for Archipelago
 This is instructions for the alpha test of Lego Batman: The Videogame for Archipelago multiworld randomizer made by ZAPaDASH04 and Jr (jr5768).
 With assistance from:
 - Snolid Ice
 - Spencenox
+
+Special thanks to our dedicated play testers:
+- WhirlingWinds - first to goal v0.1.
+- and many more...
 
 Special shout out to N00byKing for developing the APCpp client library to connect to the Archipelago Server and the other SM64 Devs for being a good example of its implementation.
 
