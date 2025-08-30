@@ -14,7 +14,7 @@ bool lb1AP_locations[LB1AP_NUM_LOCS_AND_ITEMS]; //array with the total number of
 bool lb1AP_items[LB1AP_NUM_LOCS_AND_ITEMS]; //array with the in game items
 int minikits = 0; //number of minikits received
 int lb1_End_Goal = 0; //0 = minikits which is currently default
-int lb1_minikits_to_win = 250; //number of minikits required to win. Default is 250
+int lb1_minikits_to_win = 200; //number of minikits required to win. Default is 250
 
 void LB1AP_Init(const char* serverIP, const char* playerName, const char* password){
     AP_Init(serverIP, GAME_NAME, playerName, password);
@@ -65,7 +65,7 @@ void LB1AP_reset(){
 }
 
 void LB1AP_CheckWinCon(){
-    if(minikits == lb1_minikits_to_win && lb1_End_Goal == 0){
+    if(minikits >= lb1_minikits_to_win && lb1_End_Goal == 0){
         LB1AP_Complete();
     }
 }
