@@ -14,7 +14,8 @@ bool lb1AP_locations[LB1AP_NUM_LOCS_AND_ITEMS]; //array with the total number of
 bool lb1AP_items[LB1AP_NUM_LOCS_AND_ITEMS]; //array with the in game items
 int minikits = 0; //number of minikits received
 int lb1_End_Goal = 0; //0 = minikits which is currently default
-int lb1_minikits_to_win = 200; //number of minikits required to win. Default is 250
+int lb1_minikits_to_win = 200; //number of minikits required to win. Default is 200
+int lb1_levels_to_win = 20; //number of levels required to win. Default is 20
 
 void LB1AP_Init(const char* serverIP, const char* playerName, const char* password){
     AP_Init(serverIP, GAME_NAME, playerName, password);
@@ -23,6 +24,7 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
     AP_SetLocationCheckedCallback(&LB1AP_CheckLocation); //What to do when a location is checked
     AP_RegisterSlotDataIntCallback("EndGoal", &LB1AP_SetCompletionType); //read slot data for completion type
     AP_RegisterSlotDataIntCallback("MinikitsToWin", &LB1AP_SetMinikitsToWin); //read slot data for number of minikits to win
+    AP_RegisterSlotDataIntCallback("LevelsToWin", &LB1AP_SetLevelsToWin); //read slot data for number of levels to win
     AP_Start();
 }
 
@@ -172,4 +174,13 @@ void LB1AP_SetMinikitsToWin(int num){
     }
     lb1_minikits_to_win = num;
     std::cout << "Minikits to win set to " << lb1_minikits_to_win << std::endl;
+}
+
+void LB1AP_SetLevelsToWin(int num){
+    if(num < 5 || num > 30){
+        std::cout << "Could not read the number of levels to win. Please report this to the devs." << std::endl;
+        return;
+    }
+    lb1_levels_to_win = num;
+    std::cout << "Levels to win set to " << lb1_levels_to_win << std::endl;
 }

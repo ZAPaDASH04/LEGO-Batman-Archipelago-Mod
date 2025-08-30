@@ -41,3 +41,4 @@ const char* readFile(std::ifstream& file);
 AP_Message* LB1AP_GetMessage();
 void LB1AP_SetCompletionType(int type);
 void LB1AP_SetMinikitsToWin(int num);
+void LB1AP_SetLevelsToWin(int num);
