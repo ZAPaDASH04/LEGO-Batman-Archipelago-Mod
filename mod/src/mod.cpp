@@ -434,6 +434,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     << "new level beaten " << (int) i 
                     << std::endl;
                 LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 425 + i);
+                game.levels.levelBeatenOld[i] = *game.levels.levelBeaten[i];
             }
         }
         
