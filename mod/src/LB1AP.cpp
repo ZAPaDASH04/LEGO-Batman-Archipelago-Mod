@@ -27,8 +27,8 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
     AP_SetItemClearCallback(&LB1AP_reset); //used to clear the state of the game. Called when connecting to server, not sure why but implemented like SM64 did
     AP_SetItemRecvCallback(LB1AP_receiveItem); //I believe this is what to do when items are received TODO: break out into own function
     AP_SetLocationCheckedCallback(&LB1AP_CheckLocation); //What to do when a location is checked
-    // AP_SetNotify(AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal", AP_DataType::Int); //Used to make sure Level Complete win condition is properly calculated between sessions
-    // AP_RegisterSetReplyCallback(&LB1AP_SetReplyHanlder); //Set reply hanlder for Level complete win condition
+    AP_SetNotify(AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal", AP_DataType::Int); //Used to make sure Level Complete win condition is properly calculated between sessions
+    AP_RegisterSetReplyCallback(&LB1AP_SetReplyHanlder); //Set reply hanlder for Level complete win condition
     AP_RegisterSlotDataIntCallback("EndGoal", &LB1AP_SetCompletionType); //read slot data for completion type
     AP_RegisterSlotDataIntCallback("MinikitsToWin", &LB1AP_SetMinikitsToWin); //read slot data for number of minikits to win
     AP_RegisterSlotDataIntCallback("LevelsToWin", &LB1AP_SetLevelsToWin); //read slot data for number of levels to win
@@ -41,11 +41,11 @@ void LB1AP_CheckLocation(int64_t location_id){ //function to mark a location che
 
 void LB1AP_send_item(int64_t location_id){  //function to send an item
     AP_SendItem(location_id);
-    // location_id -= LB1AP_LOCATION_ID_OFFSET;
-    // if(location_id >= 425 && location_id < 455){
-    //     printf("Calling Level Complete request function\n");
-    //     LB1AP_LevelComplete();
-    // }
+    location_id -= LB1AP_LOCATION_ID_OFFSET;
+    if(location_id >= 425 && location_id < 455){
+        printf("Calling Level Complete request function\n");
+        LB1AP_LevelComplete();
+    }
 }
 
 void LB1AP_receiveItem(int itemID, bool notify){
@@ -222,28 +222,28 @@ void LB1AP_SetLevelsToWin(int num){
     std::cout << "Levels to win set to " << lb1_levels_to_win << std::endl;
 }
 
-// void LB1AP_SetReplyHanlder(AP_SetReply reply){
-//     if(reply.key == AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal"){
-//         switch(lb1_End_Goal){
-//             case 0: //minikits
-//                 break;
-//             case 1: //levels
-//                 printf("Number of levels completed: %d\n", *(int*)reply.value);
-//                 if(*(int*)reply.value >= lb1_levels_to_win) LB1AP_Complete();
-//                 break;
-//         }
-//     }
-//     return;
-// }
+void LB1AP_SetReplyHanlder(AP_SetReply reply){
+    if(reply.key == AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal"){
+        switch(lb1_End_Goal){
+            case 0: //minikits
+                break;
+            case 1: //levels
+                printf("Number of levels completed: %d\n", *(int*)reply.value);
+                if(*(int*)reply.value >= lb1_levels_to_win) LB1AP_Complete();
+                break;
+        }
+    }
+    return;
+}
 
-// void LB1AP_LevelComplete(){
-//     AP_SetServerDataRequest req;
-//     req.key = AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal";
-//     int def_val = 0;
-//     req.default_value = &def_val;
-//     req.type = AP_DataType::Int;
-//     req.want_reply = true;
-//     int flag = 1;
-//     req.operations = std::vector<AP_DataStorageOperation>{{{"add", &flag}}};
-//     AP_SetServerData(&req);
-// }
+void LB1AP_LevelComplete(){
+    AP_SetServerDataRequest req;
+    req.key = AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal";
+    int def_val = 0;
+    req.default_value = &def_val;
+    req.type = AP_DataType::Int;
+    req.want_reply = true;
+    int flag = 1;
+    req.operations = std::vector<AP_DataStorageOperation>{{{"add", &flag}}};
+    AP_SetServerData(&req);
+}
