@@ -27,11 +27,13 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
     AP_SetItemClearCallback(&LB1AP_reset); //used to clear the state of the game. Called when connecting to server, not sure why but implemented like SM64 did
     AP_SetItemRecvCallback(LB1AP_receiveItem); //I believe this is what to do when items are received TODO: break out into own function
     AP_SetLocationCheckedCallback(&LB1AP_CheckLocation); //What to do when a location is checked
-    AP_SetNotify(AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal", AP_DataType::Int); //Used to make sure Level Complete win condition is properly calculated between sessions
+    AP_SetNotify(AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal", AP_DataType::Int); //Used to make sure Level Complete win condition is properly calculated between sessions //WARNING: if levels are sent multiple times, may result in completion early
     AP_RegisterSetReplyCallback(&LB1AP_SetReplyHanlder); //Set reply hanlder for Level complete win condition
     AP_RegisterSlotDataIntCallback("EndGoal", &LB1AP_SetCompletionType); //read slot data for completion type
     AP_RegisterSlotDataIntCallback("MinikitsToWin", &LB1AP_SetMinikitsToWin); //read slot data for number of minikits to win
     AP_RegisterSlotDataIntCallback("LevelsToWin", &LB1AP_SetLevelsToWin); //read slot data for number of levels to win
+    AP_RegisterSlotDataIntCallback("MinikitSanity", &LB1AP_SetMinikitSanity); //read slot data for minikit sanity setting
+    AP_RegisterSlotDataIntCallback("TrueStatusSanity", &LB1AP_SetTrueStatusSanity); //read slot data for true status sanity setting
     AP_Start();
 }
 
@@ -220,6 +222,24 @@ void LB1AP_SetLevelsToWin(int num){
     }
     lb1_levels_to_win = num;
     std::cout << "Levels to win set to " << lb1_levels_to_win << std::endl;
+}
+
+void LB1AP_SetMinikitSanity(int num){
+    if(num < 0 || num > 1){
+        std::cout << "Could not read the minikit sanity setting. Please report this to the devs." << std::endl;
+        return;
+    }
+    lb1_minikit_sanity = num;
+    std::cout << "Minikit sanity set to " << lb1_minikit_sanity << std::endl;
+}
+
+void LB1AP_SetTrueStatusSanity(int num){
+    if(num < 0 || num > 1){
+        std::cout << "Could not read the true status sanity setting. Please report this to the devs." << std::endl;
+        return;
+    }
+    lb1_true_status_sanity = num;
+    std::cout << "True status sanity set to " << lb1_true_status_sanity << std::endl;
 }
 
 void LB1AP_SetReplyHanlder(AP_SetReply reply){
