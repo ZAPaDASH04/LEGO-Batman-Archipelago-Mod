@@ -14,6 +14,8 @@ Special shout out to N00byKing for developing the APCpp client library to connec
 - You must use unmodified steam version of [LEGO Batman: The Videogame](https://store.steampowered.com/app/21000/LEGO_Batman_The_Videogame).
 - You will be using a 3rd party tool, a mod loader called Reloaded II, to run. Installation instructions are included in the instructions below.
 - Debug messages are logged in a.txt (ours) and b.txt (ap's) both of which will be located in the LEGOBatman.exe folder.
+- This mod is in Alpha. If you are planning on playing it with other people, please be aware that it can break or not work properly.
+- Make sure to pay attention to which locations are sent to verify that it sends the correct location (i.e. that locations aren't skipped or swapped). 
 
 ## Instructions
 
