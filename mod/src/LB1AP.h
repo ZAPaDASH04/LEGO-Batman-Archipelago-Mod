@@ -22,11 +22,21 @@
 #include <chrono>
 #include <iomanip>
 #include <filesystem>
+#include <queue>
+
+
+#ifndef LB1AP_H
+#define LB1AP_H
 
 #define LB1AP_LOCATION_ID_OFFSET 400000 
 #define LB1AP_ITEM_ID_OFFSET 400000 
 #define LB1AP_NUM_LOCS_AND_ITEMS 500 //number of total locations and items TODO: update once fully implemented
 #define GAME_NAME "Lego Batman: The Video Game"
+
+// extern std::queue<int> receiveQueue;
+
+#endif
+
 
 void LB1AP_Init(const char* ip, const char* player_name, const char* passwd);
 void LB1AP_CheckLocation(int64_t location_id);

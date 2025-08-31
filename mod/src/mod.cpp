@@ -154,12 +154,6 @@ void HookFunc() {
 }
 
 
-void hugeTest(Game game) {
-    std::cout << "Huge test" << std::endl;
-    std::cout << "saveSlot " << std::hex << (int) game.saveSlot << std::endl;
-    
-    
-}
 
 void loopTest(Game game, DWORD loops) {
     if (loops%500 == 0) {
@@ -218,7 +212,7 @@ void loopTest(Game game, DWORD loops) {
 DWORD WINAPI ThreadProc(LPVOID lpParam) {
     HMODULE hSelf = (HMODULE)lpParam;
 
-    // Prevent the DLL from being unloaded
+    // Prevent the DLL from being unloaded? TODO: I don't know if this works
     HMODULE dummy;
     GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)hSelf, &dummy);
     
@@ -230,9 +224,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     freopen("b.txt", "a", stdout);
     freopen("b.txt", "a", stderr);
     setvbuf(stdout, NULL, _IONBF, 0);
-    std::cout << "hello world" << std::endl;
-    std::cerr << "Error world" << std::endl;
-    printf("Does this work\n");
+    std::cout << "cout test" << std::endl;
+    std::cerr << "cerr test" << std::endl;
+    printf("stdout test\n");
+    //fprintf(stderr, "stderr test\n"); // TODO: untested
     file << "ThreadProc started" << std::endl;
 
     
@@ -248,14 +243,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     DWORD UP1 = 0x1000; // 7/9/2025 update | WARN: LEGO Batman suddenly updated and I assume this +0x1000 is the general fix for it at least when it comes to data addresses. code addresses vary.
     DWORD UP = UP0 + UP1;
     
+    // build the game data and message box
     Game game(BASE_ADDR + UP);
     HintMessageBox messageBox(BASE_ADDR + UP);
 
-    // example
-    hugeTest(game);
-
-    
+    // Nops for overwriting code
     BYTE NOP[16] = {0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90};
+
+
 
 
     // Wait for data and code to be readable and writable
@@ -266,6 +261,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     volatile BYTE saveFile = game.saveSlot; // (BYTE*)(BASE_ADDR + UP + (0x56801C));
     volatile BYTE level = game.currentLevel; // This may not be working somehow
 
+    std::cout << "saveSlot " << std::hex << (int) game.saveSlot << std::endl;
     while (level == 0x00) {
         Sleep(500); 
         // this is flawed as it often crashes on batman robin loading
@@ -281,15 +277,18 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     }
 
 
+
+
+
     
     // 7 byte add function
     // subtracting offset UP1 and adding 0x20 added by update 1. this means that the new code added in update 1 is after the damage code.
     // U0 -> BASE_ADDR + 1C356D
     // U1 -> BASE_ADDR + 1C358D
-    BYTE* dmgFuncAddr = (BYTE*)(BASE_ADDR + (0x20) + (0x1C356D)); // not the damage function instead it's a pointer to an add function that adds -1 to health.
+    //BYTE* dmgFuncAddr = (BYTE*)(BASE_ADDR + (0x20) + (0x1C356D)); // not the damage function instead it's a pointer to an add function that adds -1 to health.
     
 
-    // Message box code nops
+    // Message box code overwrites
 
     // code that sets the hint id. LEGOBatman.exe+1D522D - 89 35 246FAC00        - mov [LEGOBatman.exe+6C6F24],esi
     WriteCode((BYTE*)(BASE_ADDR + 0x001D522D),(BYTE[]){0x89,0x35,0x24,0x6F,0xAC,0x00},NOP,6);
@@ -303,6 +302,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     WriteCode((BYTE*)(BASE_ADDR + 0x001D4E3D),(BYTE[]){0xD9,0x15,0x34,0x6F,0xAC,0x00},NOP,6);
 
 
+
+
+
+
     /*////////////////////////////////
     -////  Pre Loop Setup Begin  ////-
     ////////////////////////////////*/
@@ -310,9 +313,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     // AP testing.
     messageBox.holdMessage("Holy Archipelago Batman!!! Attempting to connect...");
+    //TODO: add remove player movement
     LB1AP_Connect();
     messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
     messageBox.releaseMessage();
+    //TODO: restore player movement
 
     
     //Turn off damage player function
@@ -323,15 +328,38 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     ///////// TODO: do a loop of all memory for missed checks.
 
 
+
+
     // WARN: temporary setup for testing.
 
-    for (size_t i = 0; i < 35; i++)
-    {
-        //std::cout << std::hex << (void*)game.levels.levelUnlocked[i] << std::endl;
-        *game.levels.levelUnlocked[i] = 1;
-        *game.levels.levelBeaten[i] = 1;
-    }
+    // fully unlock all levels
+    // for (size_t i = 0; i < 35; i++)
+    // {
+    //     //std::cout << std::hex << (void*)game.levels.levelUnlocked[i] << std::endl;
+    //     *game.levels.levelUnlocked[i] = 1;
+    //     *game.levels.levelBeaten[i] = 1;
+    // }
     
+
+    // std::cout << "extra purch " << std::hex
+    //       << reinterpret_cast<uintptr_t>(&game.extraPurchased)
+    //       << std::endl;
+
+    // purchase all extras.
+    // for (size_t i = 0; i < 21; i++)
+    // {
+    //     game.extraPurchased |= (1 << i);
+    // }
+
+    // Easy true status
+    // *game.extraEnabled[ExtraName::Always_Score_Multiply] = 1;
+    // *game.extraEnabled[ExtraName::Stud_Magnet] = 1;
+    // Detectors on
+    *game.extraEnabled[ExtraName::Minikit_Detector] = 1;
+    // *game.extraEnabled[ExtraName::Power_Brick_Detector] = 1;
+    
+    
+    // unlock all characters
     for (size_t i = 0; i < game.characters.characterCount; i++)
     {
         //std::cout << "char " << std::hex << (int) game.characters._characterBytes[i] << std::endl;
@@ -339,21 +367,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         //*game.characters[i] = 0x03;
     }
 
-    // std::cout << "extra purch " << std::hex
-    //       << reinterpret_cast<uintptr_t>(&game.extraPurchased)
+    // std::cout << "suit unlock " << std::hex
+    //       << reinterpret_cast<uintptr_t>(&game.suitUnlocked1)
     //       << std::endl;
-
-    // purchase all kits.
-    for (size_t i = 0; i < 21; i++)
-    {
-        game.extraPurchased |= (1 << i);
-    }
-    // auto minkit detector on
-    *game.extraEnabled[ExtraName::Minikit_Detector] = 1;
-    
-    std::cout << "suit unlock " << std::hex
-          << reinterpret_cast<uintptr_t>(&game.suitUnlocked1)
-          << std::endl;
 
     // unlock all suits
     for (size_t i = 0; i < 10; i++) 
@@ -370,20 +386,25 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     file << "About to loop." << std::endl;
 
     DWORD loops = 0;
-    SubLevelKits* saveKitData = game.levels.levelKitSaveData;
-    SubLevelKits levelKitData;
+    //SubLevelKits* saveKitData = game.levels.levelKitSaveData;
+    //SubLevelKits levelKitData;
     while (true) {
         
         loopTest(game,loops);
 
-        // AP STUFF
+        /*////////////////////////////
+        *//// Location Detection ////*
+        ////////////////////////////*/
 
-        // if(*levelBeatenH1_1 == 1 && LB1AP_location_checked(15868690003) == false){ //TODO: make this a better check rather than an if statement
-        //     LB1AP_send_item(15868690003); //TODO: make this not hardcoded
-        //     LB1AP_CheckLocation(15868690003);
-        //     printf("Sent levelBeatenH1_1\n");
-        // }
-        for (BYTE i = game.inLevelKitCountPrev; i < game.inLevelKitCount; i++)
+        // TODO: extract each of these to functions. probably in this file.
+
+        // Minikits
+        if (game.inLevelKitCount < game.inLevelKitCountPrev) {
+            // left level
+            // TODO: test
+            game.inLevelKitCountPrev = 0;
+
+        } else for (BYTE i = game.inLevelKitCountPrev; i < game.inLevelKitCount; i++)
         {
             // new kit picked up.
             std::cout  
@@ -392,24 +413,67 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 << std::endl;
             
             LB1AP_send_item(400000 + 100 + game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i]));
-            // levelKitData = game.levels.levelKitSaveData[*game.inLevelKitLocations[i]];
-            // strncpy(levelKitData.kits[levelKitData.count], game.inLevelKits[i], 8);
+            /** 
+             * TODO: auto save the kit to the file.
+             * levelKitData = game.levels.levelKitSaveData[*game.inLevelKitLocations[i]];
+             * strncpy(levelKitData.kits[levelKitData.count], game.inLevelKits[i], 8);
+             */ 
             game.inLevelKitCountPrev++;
-        } 
-        if (game.inLevelKitCount < game.inLevelKitCountPrev) {
-            // left level
-            // TODO: test
-            game.inLevelKitCountPrev = 0;
         }
 
-        //LB1AP_GetMessage();
-        // if (AP_IsMessagePending()) {
 
-        //     AP_Message* message = AP_GetLatestMessage();
-        //     std::cout << message->text << std::endl;
 
-        //     AP_ClearLatestMessage();
+        // Hostages
+        // int hostageCheck = game.levels.checkHostages();
+        // if (hostageCheck != -1) { // TODO: I don't know if this is how logic works
+        //     std::cout
+        //         << "new hostage " << (int) hostageCheck 
+        //         << ". hostagedata " << std::hex << (int) *game.levels.hostages
+        //         << std::endl;
+        //     LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 400 + hostageCheck);
+            
+        //     // TODO: setup receives when hush is unlockable?
         // }
+
+
+        /*////////////////////////
+        *//// Item Receiving ////*
+        ////////////////////////*/
+
+        // for (int i = receiveQueue.front(); i < receiveQueue.empty(); i = receiveQueue.front())
+        // {
+        //     if (i < 100) {
+        //         printf("You should not be getting this: %d (report to devs)\n", i);
+        //     } else if (i < 400) { // Minikits
+        //         printf("You should not be getting this: %d (report to devs)\n", i);
+        //     } else if (i < 425) { // Hostages
+        //         printf("You should not be getting this: %d (report to devs)\n", i);
+        //     } else if (i < 455) { // Level Unlock
+        //         //game.levels.levelUnlocked
+        //         //[i-425]
+        //         // need to know which to skip
+
+        //     } else if (i < 485) { // True status
+        //         printf("You should not be getting this: %d (report to devs)\n", i);
+        //     } else if (i < 515) { // Red Brick
+
+
+        //     } else if (i < 545) { // Red Brick purchased
+                
+
+        //     } else { // out of bound
+        //         printf("Received Unknown Item: %d\n", i);
+        //     }
+        //     receiveQueue.pop();
+
+        // }
+        
+
+
+        /*////////////////////////
+        *//// Post Detection ////*
+        ////////////////////////*/
+
         messageBox.tick();
 
         Sleep(50);

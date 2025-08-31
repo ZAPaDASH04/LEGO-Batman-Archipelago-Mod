@@ -94,8 +94,7 @@ private:
     // DWORD32* hostages;
     
 public:
-    const DWORD BASE_ADDR;
-    // TODO: maybe const
+    const DWORD BASE_ADDR; // TODO: can be removed later if only used in constructor.
     BYTE* levelUnlocked[35];
     BYTE* levelBeaten  [35];
     BYTE* levelKitCount[35]; // TODO: test
@@ -103,6 +102,8 @@ public:
     DWORD32* hostages; // TODO: test
     // usage: levelKitSaveData[levelid]
     SubLevelKits* levelKitSaveData; // WARN: this should not be public.
+
+    // DWORD32 hostagesOld;
     
     /**
      * @brief Construct a new Levels object
@@ -112,6 +113,12 @@ public:
     Levels(DWORD BASE_ADDR);
     ~Levels();
 
+    /**
+     * @brief checks if new hostage
+     * 
+     * @return BYTE -1 for no change
+     */
+    // int checkHostages(); // TODO: test
     
 };
 

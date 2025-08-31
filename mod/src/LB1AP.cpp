@@ -13,9 +13,12 @@
 bool lb1AP_locations[LB1AP_NUM_LOCS_AND_ITEMS]; //array with the total number of locations.
 bool lb1AP_items[LB1AP_NUM_LOCS_AND_ITEMS]; //array with the in game items
 int minikits = 0; //number of minikits received
+int hostages = 0; // number of hostages received
 int lb1_End_Goal = 0; //0 = minikits which is currently default
 int lb1_minikits_to_win = 200; //number of minikits required to win. Default is 200
 int lb1_levels_to_win = 20; //number of levels required to win. Default is 20
+
+// std::queue<int> receiveQueue;
 
 void LB1AP_Init(const char* serverIP, const char* playerName, const char* password){
     AP_Init(serverIP, GAME_NAME, playerName, password);
@@ -38,17 +41,39 @@ void LB1AP_send_item(int64_t location_id){  //function to send an item
 
 void LB1AP_receiveItem(int itemID, bool notify){
     itemID -= LB1AP_ITEM_ID_OFFSET;
-    if(itemID >= 100 && itemID < 400){ //if the item is a minikit
-        if(lb1AP_items[itemID] == false){ //TODO: make it so we can call location checked here
-            lb1AP_items[itemID] = true;
-            minikits++;
-            printf("Total Minikits: %d\n", minikits);
-        } else {
-            printf("Minikit %d already received.\n", itemID);
-        }
-    }else{
+    // if(itemID >= 100 && itemID < 400){ //if the item is a minikit
+    //     if(lb1AP_items[itemID] == false){ //TODO: make it so we can call location checked here
+    //         lb1AP_items[itemID] = true;
+    //         minikits++;
+    //         printf("Total Minikits: %d\n", minikits);
+    //     } else {
+    //         printf("Minikit %d already received.\n", itemID);
+    //     }
+    // }else{
+    //     printf("Received Unknown Item: %d\n", itemID);
+    // }
+
+    if (itemID < 100) {
         printf("Received Unknown Item: %d\n", itemID);
+    } else if (itemID < 400) { // Minikits
+        minikits++;
+
+    } else if (itemID < 425) { // Hostages
+    } else if (itemID < 455) { // Level Unlock
+        // receiveQueue.push(itemID);
+
+    } else if (itemID < 485) { // True status
+    } else if (itemID < 515) { // Red Brick
+        // receiveQueue.push(itemID);
+
+    } else if (itemID < 545) { // Red Brick purchased
+        // receiveQueue.push(itemID);
+
+    } else { // out of bound
+        printf("Received Unknown Item: %d\n", itemID);
+
     }
+
     LB1AP_CheckWinCon();
 }
 
