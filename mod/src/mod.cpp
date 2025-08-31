@@ -302,10 +302,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     WriteCode((BYTE*)(BASE_ADDR + 0x001D4E3D),(BYTE[]){0xD9,0x15,0x34,0x6F,0xAC,0x00},NOP,6);
 
 
+    // disable game unlocking levels
+    WriteCode((BYTE*)(BASE_ADDR + 0x0024E254),(BYTE[]){0xC6,0x44,0x90,0x02,0x01},NOP,5);
+    WriteCode((BYTE*)(BASE_ADDR + 0x0024E155),(BYTE[]){0xC6,0x44,0x90,0x02,0x01},NOP,5);
+
     // disable default levels
     *game.levels.levelUnlocked[0] = 0; // H1-1
-    *game.levels.levelUnlocked[5] = 0; // H2-2
-    *game.levels.levelUnlocked[10] = 0; // H3-3
+    *game.levels.levelUnlocked[5] = 0; // H2-1
+    *game.levels.levelUnlocked[10] = 0; // H3-1
 
 
 
