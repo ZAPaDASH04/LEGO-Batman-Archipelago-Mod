@@ -18,7 +18,7 @@ int lb1_End_Goal = 0; //0 = minikits which is currently default
 int lb1_minikits_to_win = 200; //number of minikits required to win. Default is 200
 int lb1_levels_to_win = 20; //number of levels required to win. Default is 20
 
-// std::queue<int> receiveQueue;
+std::queue<int> receiveQueue;
 
 void LB1AP_Init(const char* serverIP, const char* playerName, const char* password){
     AP_Init(serverIP, GAME_NAME, playerName, password);
@@ -52,7 +52,7 @@ void LB1AP_receiveItem(int itemID, bool notify){
     // }else{
     //     printf("Received Unknown Item: %d\n", itemID);
     // }
-
+    printf("Item Received\n");
     if (itemID < 100) {
         printf("Received Unknown Item: %d\n", itemID);
     } else if (itemID < 400) { // Minikits
@@ -60,14 +60,17 @@ void LB1AP_receiveItem(int itemID, bool notify){
 
     } else if (itemID < 425) { // Hostages
     } else if (itemID < 455) { // Level Unlock
-        // receiveQueue.push(itemID);
+        printf("Level Unlocked\n");
+        receiveQueue.push(itemID);
 
     } else if (itemID < 485) { // True status
     } else if (itemID < 515) { // Red Brick
-        // receiveQueue.push(itemID);
+        printf("Red Brick Collected\n");
+        receiveQueue.push(itemID);
 
     } else if (itemID < 545) { // Red Brick purchased
-        // receiveQueue.push(itemID);
+        printf("Red Brick Purchased\n");
+        receiveQueue.push(itemID);
 
     } else { // out of bound
         printf("Received Unknown Item: %d\n", itemID);

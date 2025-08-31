@@ -33,7 +33,7 @@
 #define LB1AP_NUM_LOCS_AND_ITEMS 500 //number of total locations and items TODO: update once fully implemented
 #define GAME_NAME "Lego Batman: The Video Game"
 
-// extern std::queue<int> receiveQueue;
+extern std::queue<int> receiveQueue;
 
 #endif
 

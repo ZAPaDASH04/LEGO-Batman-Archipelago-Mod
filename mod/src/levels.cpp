@@ -181,15 +181,18 @@ DWORD Table::operator[](BYTE* name)
 Levels::Levels(DWORD BASE_ADDR) :
     BASE_ADDR(BASE_ADDR)
 {
+    size_t j = 0;
     for (size_t i = 0; i < 35; i++) {
         // SKIP 5,6,12,13,19
+        if (i==5 || i==6 || i==12 || i==12 || i==13 || i==19) continue;
         // 
-        levelUnlocked[i] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C6 + i*0x0C);
-        levelBeaten[i] =   *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C5 + i*0x0C);
+        levelUnlocked[j] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C6 + i*0x0C);
+        levelBeaten[j] =   *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C5 + i*0x0C);
         //
-        levelKitCount[i] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C3 + i*0x0C);
+        levelKitCount[j] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C3 + i*0x0C);
         //
-        levelRedBrick[i] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C1 + i*0x0C);
+        levelRedBrick[j] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C1 + i*0x0C);
+        j++;
     }
     //hostages = *((DWORD32**)(BASE_ADDR + 0x006AF8B0)) + 0x240; // 4 bytes. at least 32bits
     hostages = reinterpret_cast<DWORD32*>(

@@ -95,10 +95,10 @@ private:
     
 public:
     const DWORD BASE_ADDR; // TODO: can be removed later if only used in constructor.
-    BYTE* levelUnlocked[35];
-    BYTE* levelBeaten  [35];
-    BYTE* levelKitCount[35]; // TODO: test
-    BYTE* levelRedBrick[35]; // TODO: test
+    BYTE* levelUnlocked[30];
+    BYTE* levelBeaten  [30];
+    BYTE* levelKitCount[30]; // TODO: test
+    BYTE* levelRedBrick[30]; // TODO: test
     DWORD32* hostages; // TODO: test
     // usage: levelKitSaveData[levelid]
     SubLevelKits* levelKitSaveData; // WARN: this should not be public.

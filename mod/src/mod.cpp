@@ -302,6 +302,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     WriteCode((BYTE*)(BASE_ADDR + 0x001D4E3D),(BYTE[]){0xD9,0x15,0x34,0x6F,0xAC,0x00},NOP,6);
 
 
+    // disable default levels
+    *game.levels.levelUnlocked[0] = 0; // H1-1
+    *game.levels.levelUnlocked[5] = 0; // H2-2
+    *game.levels.levelUnlocked[10] = 0; // H3-3
 
 
 
@@ -383,6 +387,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //////////////////////////////*/
 
 
+
     file << "About to loop." << std::endl;
 
     DWORD loops = 0;
@@ -424,7 +429,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
         // Hostages
-        std::cout << "hostasdgt " << std::hex << (int) *game.levels.hostages << " " << (int) game.levels.hostagesOld << std::endl;
+        //std::cout << "hostasdgt " << std::hex << (int) *game.levels.hostages << " " << (int) game.levels.hostagesOld << std::endl;
         int hostageCheck = game.levels.checkHostages();
         if (hostageCheck != -1) { // TODO: I don't know if this is how logic works
             std::cout
@@ -441,33 +446,35 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         *//// Item Receiving ////*
         ////////////////////////*/
 
-        // for (int i = receiveQueue.front(); i < receiveQueue.empty(); i = receiveQueue.front())
-        // {
-        //     if (i < 100) {
-        //         printf("You should not be getting this: %d (report to devs)\n", i);
-        //     } else if (i < 400) { // Minikits
-        //         printf("You should not be getting this: %d (report to devs)\n", i);
-        //     } else if (i < 425) { // Hostages
-        //         printf("You should not be getting this: %d (report to devs)\n", i);
-        //     } else if (i < 455) { // Level Unlock
-        //         //game.levels.levelUnlocked
-        //         //[i-425]
-        //         // need to know which to skip
+        while (!receiveQueue.empty())
+        {
+            int i = receiveQueue.front();
+            std::cout << "Received an Item!" << std::endl;
+            if (i < 100) {
+                std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
+            } else if (i < 400) { // Minikits
+                std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
+            } else if (i < 425) { // Hostages
+                std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
+            } else if (i < 455) { // Level Unlock
+                std::cout << "Level Unlocked!" << std::endl;
+                *game.levels.levelUnlocked[i-425] = 1;
+                *game.levels.levelBeaten[i-425] = 1; // WARN: temporary
 
-        //     } else if (i < 485) { // True status
-        //         printf("You should not be getting this: %d (report to devs)\n", i);
-        //     } else if (i < 515) { // Red Brick
+            } else if (i < 485) { // True status
+                std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
+            } else if (i < 515) { // Red Brick
 
 
-        //     } else if (i < 545) { // Red Brick purchased
+            } else if (i < 545) { // Red Brick purchased
                 
 
-        //     } else { // out of bound
-        //         printf("Received Unknown Item: %d\n", i);
-        //     }
-        //     receiveQueue.pop();
+            } else { // out of bound
+                printf("Received Unknown Item: %d\n", i);
+            }
+            receiveQueue.pop();
 
-        // }
+        }
         
 
 
