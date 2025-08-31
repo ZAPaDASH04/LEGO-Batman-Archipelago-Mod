@@ -103,7 +103,7 @@ public:
     // usage: levelKitSaveData[levelid]
     SubLevelKits* levelKitSaveData; // WARN: this should not be public.
 
-    // DWORD32 hostagesOld;
+    DWORD32 hostagesOld;
     
     /**
      * @brief Construct a new Levels object
@@ -118,7 +118,7 @@ public:
      * 
      * @return BYTE -1 for no change
      */
-    // int checkHostages(); // TODO: test
+    int checkHostages(); // TODO: test
     
 };
 

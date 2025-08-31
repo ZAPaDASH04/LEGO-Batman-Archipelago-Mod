@@ -191,8 +191,13 @@ Levels::Levels(DWORD BASE_ADDR) :
         //
         levelRedBrick[i] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C1 + i*0x0C);
     }
-    hostages = *((DWORD32**)(BASE_ADDR + 0x006AF8B0)) + 0x240; // 4 bytes. at least 32bits
-    // hostagesOld = *hostages;
+    //hostages = *((DWORD32**)(BASE_ADDR + 0x006AF8B0)) + 0x240; // 4 bytes. at least 32bits
+    hostages = reinterpret_cast<DWORD32*>(
+            reinterpret_cast<uintptr_t>(
+                *reinterpret_cast<void**>(BASE_ADDR + 0x006AF8B0)
+            ) + 0x240
+        );
+    hostagesOld = *hostages;
     //levelKitSaveData = reinterpret_cast<LevelKits*>(BASE_ADDR - 0x1000 + 0x006CA8FC); // point to beginning of save data then interperet as object
     
     levelKitSaveData = *reinterpret_cast<SubLevelKits**>(BASE_ADDR + 0x006C98FC);
@@ -203,18 +208,18 @@ Levels::Levels(DWORD BASE_ADDR) :
 Levels::~Levels() = default; // TODO: why did I have to add this???
 
 
-// int Levels::checkHostages()
-// {
-//     // if (*hostages != hostagesOld) {
-//     //     //DWORD32 a = *hostages - hostagesOld;
-//     //     // how many right shifts
-//     //     for (int a = *hostages - hostagesOld; a > 1; a = a >> 1)
-//     //     {
-//     //         /* code */
-//     //     }
-//     // }
-//     int i = -1; // -1 is no new hostages.
-//     // how many right shifts // WARN: does not account for loading a different save or losing hostage progress.
-//     for (int a = *hostages - hostagesOld; a > 0; a = a >> 1) i++;
-//     return i; 
-// }
+int Levels::checkHostages()
+{
+    // if (*hostages != hostagesOld) {
+    //     //DWORD32 a = *hostages - hostagesOld;
+    //     // how many right shifts
+    //     for (int a = *hostages - hostagesOld; a > 1; a = a >> 1)
+    //     {
+    //         /* code */
+    //     }
+    // }
+    int i = -1; // -1 is no new hostages.
+    // how many right shifts // WARN: does not account for loading a different save or losing hostage progress.
+    for (int a = *hostages - hostagesOld; a > 0; a = a >> 1) i++;
+    return i; 
+}

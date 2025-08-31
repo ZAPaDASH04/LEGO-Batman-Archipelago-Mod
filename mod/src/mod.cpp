@@ -352,11 +352,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // }
 
     // Easy true status
-    // *game.extraEnabled[ExtraName::Always_Score_Multiply] = 1;
-    // *game.extraEnabled[ExtraName::Stud_Magnet] = 1;
+    *game.extraEnabled[ExtraName::Always_Score_Multiply] = 1;
+    *game.extraEnabled[ExtraName::Stud_Magnet] = 1;
     // Detectors on
     *game.extraEnabled[ExtraName::Minikit_Detector] = 1;
-    // *game.extraEnabled[ExtraName::Power_Brick_Detector] = 1;
+    *game.extraEnabled[ExtraName::Power_Brick_Detector] = 1;
     
     
     // unlock all characters
@@ -424,16 +424,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
         // Hostages
-        // int hostageCheck = game.levels.checkHostages();
-        // if (hostageCheck != -1) { // TODO: I don't know if this is how logic works
-        //     std::cout
-        //         << "new hostage " << (int) hostageCheck 
-        //         << ". hostagedata " << std::hex << (int) *game.levels.hostages
-        //         << std::endl;
-        //     LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 400 + hostageCheck);
+        std::cout << "hostasdgt " << std::hex << (int) *game.levels.hostages << " " << (int) game.levels.hostagesOld << std::endl;
+        int hostageCheck = game.levels.checkHostages();
+        if (hostageCheck != -1) { // TODO: I don't know if this is how logic works
+            std::cout
+                << "new hostage " << (int) hostageCheck 
+                << ". hostagedata " << std::hex << (int) *game.levels.hostages
+                << std::endl;
+            LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 400 + hostageCheck);
             
-        //     // TODO: setup receives when hush is unlockable?
-        // }
+            // TODO: setup receives when hush is unlockable?
+        }
 
 
         /*////////////////////////
