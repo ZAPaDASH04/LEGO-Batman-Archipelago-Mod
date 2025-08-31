@@ -103,6 +103,7 @@ public:
     // usage: levelKitSaveData[levelid]
     SubLevelKits* levelKitSaveData; // WARN: this should not be public.
 
+    BYTE levelBeatenOld[30];
     DWORD32 hostagesOld;
     
     /**

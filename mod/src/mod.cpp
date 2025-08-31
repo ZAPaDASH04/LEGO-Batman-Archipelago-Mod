@@ -427,6 +427,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         }
 
 
+        // Levels
+        for (size_t i = 0; i < 30; i++) {
+            if (*game.levels.levelBeaten[i] != game.levels.levelBeatenOld[i]) {
+                std::cout
+                    << "new level beaten " << (int) i 
+                    << std::endl;
+                LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 425 + i);
+            }
+        }
+        
+
 
         // Hostages
         //std::cout << "hostasdgt " << std::hex << (int) *game.levels.hostages << " " << (int) game.levels.hostagesOld << std::endl;
