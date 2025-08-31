@@ -470,7 +470,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             } else if (i < 455) { // Level Unlock
                 std::cout << "Level Unlocked!" << std::endl;
                 *game.levels.levelUnlocked[i-425] = 1;
-                *game.levels.levelBeaten[i-425] = 1; // WARN: temporary
+                //*game.levels.levelBeaten[i-425] = 1; // WARN: temporary
 
             } else if (i < 485) { // True status
                 std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
