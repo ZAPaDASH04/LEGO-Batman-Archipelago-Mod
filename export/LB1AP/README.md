@@ -10,11 +10,9 @@ Special thanks to our dedicated play testers:
 
 Special shout out to N00byKing for developing the APCpp client library to connect to the Archipelago Server and the other SM64 Devs for being a good example of its implementation.
 
-This alpha test is essentially a kits only test. A kit hunt if you will. All minikits are in the item pool. When you run the program it will run some setup for the sake of testing such as unlocking all levels, characters, suits, and red bricks to make the hunt faster.
 ## Important Notes
 - You must use unmodified steam version of [LEGO Batman: The Videogame](https://store.steampowered.com/app/21000/LEGO_Batman_The_Videogame).
 - You will be using a 3rd party tool, a mod loader called Reloaded II, to run. Installation instructions are included in the instructions below.
-- Make sure to pay attention to which locations are sent to verify it sends the correct location. (check that kit locations aren't being missed or swapped)
 - Debug messages are logged in a.txt (ours) and b.txt (ap's) both of which will be located in the LEGOBatman.exe folder.
 
 ## Instructions
@@ -31,17 +29,18 @@ This alpha test is essentially a kits only test. A kit hunt if you will. All min
     - You can easily access this folder by right clicking the game in Steam, "Manage", then "Browse local files".
   
 #### Setup AP game
-- Set up an AP game using the lego_batman_1.apworld (Alpha test is not intended for multiple players or serious games as currently there are no spheres or logic. You can play with multiple games if you wish.)
+- Set up an AP game using the lego_batman_1.apworld
     - If you aren't familiar with archipelago, please use the command &apworld and/or &template in the archipelago discord server.
-- Open the APConnect.txt file (should be in the same folder as LEGOBatman.exe) and add the AP info. follow instructions on the first line.
-- Run lego batman (tested methods: through steam, directly through the LEGOBatman.exe, or using DXWND).
+- Open the APConnect.txt file (should be in the same folder as LEGOBatman.exe) and add the AP info. Follow instructions on the first line.
+- In "Configure Mods" of Reloaded II, enable only "Reloaded II Server" (Enabled mods have a red plus and disabled mods have a grey minus). 
+    - LB1 Client Connector should be a filled red box.
+- With Lego Batman selected in Reloaded II, click "Launch Application".
+    - If you would like to play windowed, have DXWND open at the same time as clicking "Launch Application". (Make sure that Lego Batman is setup in DXWND for it to work)
 - Make a new game and **EXIT THE LEVEL**. If you already have an AP game then just load the save.
-- Once in the hub go to Reloaded II and click lego batman on the left side.
-- In "Configure Mods" enable only "Reloaded II Server" and "LB1 Archipelago" (Enabled mods have a red plus and disabled mods, if any, have a grey minus). LB1 Client Connector should be a filled red box.
-- In the bottom left, under Processes there should be process to select.
-- There should now be an inject button click it and switch back to the game.
-- Check that a message appeared in the hint box indicating that the program connected.
+- Once in the hub go to Lego Batman in Reloaded II. In the bottom left, under Processes there should be process to select.
+- Beneath the list of mods running, click the button called "Load Mod".
+- Select "LB1 Archipelago" and click "Load Mod". 
+- Switch back to Lego Batman and check that a message appeared in the hint box indicating that the program connected.
 - Check the AP game webpage to see that you have connected.
-- Get those kits!
 
 
