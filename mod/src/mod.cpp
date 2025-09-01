@@ -305,6 +305,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // disable game unlocking levels
     WriteCode((BYTE*)(BASE_ADDR + 0x0024E254),(BYTE[]){0xC6,0x44,0x90,0x02,0x01},NOP,5);
     WriteCode((BYTE*)(BASE_ADDR + 0x0024E155),(BYTE[]){0xC6,0x44,0x90,0x02,0x01},NOP,5);
+    // for beating episode
+    WriteCode((BYTE*)(BASE_ADDR + 0x000788BF),(BYTE[]){0xC6, 0x84, 0x81, 0xDA, 0x77, 0x00, 0x00, 0x01},NOP,8);
 
     // disable default levels
     *game.levels.levelUnlocked[0] = 0; // H1-1
