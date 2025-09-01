@@ -99,11 +99,12 @@ public:
     BYTE* levelBeaten  [30];
     BYTE* levelKitCount[30]; // TODO: test
     BYTE* levelRedBrick[30]; // TODO: test
-    DWORD32* hostages; // TODO: test
+    DWORD32* hostages;
     // usage: levelKitSaveData[levelid]
     SubLevelKits* levelKitSaveData; // WARN: this should not be public.
 
     BYTE levelBeatenOld[30];
+    //BYTE levelRedBrickOld[30]
     DWORD32 hostagesOld;
     
     /**

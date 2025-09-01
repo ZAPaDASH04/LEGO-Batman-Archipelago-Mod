@@ -77,8 +77,9 @@ public:
     volatile BYTE& saveSlot;
     volatile BYTE& inLevelTotalKitCount;
     volatile BYTE& inLevelKitCount;
-    const char* inLevelKits[10]; // TODO: test. size is uncertain
-    const BYTE* inLevelKitLocations[10]; // TODO: test. size is uncertain
+    const char* inLevelKits[10]; 
+    const BYTE* inLevelKitLocations[10];
+    volatile BYTE& inLevelPowerBrick; // TODO: test
     volatile DWORD& extraPurchased;
     BYTE* extraEnabled[21]; 
     volatile WORD& suitUnlocked1; // active value
@@ -86,6 +87,7 @@ public:
     //volatile DWORD& powerBrickEnabled;
     //volatile BYTE* inLevelKitLocations[10];
     BYTE inLevelKitCountPrev;
+    BYTE inLevelPowerBrickPrev;
     Game(DWORD BASE_ADDR);
 
     

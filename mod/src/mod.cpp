@@ -280,6 +280,15 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
 
+
+
+
+
+    /*////////////////////////////////
+    -////  Pre Loop Setup Begin  ////-
+    ////////////////////////////////*/
+
+
     
     // 7 byte add function
     // subtracting offset UP1 and adding 0x20 added by update 1. this means that the new code added in update 1 is after the damage code.
@@ -315,12 +324,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
 
-
-    /*////////////////////////////////
-    -////  Pre Loop Setup Begin  ////-
-    ////////////////////////////////*/
-
-
     // AP testing.
     messageBox.holdMessage("Holy Archipelago Batman!!! Attempting to connect...");
     //TODO: add remove player movement
@@ -335,12 +338,24 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
     //file << "Patched damage function." << std::endl;
 
+
+
+
+
+
     ///////// TODO: do a loop of all memory for missed checks.
 
 
 
 
+
+
+
     // WARN: temporary setup for testing.
+
+
+
+
 
     // fully unlock all levels
     // for (size_t i = 0; i < 35; i++)
@@ -412,7 +427,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         // Minikits
         if (game.inLevelKitCount < game.inLevelKitCountPrev) {
             // left level
-            // TODO: test
             game.inLevelKitCountPrev = 0;
 
         } else for (BYTE i = game.inLevelKitCountPrev; i < game.inLevelKitCount; i++)
@@ -423,7 +437,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 << (int) game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i])
                 << std::endl;
             
-            LB1AP_send_item(400000 + 100 + game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i]));
+            LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 100 + game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i]));
             /** 
              * TODO: auto save the kit to the file.
              * levelKitData = game.levels.levelKitSaveData[*game.inLevelKitLocations[i]];
@@ -431,6 +445,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
              */ 
             game.inLevelKitCountPrev++;
         }
+
 
 
         // Levels
@@ -459,6 +474,23 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             // TODO: setup receives when hush is unlockable?
         }
 
+        // Red Brick
+        if (game.inLevelPowerBrick != game.inLevelPowerBrickPrev) {
+            if (game.inLevelPowerBrick < game.inLevelPowerBrickPrev) {
+                // left level
+                game.inLevelPowerBrickPrev = 0;
+
+            } else {
+                // PowerBrick Get
+                std::cout
+                    << "new Power Brick found"
+                    << std::endl;
+                // WARN: high probability to fail. NEEDS SIGNIFICANT TESTING    
+                LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 485 + sublevelToLevel(game.currentLevel));
+                game.inLevelPowerBrickPrev = 1;
+            }
+
+        }
 
         /*////////////////////////
         *//// Item Receiving ////*
