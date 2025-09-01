@@ -10,8 +10,8 @@
 
 #include "LB1AP.h"
 
-bool lb1AP_locations[LB1AP_NUM_LOCS_AND_ITEMS]; //array with the total number of locations.
-bool lb1AP_items[LB1AP_NUM_LOCS_AND_ITEMS]; //array with the in game items
+bool lb1AP_locations[LB1AP_NUM_LOCS_AND_ITEMS] = {}; //array with the total number of locations.
+bool lb1AP_items[LB1AP_NUM_LOCS_AND_ITEMS] = {}; //array with the in game items
 int minikits = 0; //number of minikits received
 int hostages = 0; // number of hostages received
 int lb1_End_Goal = 0; //0 = minikits which is currently default
@@ -25,7 +25,7 @@ std::queue<int> receiveQueue;
 void LB1AP_Init(const char* serverIP, const char* playerName, const char* password){
     AP_Init(serverIP, GAME_NAME, playerName, password);
     AP_SetItemClearCallback(&LB1AP_reset); //used to clear the state of the game. Called when connecting to server, not sure why but implemented like SM64 did
-    AP_SetItemRecvCallback(LB1AP_receiveItem); //I believe this is what to do when items are received TODO: break out into own function
+    AP_SetItemRecvCallback(LB1AP_receiveItem); //I believe this is what to do when items are received
     AP_SetLocationCheckedCallback(&LB1AP_CheckLocation); //What to do when a location is checked
     AP_SetNotify(AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal", AP_DataType::Int); //Used to make sure Level Complete win condition is properly calculated between sessions //WARNING: if levels are sent multiple times, may result in completion early
     AP_RegisterSetReplyCallback(&LB1AP_SetReplyHanlder); //Set reply hanlder for Level complete win condition
@@ -37,17 +37,19 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
     AP_Start();
 }
 
-void LB1AP_CheckLocation(int64_t location_id){ //function to mark a location checked 
+void LB1AP_CheckLocation(int64_t location_id){ //function to mark a location checked
     lb1AP_locations[location_id - LB1AP_LOCATION_ID_OFFSET] = true;
+    std::cout << "Location " << location_id << " checked!" << std::endl;
 }
 
 void LB1AP_send_item(int64_t location_id){  //function to send an item
-    AP_SendItem(location_id);
-    location_id -= LB1AP_LOCATION_ID_OFFSET;
-    if(location_id >= 425 && location_id < 455){
+    int temp_location_id = location_id - LB1AP_LOCATION_ID_OFFSET;
+    std::cout <<"Temp Location ID: " << temp_location_id << std::endl;
+    if(temp_location_id >= 425 && temp_location_id < 455 && LB1AP_location_checked(location_id) == false){
         printf("Calling Level Complete request function\n");
         LB1AP_LevelComplete();
     }
+    AP_SendItem(location_id);
 }
 
 void LB1AP_receiveItem(int itemID, bool notify){
