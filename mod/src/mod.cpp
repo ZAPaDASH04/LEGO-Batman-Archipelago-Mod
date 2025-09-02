@@ -505,7 +505,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     << std::endl;
                 // WARN: high probability to fail. NEEDS SIGNIFICANT TESTING    
                 LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 485 + sublevelToLevel(game.currentLevel));
-                game.inLevelPowerBrickPrev = 1;
+                game.inLevelPowerBrickPrev = 2;
             }
 
         }
