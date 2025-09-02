@@ -39,6 +39,8 @@ Game::Game(DWORD BASE_ADDR) :
             ) + 0x7BB4
         )
     ),
+
+    inShopSubMenu(*(volatile BYTE*)(BASE_ADDR + 0x005CCC90)),
     //powerBrickEnabled(*(volatile DWORD*)(BASE_ADDR + 0x00536DE0)), // TODO: test
     inLevelKitCountPrev(0),
     inLevelPowerBrickPrev(0),
@@ -57,3 +59,7 @@ Game::Game(DWORD BASE_ADDR) :
     }
     
 };
+
+bool Game::isInShop(){
+    
+}

@@ -86,12 +86,14 @@ public:
     volatile WORD& suitUnlocked1; // active value
     volatile WORD& suitUnlocked2; // loaded value. (when loading sets unlocked1 to unlocked2)
     //volatile DWORD& powerBrickEnabled;
-    //volatile BYTE* inLevelKitLocations[10];
+    volatile BYTE& inShopSubMenu;
+
+    // stuff
     BYTE inLevelKitCountPrev;
     BYTE inLevelPowerBrickPrev;
     BYTE inLevelTrueStatusPrev;
     Game(DWORD BASE_ADDR);
 
-    
+    bool isInShop();
 
 };
