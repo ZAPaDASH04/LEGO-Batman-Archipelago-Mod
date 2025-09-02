@@ -474,6 +474,24 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             // TODO: setup receives when hush is unlockable?
         }
 
+        // True Status
+        if (game.inLevelTrueStatus != game.inLevelTrueStatusPrev) {
+            if (game.inLevelTrueStatus < game.inLevelTrueStatusPrev) {
+                // left level
+                game.inLevelTrueStatusPrev = 0;
+
+            } else {
+                // TrueStatus Get
+                std::cout
+                    << "new Power Brick found"
+                    << std::endl;
+                // WARN: high probability to fail. NEEDS SIGNIFICANT TESTING    
+                LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 455 + sublevelToLevel(game.currentLevel));
+                game.inLevelTrueStatusPrev = 1;
+            }
+
+        }
+
         // Red Brick
         if (game.inLevelPowerBrick != game.inLevelPowerBrickPrev) {
             if (game.inLevelPowerBrick < game.inLevelPowerBrickPrev) {

@@ -80,6 +80,7 @@ public:
     const char* inLevelKits[10]; 
     const BYTE* inLevelKitLocations[10];
     volatile BYTE& inLevelPowerBrick; // TODO: test
+    volatile BYTE& inLevelTrueStatus;
     volatile DWORD& extraPurchased;
     BYTE* extraEnabled[21]; 
     volatile WORD& suitUnlocked1; // active value
@@ -88,6 +89,7 @@ public:
     //volatile BYTE* inLevelKitLocations[10];
     BYTE inLevelKitCountPrev;
     BYTE inLevelPowerBrickPrev;
+    BYTE inLevelTrueStatusPrev;
     Game(DWORD BASE_ADDR);
 
     
