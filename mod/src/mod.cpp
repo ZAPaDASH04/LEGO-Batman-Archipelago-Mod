@@ -494,7 +494,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         // Red Brick
         if (game.inLevelPowerBrick != game.inLevelPowerBrickPrev) {
-            if (game.inLevelPowerBrick < game.inLevelPowerBrickPrev) {
+            if (game.inLevelPowerBrick < 2) {
                 // left level
                 game.inLevelPowerBrickPrev = 0;
 
