@@ -61,5 +61,5 @@ Game::Game(DWORD BASE_ADDR) :
 };
 
 bool Game::isInShop(){
-    
+    // Jr stuff :)
 }
