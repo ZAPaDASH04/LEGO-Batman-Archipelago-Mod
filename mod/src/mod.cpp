@@ -483,7 +483,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             } else {
                 // TrueStatus Get
                 std::cout
-                    << "new Power Brick found"
+                    << "new True Status"
                     << std::endl;
                 // WARN: high probability to fail. NEEDS SIGNIFICANT TESTING    
                 LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 455 + sublevelToLevel(game.currentLevel));
