@@ -437,11 +437,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     std::cout << i << " : " << std::hex << (int)a << std::endl;
 
                     // Collected Item // TODO: test
-                    if (a | 0b0010) *game.levels.levelRedBrick[i] = 1;
+                    if (a & 0b0010) *game.levels.levelRedBrick[i] = 1;
                     else *game.levels.levelRedBrick[i] = 0;
 
                     // Purchased Location // TODO: test
-                    if (a | 0b0100) game.extraPurchased |= (1 << i);
+                    if (a & 0b0100) game.extraPurchased |= (1 << i);
                     else game.extraPurchased ^= (1 << i);
                     game.extraPurchasedPrev = game.extraPurchased;
                 }
@@ -458,11 +458,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     a = game.powerBrickState[i];
                     
                     // Collected Location // TODO: test
-                    if (a | 0b0001) *game.levels.levelRedBrick[i] = 1;
+                    if (a & 0b0001) *game.levels.levelRedBrick[i] = 1;
                     else *game.levels.levelRedBrick[i] = 0;
 
                     // Purchased Item // TODO: test
-                    if (a | 0b1000) game.extraPurchased |= (1 << i);
+                    if (a & 0b1000) game.extraPurchased |= (1 << i);
                     else game.extraPurchased ^= (1 << i);
                     game.extraPurchasedPrev = game.extraPurchased;
                 }
