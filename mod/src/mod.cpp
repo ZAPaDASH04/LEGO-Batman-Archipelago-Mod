@@ -424,14 +424,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         // TODO: test
         if (game.inShopSubMenuPrev != game.inShopSubMenu) {
+            std::cout << "entered or exited shop." << std::endl;
             BYTE a;
             if (game.isInShop()) {
                 // entered shop
+                std::cout << "entered shop" << std::endl;
 
                 // per level
                 for (size_t i = 0; i < 30; i++)
                 {
                     a = game.powerBrickState[i];
+                    std::cout << i << " : " << std::hex << a << std::endl;
 
                     // Collected Item // TODO: test
                     if (a | 0b0010) *game.levels.levelRedBrick[i] = 1;
@@ -446,10 +449,12 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 
             } else {
                 // left shop
+                std::cout << "exited shop" << std::endl;
 
                 // per level
                 for (size_t i = 0; i < 30; i++)
                 {
+                    std::cout << i << " : " << std::hex << a << std::endl;
                     a = game.powerBrickState[i];
                     
                     // Collected Location // TODO: test
