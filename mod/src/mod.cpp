@@ -434,7 +434,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 for (size_t i = 0; i < 30; i++)
                 {
                     a = game.powerBrickState[i];
-                    std::cout << i << " : " << std::hex << a << std::endl;
+                    std::cout << i << " : " << std::hex << (int)a << std::endl;
 
                     // Collected Item // TODO: test
                     if (a | 0b0010) *game.levels.levelRedBrick[i] = 1;
@@ -454,7 +454,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 // per level
                 for (size_t i = 0; i < 30; i++)
                 {
-                    std::cout << i << " : " << std::hex << a << std::endl;
+                    std::cout << i << " : " << std::hex << (int)a << std::endl;
                     a = game.powerBrickState[i];
                     
                     // Collected Location // TODO: test
