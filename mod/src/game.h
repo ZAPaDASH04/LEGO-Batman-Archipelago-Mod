@@ -88,12 +88,23 @@ public:
     //volatile DWORD& powerBrickEnabled;
     volatile BYTE& inShopSubMenu;
 
-    // stuff
+    // Tracking
     BYTE inLevelKitCountPrev;
     BYTE inLevelPowerBrickPrev;
     BYTE inLevelTrueStatusPrev;
+    DWORD extraPurchasedPrev;
+    BYTE inShopSubMenuPrev;
+    /**
+     * @brief 4 flags
+     * bit 1 = Collected Location
+     * bit 2 = Collected Item
+     * bit 3 = Purchased Location
+     * bit 4 = Purchased Item
+     */
+    BYTE powerBrickState[30];
     Game(DWORD BASE_ADDR);
 
+    int checkPowerBricks();
     bool isInShop();
 
 };

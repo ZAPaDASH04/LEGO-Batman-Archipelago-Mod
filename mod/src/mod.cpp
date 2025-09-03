@@ -418,6 +418,63 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         
         loopTest(game,loops);
 
+        /*//////////////
+        *//// Shop ////*
+        //////////////*/
+
+        // TODO: test
+        if (game.inShopSubMenuPrev != game.inShopSubMenu) {
+            BYTE a;
+            if (game.isInShop()) {
+                // entered shop
+
+                // per level
+                for (size_t i = 0; i < 30; i++)
+                {
+                    a = game.powerBrickState[i];
+
+                    // Collected Item // TODO: test
+                    if (a | 0b0010) *game.levels.levelRedBrick[i] = 1;
+                    else *game.levels.levelRedBrick[i] = 0;
+
+                    // Purchased Location // TODO: test
+                    if (a | 0b0100) {
+                        game.extraPurchased |= (1 << i);
+                        game.extraPurchasedPrev = game.extraPurchased;
+                    } else {
+                        game.extraPurchased ^= (1 << i);
+                        game.extraPurchasedPrev = game.extraPurchased;
+                    }
+                }
+
+                
+            } else {
+                // left shop
+
+                // per level
+                for (size_t i = 0; i < 30; i++)
+                {
+                    a = game.powerBrickState[i];
+                    
+                    // Collected Location // TODO: test
+                    if (a | 0b0001) *game.levels.levelRedBrick[i] = 1;
+                    else *game.levels.levelRedBrick[i] = 0;
+
+                    // Purchased Item // TODO: test
+                    if (a | 0b1000) {
+                        game.extraPurchased |= (1 << i);
+                        game.extraPurchasedPrev = game.extraPurchased;
+                    } else {
+                        game.extraPurchased ^= (1 << i);
+                        game.extraPurchasedPrev = game.extraPurchased;
+                    }
+                }
+                
+            }
+            game.inShopSubMenuPrev = game.inShopSubMenu;
+        }
+
+
         /*////////////////////////////
         *//// Location Detection ////*
         ////////////////////////////*/
@@ -462,7 +519,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
         // Hostages
-        //std::cout << "hostasdgt " << std::hex << (int) *game.levels.hostages << " " << (int) game.levels.hostagesOld << std::endl;
         int hostageCheck = game.levels.checkHostages();
         if (hostageCheck != -1) { // TODO: I don't know if this is how logic works
             std::cout
@@ -492,7 +548,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         }
 
-        // Red Brick
+        // Red Brick Collected
         if (game.inLevelPowerBrick != game.inLevelPowerBrickPrev) {
             if (game.inLevelPowerBrick < 2) {
                 // left level
@@ -506,14 +562,22 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 // WARN: high probability to fail. NEEDS SIGNIFICANT TESTING    
                 LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 485 + sublevelToLevel(game.currentLevel));
                 game.inLevelPowerBrickPrev = game.inLevelPowerBrick;
+                game.powerBrickState[sublevelToLevel(game.currentLevel)] |= 0b0001;
             }
 
         }
 
-        // Shop
-        if(game.isInShop()){
-            std::cout << "In shop" << std::endl;
+        // Red Brick Purchased TODO: test
+        if (game.isInShop() && (game.extraPurchasedPrev != game.extraPurchased)) {
+            int powerBrickCheck = game.checkPowerBricks();
+            std::cout
+                << "new PowerBrick " << (int) powerBrickCheck
+                << ". PowerBrickdata " << std::hex << (int) game.extraPurchased
+                << std::endl;
+            LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 515 + powerBrickCheck);
+            game.powerBrickState[powerBrickCheck] != 0b0100;
         }
+
 
         /*////////////////////////
         *//// Item Receiving ////*
@@ -537,9 +601,16 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             } else if (i < 485) { // True status
                 std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
             } else if (i < 515) { // Red Brick
+                // TODO: test
+                std::cout << "Red Brick Collected!" << std::endl;
+                game.powerBrickState[i-485] |= 0b0010;
 
 
             } else if (i < 545) { // Red Brick purchased
+                // TODO: test
+                std::cout << "Red Brick Unlocked!" << std::endl;
+                game.powerBrickState[i-515] |= 0b1000;
+
                 
 
             } else { // out of bound

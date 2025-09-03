@@ -44,7 +44,8 @@ Game::Game(DWORD BASE_ADDR) :
     //powerBrickEnabled(*(volatile DWORD*)(BASE_ADDR + 0x00536DE0)), // TODO: test
     inLevelKitCountPrev(0),
     inLevelPowerBrickPrev(0),
-    inLevelTrueStatusPrev(0)
+    inLevelTrueStatusPrev(0),
+    inShopSubMenuPrev(0)
 {
     //currentLevel = ((volatile BYTE*)(BASE_ADDR + 0x006C98C4));
     for (size_t i = 0; i < 10; i++)
@@ -57,8 +58,25 @@ Game::Game(DWORD BASE_ADDR) :
     for (size_t i = 0; i < 21; i++) {
         extraEnabled[i] = ((BYTE*)(BASE_ADDR + 0x00536DE0 + i*0x1C));
     }
+
+    extraPurchasedPrev = extraPurchased;
+
+    for (size_t i = 0; i < 30; i++)
+    {
+        // red brick stuff
+        powerBrickState[i] = 0;
+    }
+    
     
 };
+
+int Game::checkPowerBricks()
+{
+    int i = -1; // -1 is no new hostages.
+    // how many right shifts // WARN: does not account for loading a different save or losing hostage progress.
+    for (int a =  extraPurchasedPrev ^ extraPurchased; a > 0; a = a >> 1) i++;
+    return i; 
+}
 
 bool Game::isInShop(){
     return inShopSubMenu == 1;
