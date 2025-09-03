@@ -510,6 +510,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         }
 
+        // Shop
+        if(game.isInShop()){
+            std::cout << "In shop" << std::endl;
+        }
+
         /*////////////////////////
         *//// Item Receiving ////*
         ////////////////////////*/
