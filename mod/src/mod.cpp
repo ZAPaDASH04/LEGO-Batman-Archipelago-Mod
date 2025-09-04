@@ -256,43 +256,25 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
     // Wait for data and code to be readable and writable
-
-    ///////////////TODO: This sucks but I just can't find a good way to do this :(
-    // WARN: does not work yet. just inject after in level.
-    //Sleep(30000);
-    // volatile BYTE saveFile = game.saveSlot; // (BYTE*)(BASE_ADDR + UP + (0x56801C));
-    // volatile BYTE level = game.currentLevel; // This may not be working somehow
-
-    // std::cout << "saveSlot " << std::hex << (int) game.saveSlot << std::endl;
-    // while (level == 0x00) {
-    //     Sleep(500); 
-    //     // this is flawed as it often crashes on batman robin loading
-    // }
-    // file << "Level is " << std::hex << (int)level << std::endl;
-    // file << "Save file is " << (int)saveFile << std::endl;
-    // // TODO: wait for player to gain control?
-    // if (saveFile == 0xFF) {
-    //     // NEW GAME started
-    //     // TODO: Find some way to make the player save.
-    // } else {
-    //     // preexisting save file.
-    // }
     std::cout << "angy" << std::endl;
     BYTE** playerControlOnP = ((BYTE**)(BASE_ADDR + UP + 0x006B264C));
     std::cout << "angy2" << std::endl;
     
-    while (!isValid(playerControlOnP) || isValid((*playerControlOnP) + 0x258)) {
-        std::cout << ">:)" << std::endl;
-        Sleep(100);
-    }
+    // while (!isValid(playerControlOnP) || isValid((*playerControlOnP) + 0x258)) {
+    //     std::cout << ">:)" << std::endl;
+    //     Sleep(100);
+    // }
 
     std::cout << "angy3" << std::endl;
     while ((*playerControlOnP == nullptr) || (*((*playerControlOnP) + 0x258) == 0)) {
+        std::cout << "waiting for game..." << std::endl;
         Sleep(10);
     }
     
 
-    std::cout << "yippee" << std::endl;
+
+
+
 
     
     // build the game data and message box
@@ -305,6 +287,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     BYTE NOP[16] = {0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90};
 
 
+    
+
+    if (game.saveSlot == 0xFF) {
+        // NEW GAME started
+        // TODO: Find some way to make the player save.
+    } else {
+        // preexisting save file.
+    }
 
 
     /*////////////////////////////////
@@ -350,6 +340,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     // AP testing.
     messageBox.holdMessage("Holy Archipelago Batman!!! Attempting to connect...");
+    // TODO: doesn't hold forever :(
     //TODO: add remove player movement
     LB1AP_Connect();
     messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
