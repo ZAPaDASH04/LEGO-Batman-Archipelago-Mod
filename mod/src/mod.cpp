@@ -266,17 +266,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         Sleep(500); 
         // this is flawed as it often crashes on batman robin loading
     }
-    file << "Level is " << std::hex << (int)level << std::endl;
-    file << "Save file is " << (int)saveFile << std::endl;
-    // TODO: wait for player to gain control?
-    if (saveFile == 0xFF) {
-        // NEW GAME started
-        // TODO: Find some way to make the player save.
-    } else {
-        // preexisting save file.
-    }
-
-    while (!game.playerControlOn) {
+    // file << "Level is " << std::hex << (int)level << std::endl;
+    // file << "Save file is " << (int)saveFile << std::endl;
+    // // TODO: wait for player to gain control?
+    // if (saveFile == 0xFF) {
+    //     // NEW GAME started
+    //     // TODO: Find some way to make the player save.
+    // } else {
+    //     // preexisting save file.
+    // }
+    std::cout << "angy" << std::endl;
+    while (game.playerControlOn != 1) {
         Sleep(10);
     }
 
