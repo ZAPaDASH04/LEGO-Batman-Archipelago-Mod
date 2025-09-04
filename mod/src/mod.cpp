@@ -208,14 +208,14 @@ void loopTest(Game game, DWORD loops) {
     
 }
 
-bool isValid(void* addr) {
-    MEMORY_BASIC_INFORMATION mbi;
-    if (VirtualQuery(addr, &mbi, sizeof(mbi))) {
-        return (mbi.State == MEM_COMMIT) &&
-               !(mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD));
-    }
-    return false;
-}
+// bool isValid(void* addr) {
+//     MEMORY_BASIC_INFORMATION mbi;
+//     if (VirtualQuery(addr, &mbi, sizeof(mbi))) {
+//         return (mbi.State == MEM_COMMIT) &&
+//                !(mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD));
+//     }
+//     return false;
+// }
 
 
 DWORD WINAPI ThreadProc(LPVOID lpParam) {
@@ -265,10 +265,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //     Sleep(100);
     // }
 
-    std::cout << "angy3" << std::endl;
     while ((*playerControlOnP == nullptr) || (*((*playerControlOnP) + 0x258) == 0)) {
-        std::cout << "waiting for game..." << std::endl;
-        Sleep(10);
+        //std::cout << "waiting for game..." << std::endl;
+        Sleep(100);
     }
     
 
