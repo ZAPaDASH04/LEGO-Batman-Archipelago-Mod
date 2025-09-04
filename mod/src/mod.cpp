@@ -442,7 +442,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
                     // Purchased Location // TODO: test
                     if (a & 0b0100) game.extraPurchased |= (1 << i);
-                    else game.extraPurchased ^= (1 << i);
+                    else game.extraPurchased &= ~(1 << i);
                     game.extraPurchasedPrev = game.extraPurchased;
                 }
 
@@ -463,7 +463,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
                     // Purchased Item // TODO: test
                     if (a & 0b1000) game.extraPurchased |= (1 << i);
-                    else game.extraPurchased ^= (1 << i);
+                    else game.extraPurchased &= ~(1 << i);
                     game.extraPurchasedPrev = game.extraPurchased;
                 }
                 
