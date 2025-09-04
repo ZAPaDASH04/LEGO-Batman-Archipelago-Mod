@@ -239,6 +239,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     }
     file << "Module found." << std::endl;
     DWORD BASE_ADDR = (DWORD)hModule; 
+    
+    std::cout << "here1" << std::endl;
+    DWORD UP0 = 0x0; // initial version
+    DWORD UP1 = 0x1000; // 7/9/2025 update | WARN: LEGO Batman suddenly updated and I assume this +0x1000 is the general fix for it at least when it comes to data addresses. code addresses vary.
+    DWORD UP = UP0 + UP1;
 
 
     // Wait for data and code to be readable and writable
@@ -264,19 +269,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //     // preexisting save file.
     // }
     std::cout << "angy" << std::endl;
-    BYTE** playerControlOnP = ((BYTE**)(BASE_ADDR + 0x006B264C));
+    BYTE** playerControlOnP = ((BYTE**)(BASE_ADDR + UP + 0x006B264C));
     while ((playerControlOnP == nullptr) || (*((*playerControlOnP) + 0x258) == 0)) {
         Sleep(10);
     }
 
     std::cout << "yippee" << std::endl;
 
-
-
-    std::cout << "here1" << std::endl;
-    DWORD UP0 = 0x0; // initial version
-    DWORD UP1 = 0x1000; // 7/9/2025 update | WARN: LEGO Batman suddenly updated and I assume this +0x1000 is the general fix for it at least when it comes to data addresses. code addresses vary.
-    DWORD UP = UP0 + UP1;
     
     // build the game data and message box
     std::cout << "before game" << std::endl;
