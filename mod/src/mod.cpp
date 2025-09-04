@@ -276,6 +276,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         // preexisting save file.
     }
 
+    while (!game.playerControlOn) {
+        Sleep(10);
+    }
 
 
 
