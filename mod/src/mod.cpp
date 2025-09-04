@@ -378,7 +378,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     // Easy true status
     *game.extraEnabled[ExtraName::Always_Score_Multiply] = 1;
-    *game.extraEnabled[ExtraName::Stud_Magnet] = 1;
+    //*game.extraEnabled[ExtraName::Stud_Magnet] = 1;
     // Detectors on
     *game.extraEnabled[ExtraName::Minikit_Detector] = 1;
     *game.extraEnabled[ExtraName::Power_Brick_Detector] = 1;
@@ -573,6 +573,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 << std::endl;
             LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 515 + powerBrickCheck);
             game.powerBrickState[powerBrickCheck] != 0b0100;
+            game.extraPurchasedPrev = game.extraPurchased;
         }
 
 
