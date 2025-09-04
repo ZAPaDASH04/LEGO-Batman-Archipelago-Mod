@@ -280,7 +280,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         Sleep(10);
     }
 
-
+    std::cout << "yippee" << std::endl;
 
 
 
