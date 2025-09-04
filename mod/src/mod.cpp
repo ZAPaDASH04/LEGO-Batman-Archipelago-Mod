@@ -208,6 +208,15 @@ void loopTest(Game game, DWORD loops) {
     
 }
 
+bool isValid(void* addr) {
+    MEMORY_BASIC_INFORMATION mbi;
+    if (VirtualQuery(addr, &mbi, sizeof(mbi))) {
+        return (mbi.State == MEM_COMMIT) &&
+               !(mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD));
+    }
+    return false;
+}
+
 
 DWORD WINAPI ThreadProc(LPVOID lpParam) {
     HMODULE hSelf = (HMODULE)lpParam;
@@ -270,9 +279,18 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // }
     std::cout << "angy" << std::endl;
     BYTE** playerControlOnP = ((BYTE**)(BASE_ADDR + UP + 0x006B264C));
-    while ((playerControlOnP == nullptr) || (*((*playerControlOnP) + 0x258) == 0)) {
+    std::cout << "angy2" << std::endl;
+    
+    while (!isValid(playerControlOnP) || isValid((*playerControlOnP) + 0x258)) {
+        std::cout << ">:)" << std::endl;
+        Sleep(100);
+    }
+
+    std::cout << "angy3" << std::endl;
+    while ((*playerControlOnP == nullptr) || (*((*playerControlOnP) + 0x258) == 0)) {
         Sleep(10);
     }
+    
 
     std::cout << "yippee" << std::endl;
 
