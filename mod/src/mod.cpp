@@ -269,10 +269,23 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //     // preexisting save file.
     // }
     std::cout << "angy" << std::endl;
-    BYTE** playerControlOnP = ((BYTE**)(BASE_ADDR + UP + 0x006B264C));
-    while ((playerControlOnP == nullptr) || (*((*playerControlOnP) + 0x258) == 0)) {
-        Sleep(10);
+    bool trying = true;
+    while (trying)
+    {
+        try
+        {
+            BYTE** playerControlOnP = ((BYTE**)(BASE_ADDR + UP + 0x006B264C));
+            while ((playerControlOnP == nullptr) || (*((*playerControlOnP) + 0x258) == 0)) {
+                Sleep(10);
+            }
+            trying = false;
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
     }
+    
 
     std::cout << "yippee" << std::endl;
 
