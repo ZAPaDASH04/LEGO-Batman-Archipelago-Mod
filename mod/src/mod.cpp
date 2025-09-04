@@ -262,10 +262,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     volatile BYTE level = game.currentLevel; // This may not be working somehow
 
     std::cout << "saveSlot " << std::hex << (int) game.saveSlot << std::endl;
-    while (level == 0x00) {
-        Sleep(500); 
-        // this is flawed as it often crashes on batman robin loading
-    }
+    // while (level == 0x00) {
+    //     Sleep(500); 
+    //     // this is flawed as it often crashes on batman robin loading
+    // }
     // file << "Level is " << std::hex << (int)level << std::endl;
     // file << "Save file is " << (int)saveFile << std::endl;
     // // TODO: wait for player to gain control?
