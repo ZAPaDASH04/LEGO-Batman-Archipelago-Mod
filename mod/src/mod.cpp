@@ -262,10 +262,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     ///////////////TODO: This sucks but I just can't find a good way to do this :(
     // WARN: does not work yet. just inject after in level.
     //Sleep(30000);
-    volatile BYTE saveFile = game.saveSlot; // (BYTE*)(BASE_ADDR + UP + (0x56801C));
-    volatile BYTE level = game.currentLevel; // This may not be working somehow
+    // volatile BYTE saveFile = game.saveSlot; // (BYTE*)(BASE_ADDR + UP + (0x56801C));
+    // volatile BYTE level = game.currentLevel; // This may not be working somehow
 
-    std::cout << "saveSlot " << std::hex << (int) game.saveSlot << std::endl;
+    // std::cout << "saveSlot " << std::hex << (int) game.saveSlot << std::endl;
     // while (level == 0x00) {
     //     Sleep(500); 
     //     // this is flawed as it often crashes on batman robin loading
