@@ -10,6 +10,7 @@
  */
 
 #include "game.h"
+#include <iostream>
 
 
 Game::Game(DWORD BASE_ADDR) : 
@@ -41,7 +42,6 @@ Game::Game(DWORD BASE_ADDR) :
     ),
 
     inShopSubMenu(*(volatile BYTE*)(BASE_ADDR + 0x005CBC90)),
-    playerControlOnP((BYTE**)(BASE_ADDR + 0x006B264C)),
     //powerBrickEnabled(*(volatile DWORD*)(BASE_ADDR + 0x00536DE0)), // TODO: test
     inLevelKitCountPrev(0),
     inLevelPowerBrickPrev(0),

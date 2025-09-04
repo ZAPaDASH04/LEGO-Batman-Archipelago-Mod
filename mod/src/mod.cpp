@@ -238,23 +238,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         Sleep(50);
     }
     file << "Module found." << std::endl;
-    std::cout << "here" << std::endl;
     DWORD BASE_ADDR = (DWORD)hModule; 
-    std::cout << "here1" << std::endl;
-    DWORD UP0 = 0x0; // initial version
-    DWORD UP1 = 0x1000; // 7/9/2025 update | WARN: LEGO Batman suddenly updated and I assume this +0x1000 is the general fix for it at least when it comes to data addresses. code addresses vary.
-    DWORD UP = UP0 + UP1;
-    
-    // build the game data and message box
-    std::cout << "before game" << std::endl;
-    Game game(BASE_ADDR + UP);
-    std::cout << "before message box" << std::endl;
-    HintMessageBox messageBox(BASE_ADDR + UP);
-
-    // Nops for overwriting code
-    BYTE NOP[16] = {0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90};
-
-
 
 
     // Wait for data and code to be readable and writable
@@ -280,7 +264,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //     // preexisting save file.
     // }
     std::cout << "angy" << std::endl;
-    while ((game.playerControlOnP == nullptr) || (*((*game.playerControlOnP) + 0x258) == 0)) {
+    BYTE** playerControlOnP = ((BYTE**)(BASE_ADDR + 0x006B264C));
+    while ((playerControlOnP == nullptr) || (*((*playerControlOnP) + 0x258) == 0)) {
         Sleep(10);
     }
 
@@ -288,12 +273,27 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
 
+    std::cout << "here1" << std::endl;
+    DWORD UP0 = 0x0; // initial version
+    DWORD UP1 = 0x1000; // 7/9/2025 update | WARN: LEGO Batman suddenly updated and I assume this +0x1000 is the general fix for it at least when it comes to data addresses. code addresses vary.
+    DWORD UP = UP0 + UP1;
+    
+    // build the game data and message box
+    std::cout << "before game" << std::endl;
+    Game game(BASE_ADDR + UP);
+    std::cout << "before message box" << std::endl;
+    HintMessageBox messageBox(BASE_ADDR + UP);
+
+    // Nops for overwriting code
+    BYTE NOP[16] = {0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90};
+
 
 
 
     /*////////////////////////////////
     -////  Pre Loop Setup Begin  ////-
     ////////////////////////////////*/
+
 
 
     

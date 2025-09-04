@@ -87,8 +87,7 @@ public:
     volatile WORD& suitUnlocked2; // loaded value. (when loading sets unlocked1 to unlocked2)
     //volatile DWORD& powerBrickEnabled;
     volatile BYTE& inShopSubMenu;
-    BYTE** playerControlOnP;
-    
+
 
     // Tracking
     BYTE inLevelKitCountPrev;
