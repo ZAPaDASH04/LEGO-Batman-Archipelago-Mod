@@ -73,7 +73,7 @@ Game::Game(DWORD BASE_ADDR) :
 
 int Game::checkPowerBricks()
 {
-    int i = -1; // -1 is no new hostages.
+    int i = -1; // -1 is no powerbrick.
     // how many right shifts // WARN: does not account for loading a different save or losing hostage progress.
     for (int a =  extraPurchasedPrev ^ extraPurchased; a > 0; a = a >> 1) i++;
     return i; 

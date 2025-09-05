@@ -585,7 +585,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         // Red Brick Purchased TODO: test
         if (game.isInShop() && (game.extraPurchasedPrev != game.extraPurchased)) {
             int powerBrickCheck = game.checkPowerBricks();
-            if (powerBrickCheck < 0) { // TODO: I don't think this will ever not trigger.
+            if (powerBrickCheck != -1) { // TODO: I don't think this will ever not trigger.
                 std::cout
                     << "new PowerBrick " << (int) powerBrickCheck
                     << ". PowerBrickdata " << std::hex << (int) game.extraPurchased
