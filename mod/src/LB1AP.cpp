@@ -81,7 +81,7 @@ void LB1AP_receiveItem(int itemID, bool notify){
         printf("Red Brick Collected\n");
         receiveQueue.push(itemID);
 
-    } else if (itemID < 545) { // Red Brick purchased
+    } else if (itemID < 549) { // Red Brick purchased
         printf("Red Brick Purchased\n");
         receiveQueue.push(itemID);
 
