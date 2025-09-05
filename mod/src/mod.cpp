@@ -445,7 +445,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout << "entered shop" << std::endl;
 
                 // per level
-                for (size_t i = 0; i < 35; i++)
+                for (DWORD64 i = 0; i < 35; i++)
                 {
                     a = game.powerBrickState[i];
                     std::cout << i << " : " << std::hex << (int)a << std::endl;
@@ -457,8 +457,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     }
 
                     // Purchased Location // TODO: test
-                    if (a & 0b0100) game.extraPurchased |= (1 << (i));
-                    else game.extraPurchased &= ~(1 << (i));
+                    if (a & 0b0100) game.extraPurchased |= (((DWORD64)1) << (i));
+                    else game.extraPurchased &= ~(DWORD64)(((DWORD64)1) << (i));
                     game.extraPurchasedPrev = game.extraPurchased;
                 }
 
@@ -468,7 +468,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout << "exited shop" << std::endl;
 
                 // per level
-                for (size_t i = 0; i < 35; i++)
+                for (DWORD64 i = 0; i < 35; i++)
                 {
                     std::cout << i << " : " << std::hex << (int)a << std::endl;
                     a = game.powerBrickState[i];
@@ -480,8 +480,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                         else *game.levels.levelRedBrick[i] = 0;
                     }
                     // Purchased Item // TODO: test
-                    if (a & 0b1000) game.extraPurchased |= (1 << (i));
-                    else game.extraPurchased &= ~(1 << (i));
+                    if (a & 0b1000) game.extraPurchased |= (((DWORD64)1) << (i));
+                    else game.extraPurchased &= ~(DWORD64)(((DWORD64)1) << (i));
                     game.extraPurchasedPrev = game.extraPurchased;
                 }
                 
@@ -582,7 +582,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         }
 
-        // Red Brick Purchased TODO: test
+        // Red Brick Purchased
         if (game.isInShop() && (game.extraPurchasedPrev != game.extraPurchased)) {
             int powerBrickCheck = game.checkPowerBricks() - 1;
             if (powerBrickCheck != -1) { // TODO: I don't think this will ever not trigger.
