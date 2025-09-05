@@ -62,7 +62,7 @@ Game::Game(DWORD BASE_ADDR) :
 
     extraPurchasedPrev = extraPurchased;
 
-    for (size_t i = 0; i < 30; i++)
+    for (size_t i = 0; i < 35; i++)
     {
         // red brick stuff
         powerBrickState[i] = 0;

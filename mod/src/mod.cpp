@@ -445,18 +445,20 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout << "entered shop" << std::endl;
 
                 // per level
-                for (size_t i = 0; i < 30; i++)
+                for (size_t i = 0; i < 35; i++)
                 {
                     a = game.powerBrickState[i];
                     std::cout << i << " : " << std::hex << (int)a << std::endl;
 
                     // Collected Item // TODO: test
-                    if (a & 0b0010) *game.levels.levelRedBrick[i] = 1;
-                    else *game.levels.levelRedBrick[i] = 0;
+                    if (i<30) {
+                        if (a & 0b0010) *game.levels.levelRedBrick[i] = 1;
+                        else *game.levels.levelRedBrick[i] = 0;
+                    }
 
                     // Purchased Location // TODO: test
-                    if (a & 0b0100) game.extraPurchased |= (1 << i);
-                    else game.extraPurchased &= ~(1 << i);
+                    if (a & 0b0100) game.extraPurchased |= (1 << (i+1));
+                    else game.extraPurchased &= ~(1 << (i+1));
                     game.extraPurchasedPrev = game.extraPurchased;
                 }
 
@@ -466,18 +468,20 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout << "exited shop" << std::endl;
 
                 // per level
-                for (size_t i = 0; i < 30; i++)
+                for (size_t i = 0; i < 35; i++)
                 {
                     std::cout << i << " : " << std::hex << (int)a << std::endl;
                     a = game.powerBrickState[i];
                     
                     // Collected Location // TODO: test
-                    if (a & 0b0001) *game.levels.levelRedBrick[i] = 1;
-                    else *game.levels.levelRedBrick[i] = 0;
-
+                    
+                    if (i<30) {
+                        if (a & 0b0001) *game.levels.levelRedBrick[i] = 1;
+                        else *game.levels.levelRedBrick[i] = 0;
+                    }
                     // Purchased Item // TODO: test
-                    if (a & 0b1000) game.extraPurchased |= (1 << i);
-                    else game.extraPurchased &= ~(1 << i);
+                    if (a & 0b1000) game.extraPurchased |= (1 << (i+1));
+                    else game.extraPurchased &= ~(1 << (i+1));
                     game.extraPurchasedPrev = game.extraPurchased;
                 }
                 
@@ -580,14 +584,16 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         // Red Brick Purchased TODO: test
         if (game.isInShop() && (game.extraPurchasedPrev != game.extraPurchased)) {
-            int powerBrickCheck = game.checkPowerBricks();
-            std::cout
-                << "new PowerBrick " << (int) powerBrickCheck
-                << ". PowerBrickdata " << std::hex << (int) game.extraPurchased
-                << std::endl;
-            LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 515 + powerBrickCheck);
-            game.powerBrickState[powerBrickCheck] != 0b0100;
-            game.extraPurchasedPrev = game.extraPurchased;
+            int powerBrickCheck = game.checkPowerBricks() -1;
+            if (powerBrickCheck != 0) { // TODO: I don't think this will ever not trigger.
+                std::cout
+                    << "new PowerBrick " << (int) powerBrickCheck
+                    << ". PowerBrickdata " << std::hex << (int) game.extraPurchased
+                    << std::endl;
+                LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 515 + powerBrickCheck);
+                game.powerBrickState[powerBrickCheck] != 0b0100;
+                game.extraPurchasedPrev = game.extraPurchased;
+            }
         }
 
 
@@ -622,6 +628,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 // TODO: test
                 std::cout << "Red Brick Unlocked!" << std::endl;
                 game.powerBrickState[i-515] |= 0b1000;
+                if (!game.isInShop()) game.extraPurchased |= (1 << (i-515+1));
 
                 
 

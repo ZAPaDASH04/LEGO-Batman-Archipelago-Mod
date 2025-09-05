@@ -102,7 +102,7 @@ public:
      * bit 3 = Purchased Location
      * bit 4 = Purchased Item
      */
-    BYTE powerBrickState[30];
+    BYTE powerBrickState[35];
     Game(DWORD BASE_ADDR);
 
     int checkPowerBricks();
