@@ -93,7 +93,7 @@ public:
     BYTE inLevelKitCountPrev;
     BYTE inLevelPowerBrickPrev;
     BYTE inLevelTrueStatusPrev;
-    DWORD extraPurchasedPrev;
+    DWORD64 extraPurchasedPrev;
     BYTE inShopSubMenuPrev;
     /**
      * @brief 4 flags
