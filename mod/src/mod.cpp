@@ -633,7 +633,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 
 
             } else { // out of bound
-                printf("Received Unknown Item: %d\n", i);
+                std::cout << "Received Unknown Item: " << (int) i;
             }
             receiveQueue.pop();
 
