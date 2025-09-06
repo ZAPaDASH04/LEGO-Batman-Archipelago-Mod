@@ -432,9 +432,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     while (true) {
         if (game.currentLevel != levprev) {
             std::cout << "Sub Level Changed to " 
-                      << std::hex << game.currentLevel 
-                      << ". Level " << sublevelToLevel(game.currentLevel)
+                      << std::hex << (int)game.currentLevel 
+                      << ". Level " << std::hex << (int)sublevelToLevel(game.currentLevel)
                       << std::endl;
+
+            levprev = game.currentLevel;
         }
         
         loopTest(game,loops);
@@ -551,7 +553,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         }
         
 
-        // True Status
+        // True Status // WARN: some are broken
         if (game.inLevelTrueStatus != game.inLevelTrueStatusPrev) {
             if (game.inLevelTrueStatus < game.inLevelTrueStatusPrev) {
                 // left level
@@ -569,7 +571,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         }
 
-        // Red Brick Collected
+        // Red Brick Collected ?? WARN: some are broken
         if (game.inLevelPowerBrick != game.inLevelPowerBrickPrev) {
             if (game.inLevelPowerBrick < 2) {
                 // left level
