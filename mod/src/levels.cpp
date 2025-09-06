@@ -75,6 +75,7 @@ BYTE sublevelToLevel(BYTE id) {
     case 0x38: return V1_3;
     case 0x39: return V1_3;
     case 0x3A: return V1_3;
+    case 0x3B: return V1_3;
     case 0x3F: return V1_4;
     case 0x40: return V1_4;
     case 0x41: return V1_4;
