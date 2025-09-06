@@ -15,10 +15,10 @@ bool lb1AP_items[LB1AP_NUM_LOCS_AND_ITEMS] = {}; //array with the in game items
 int minikits = 0; //number of minikits received
 int hostages = 0; // number of hostages received
 int lb1_End_Goal = 0; //0 = minikits which is currently default
-int lb1_minikits_to_win = 200; //number of minikits required to win. Default is 200
-int lb1_levels_to_win = 20; //number of levels required to win. Default is 20
-int lb1_minikit_sanity = 1; //1 if minikit sanity check is enabled, 0 if not
-int lb1_true_status_sanity = 1; //1 if true status sanity check is enabled, 0 if not
+int lb1_minikits_to_win {}; //number of minikits required to win. Default is 200
+int lb1_levels_to_win {}; //number of levels required to win. Default is 20
+int lb1_minikit_sanity {}; //1 if minikit sanity check is enabled, 0 if not
+int lb1_true_status_sanity {}; //1 if true status sanity check is enabled, 0 if not
 
 std::queue<int> receiveQueue;
 
@@ -70,6 +70,7 @@ void LB1AP_receiveItem(int itemID, bool notify){
         printf("Received Unknown Item: %d\n", itemID);
     } else if (itemID < 400) { // Minikits
         minikits++;
+        printf("Number of Minikits: %d\n", minikits);
 
     } else if (itemID < 425) { // Hostages
     } else if (itemID < 455) { // Level Unlock
@@ -210,7 +211,8 @@ void LB1AP_SetCompletionType(int type){
 
 void LB1AP_SetMinikitsToWin(int num){
     if(num < 50 || num > 300){
-        std::cout << "Could not read the number of minikits to win. Please report this to the devs." << std::endl;
+        std::cout << "Could not read the number of minikits to win. Please report this to the devs. Setting minikits to win to default" << std::endl;
+        lb1_minikits_to_win = 200; //reset to default
         return;
     }
     lb1_minikits_to_win = num;
