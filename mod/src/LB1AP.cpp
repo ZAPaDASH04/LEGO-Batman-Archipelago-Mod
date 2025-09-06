@@ -70,6 +70,7 @@ void LB1AP_receiveItem(int itemID, bool notify){
         printf("Received Unknown Item: %d\n", itemID);
     } else if (itemID < 400) { // Minikits
         minikits++;
+        printf("Number of Minikits: %d\n", minikits);
 
     } else if (itemID < 425) { // Hostages
     } else if (itemID < 455) { // Level Unlock
