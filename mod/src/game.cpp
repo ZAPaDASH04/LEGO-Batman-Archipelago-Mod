@@ -68,7 +68,6 @@ Game::Game(DWORD BASE_ADDR) :
         powerBrickState[i] = 0;
     }
     
-    
 };
 
 int Game::checkPowerBricks()
