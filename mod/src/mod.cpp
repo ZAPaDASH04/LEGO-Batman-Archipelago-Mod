@@ -435,6 +435,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                       << std::hex << (int)game.currentLevel 
                       << ". Level " << std::hex << (int)sublevelToLevel(game.currentLevel)
                       << std::endl;
+
+            levprev = game.currentLevel;
         }
         
         loopTest(game,loops);
