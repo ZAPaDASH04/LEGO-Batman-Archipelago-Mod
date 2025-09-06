@@ -433,7 +433,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         if (game.currentLevel != levprev) {
             std::cout << "Sub Level Changed to " 
                       << std::hex << (int)game.currentLevel 
-                      << ". Level " << std::hex << (int)sublevelToLevel(game.currentLevel)
+                      << ". Level " << std::dec << (int)sublevelToLevel(game.currentLevel)
                       << std::endl;
 
             levprev = game.currentLevel;
