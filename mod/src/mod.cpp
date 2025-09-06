@@ -428,7 +428,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     DWORD loops = 0;
     //SubLevelKits* saveKitData = game.levels.levelKitSaveData;
     //SubLevelKits levelKitData;
+    BYTE levprev = game.currentLevel;
     while (true) {
+        if (game.currentLevel != levprev) {
+            std::cout << "Sub Level Changed to " 
+                      << std::hex << game.currentLevel 
+                      << ". Level " << sublevelToLevel(game.currentLevel)
+                      << std::endl;
+        }
         
         loopTest(game,loops);
 
@@ -519,6 +526,18 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         }
 
 
+        // Hostages
+        int hostageCheck = game.levels.checkHostages();
+        if (hostageCheck != -1) { // TODO: I don't know if this is how logic works
+            std::cout
+                << "new hostage " << (int) hostageCheck 
+                << ". hostagedata " << std::hex << (int) *game.levels.hostages
+                << std::endl;
+            LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 400 + hostageCheck);
+            game.levels.hostagesOld = *game.levels.hostages;
+            // TODO: setup receives when hush is unlockable?
+        }
+
 
         // Levels
         for (size_t i = 0; i < 30; i++) {
@@ -531,19 +550,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             }
         }
         
-
-
-        // Hostages
-        int hostageCheck = game.levels.checkHostages();
-        if (hostageCheck != -1) { // TODO: I don't know if this is how logic works
-            std::cout
-                << "new hostage " << (int) hostageCheck 
-                << ". hostagedata " << std::hex << (int) *game.levels.hostages
-                << std::endl;
-            LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 400 + hostageCheck);
-            
-            // TODO: setup receives when hush is unlockable?
-        }
 
         // True Status
         if (game.inLevelTrueStatus != game.inLevelTrueStatusPrev) {
