@@ -35,6 +35,7 @@ BYTE sublevelToLevel(BYTE id) {
 
     case 0x5B: return H2_1;
     case 0x5C: return H2_1;
+    case 0x5D: return H2_1;
     case 0x74: return H2_2;
     case 0x75: return H2_2;
     case 0x77: return H2_2;
