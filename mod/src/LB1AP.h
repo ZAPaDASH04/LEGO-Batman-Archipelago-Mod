@@ -56,3 +56,4 @@ void LB1AP_SetReplyHanlder(AP_SetReply reply);
 void LB1AP_LevelComplete();
 void LB1AP_SetMinikitSanity(int num);
 void LB1AP_SetTrueStatusSanity(int num);
+void LB1AP_SetFreeplayOrStory(int num);

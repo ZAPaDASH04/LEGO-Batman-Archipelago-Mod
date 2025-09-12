@@ -19,6 +19,7 @@ int lb1_minikits_to_win {}; //number of minikits required to win. Default is 200
 int lb1_levels_to_win {}; //number of levels required to win. Default is 20
 int lb1_minikit_sanity {}; //1 if minikit sanity check is enabled, 0 if not
 int lb1_true_status_sanity {}; //1 if true status sanity check is enabled, 0 if not
+int lb1_freeplay_or_story {}; //0 if level unlocks send story mode, 1 if freeplay is sent
 
 std::queue<int> receiveQueue;
 
@@ -34,6 +35,7 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
     AP_RegisterSlotDataIntCallback("LevelsToWin", &LB1AP_SetLevelsToWin); //read slot data for number of levels to win
     AP_RegisterSlotDataIntCallback("MinikitSanity", &LB1AP_SetMinikitSanity); //read slot data for minikit sanity setting
     AP_RegisterSlotDataIntCallback("TrueStatusSanity", &LB1AP_SetTrueStatusSanity); //read slot data for true status sanity setting
+    AP_RegisterSlotDataIntCallback("FreeplayOrStory", &LB1AP_SetFreeplayOrStory); //read slot data for freeplay or story mode setting
     AP_Start();
 }
 
@@ -244,6 +246,15 @@ void LB1AP_SetTrueStatusSanity(int num){
     }
     lb1_true_status_sanity = num;
     std::cout << "True status sanity set to " << lb1_true_status_sanity << std::endl;
+}
+
+void LB1AP_SetFreeplayOrStory(int num){
+    if(num < 0 || num > 1){
+        std::cout << "Could not read the Freeplay setting. Please report this to the devs." << std::endl;
+        return;
+    }
+    lb1_freeplay_or_story = num;
+    std::cout << "Freeplay setting set to: " << lb1_freeplay_or_story << std::endl;
 }
 
 void LB1AP_SetReplyHanlder(AP_SetReply reply){
