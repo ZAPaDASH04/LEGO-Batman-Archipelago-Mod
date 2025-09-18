@@ -330,6 +330,12 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // for beating episode
     WriteCode((BYTE*)(BASE_ADDR + 0x000788BF),(BYTE[]){0xC6, 0x84, 0x81, 0xDA, 0x77, 0x00, 0x00, 0x01},NOP,8);
 
+    
+    // disable game overwriting level beaten.
+    // WARN: might be more than that.
+    WriteCode((BYTE*)(BASE_ADDR + 0x000ABB7D),(BYTE[]){0x89,0x30},NOP,2);
+
+
     // disable default levels
     *game.levels.levelUnlocked[0] = 0; // H1-1
     *game.levels.levelUnlocked[5] = 0; // H2-1
@@ -622,8 +628,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             } else if (i < 455) { // Level Unlock
                 std::cout << "Level Unlocked!" << std::endl;
                 *game.levels.levelUnlocked[i-425] = 1;
-                if (Settings::lb1_freeplay_or_story) *game.levels.levelBeaten[i-425] = 1;
-                
+                std::cout << "freeplay? " << Settings::lb1_freeplay_or_story << std::endl;
+                if (Settings::lb1_freeplay_or_story==1) *game.levels.levelBeaten[i-425] = 1;
+
             } else if (i < 485) { // True status
                 std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
             } else if (i < 515) { // Red Brick
