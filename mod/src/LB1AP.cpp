@@ -12,14 +12,14 @@
 
 bool lb1AP_locations[LB1AP_NUM_LOCS_AND_ITEMS] = {}; //array with the total number of locations.
 bool lb1AP_items[LB1AP_NUM_LOCS_AND_ITEMS] = {}; //array with the in game items
-int minikits = 0; //number of minikits received
-int hostages = 0; // number of hostages received
-int lb1_End_Goal = 0; //0 = minikits which is currently default
-int lb1_minikits_to_win {}; //number of minikits required to win. Default is 200
-int lb1_levels_to_win {}; //number of levels required to win. Default is 20
-int lb1_minikit_sanity {}; //1 if minikit sanity check is enabled, 0 if not
-int lb1_true_status_sanity {}; //1 if true status sanity check is enabled, 0 if not
-int lb1_freeplay_or_story {}; //0 if level unlocks send story mode, 1 if freeplay is sent
+int Settings::minikits = 0; //number of minikits received
+int Settings::hostages = 0; // number of hostages received
+int Settings::lb1_End_Goal = 0; //0 = minikits which is currently default
+int Settings::lb1_minikits_to_win {}; //number of minikits required to win. Default is 200
+int Settings::lb1_levels_to_win {}; //number of levels required to win. Default is 20
+int Settings::lb1_minikit_sanity {}; //1 if minikit sanity check is enabled, 0 if not
+int Settings::lb1_true_status_sanity {}; //1 if true status sanity check is enabled, 0 if not
+int Settings::lb1_freeplay_or_story {}; //0 if level unlocks send story mode, 1 if freeplay is sent
 
 std::queue<int> receiveQueue;
 
@@ -71,8 +71,8 @@ void LB1AP_receiveItem(int itemID, bool notify){
     if (itemID < 100) {
         printf("Received Unknown Item: %d\n", itemID);
     } else if (itemID < 400) { // Minikits
-        minikits++;
-        printf("Number of Minikits: %d\n", minikits);
+        Settings::minikits++;
+        printf("Number of Minikits: %d\n", Settings::minikits);
 
     } else if (itemID < 425) { // Hostages
     } else if (itemID < 455) { // Level Unlock
@@ -107,11 +107,11 @@ void LB1AP_reset(){
     for(int i = 0; i < LB1AP_NUM_LOCS_AND_ITEMS; i++){
         lb1AP_items[i] = false;
     }
-    minikits = 0;
+    Settings::minikits = 0;
 }
 
 void LB1AP_CheckWinCon(){
-    if(minikits >= lb1_minikits_to_win && lb1_End_Goal == 0){
+    if(Settings::minikits >= Settings::lb1_minikits_to_win && Settings::lb1_End_Goal == 0){
         LB1AP_Complete();
     }
 }
@@ -207,18 +207,18 @@ AP_Message* LB1AP_GetMessage(){
 }
 
 void LB1AP_SetCompletionType(int type){
-    lb1_End_Goal = type;
-    std::cout << "Completion type set to " << lb1_End_Goal << std::endl;
+    Settings::lb1_End_Goal = type;
+    std::cout << "Completion type set to " << Settings::lb1_End_Goal << std::endl;
 }
 
 void LB1AP_SetMinikitsToWin(int num){
     if(num < 50 || num > 300){
         std::cout << "Could not read the number of minikits to win. Please report this to the devs. Setting minikits to win to default" << std::endl;
-        lb1_minikits_to_win = 200; //reset to default
+        Settings::lb1_minikits_to_win = 200; //reset to default
         return;
     }
-    lb1_minikits_to_win = num;
-    std::cout << "Minikits to win set to " << lb1_minikits_to_win << std::endl;
+    Settings::lb1_minikits_to_win = num;
+    std::cout << "Minikits to win set to " << Settings::lb1_minikits_to_win << std::endl;
 }
 
 void LB1AP_SetLevelsToWin(int num){
@@ -226,8 +226,8 @@ void LB1AP_SetLevelsToWin(int num){
         std::cout << "Could not read the number of levels to win. Please report this to the devs." << std::endl;
         return;
     }
-    lb1_levels_to_win = num;
-    std::cout << "Levels to win set to " << lb1_levels_to_win << std::endl;
+    Settings::lb1_levels_to_win = num;
+    std::cout << "Levels to win set to " << Settings::lb1_levels_to_win << std::endl;
 }
 
 void LB1AP_SetMinikitSanity(int num){
@@ -235,8 +235,8 @@ void LB1AP_SetMinikitSanity(int num){
         std::cout << "Could not read the minikit sanity setting. Please report this to the devs." << std::endl;
         return;
     }
-    lb1_minikit_sanity = num;
-    std::cout << "Minikit sanity set to " << lb1_minikit_sanity << std::endl;
+    Settings::lb1_minikit_sanity = num;
+    std::cout << "Minikit sanity set to " << Settings::lb1_minikit_sanity << std::endl;
 }
 
 void LB1AP_SetTrueStatusSanity(int num){
@@ -244,8 +244,8 @@ void LB1AP_SetTrueStatusSanity(int num){
         std::cout << "Could not read the true status sanity setting. Please report this to the devs." << std::endl;
         return;
     }
-    lb1_true_status_sanity = num;
-    std::cout << "True status sanity set to " << lb1_true_status_sanity << std::endl;
+    Settings::lb1_true_status_sanity = num;
+    std::cout << "True status sanity set to " << Settings::lb1_true_status_sanity << std::endl;
 }
 
 void LB1AP_SetFreeplayOrStory(int num){
@@ -253,18 +253,18 @@ void LB1AP_SetFreeplayOrStory(int num){
         std::cout << "Could not read the Freeplay setting. Please report this to the devs." << std::endl;
         return;
     }
-    lb1_freeplay_or_story = num;
-    std::cout << "Freeplay setting set to: " << lb1_freeplay_or_story << std::endl;
+    Settings::lb1_freeplay_or_story = num;
+    std::cout << "Freeplay setting set to: " << Settings::lb1_freeplay_or_story << std::endl;
 }
 
 void LB1AP_SetReplyHanlder(AP_SetReply reply){
     if(reply.key == AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal"){
-        switch(lb1_End_Goal){
+        switch(Settings::lb1_End_Goal){
             case 0: //minikits
                 break;
             case 1: //levels
                 printf("Number of levels completed: %d\n", *(int*)reply.value);
-                if(*(int*)reply.value >= lb1_levels_to_win) LB1AP_Complete();
+                if(*(int*)reply.value >= Settings::lb1_levels_to_win) LB1AP_Complete();
                 break;
         }
     }

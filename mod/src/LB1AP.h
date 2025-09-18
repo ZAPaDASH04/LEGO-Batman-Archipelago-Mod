@@ -37,6 +37,17 @@ extern std::queue<int> receiveQueue;
 
 #endif
 
+struct Settings {
+    static int minikits; //number of minikits received
+    static int hostages; // number of hostages received
+    static int lb1_End_Goal; //0 = minikits which is currently default
+    static int lb1_minikits_to_win; //number of minikits required to win. Default is 200
+    static int lb1_levels_to_win; //number of levels required to win. Default is 20
+    static int lb1_minikit_sanity; //1 if minikit sanity check is enabled, 0 if not
+    static int lb1_true_status_sanity; //1 if true status sanity check is enabled, 0 if not
+    static int lb1_freeplay_or_story; //0 if level unlocks send story mode, 1 if freeplay is sent
+};
+
 
 void LB1AP_Init(const char* ip, const char* player_name, const char* passwd);
 void LB1AP_CheckLocation(int64_t location_id);

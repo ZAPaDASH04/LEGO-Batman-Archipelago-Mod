@@ -622,8 +622,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             } else if (i < 455) { // Level Unlock
                 std::cout << "Level Unlocked!" << std::endl;
                 *game.levels.levelUnlocked[i-425] = 1;
-                //*game.levels.levelBeaten[i-425] = 1; // WARN: temporary
-
+                if (Settings::lb1_freeplay_or_story) *game.levels.levelBeaten[i-425] = 1;
+                
             } else if (i < 485) { // True status
                 std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
             } else if (i < 515) { // Red Brick

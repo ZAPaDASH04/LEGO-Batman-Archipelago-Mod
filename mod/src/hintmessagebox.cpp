@@ -14,6 +14,7 @@
 
 
 
+
 HintMessageBox::HintMessageBox(DWORD BASE_ADDR):
     BASE_ADDR(BASE_ADDR),
     timer(*((volatile float*)(BASE_ADDR + 0x006C5F34))),
