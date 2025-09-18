@@ -199,7 +199,7 @@ Levels::Levels(DWORD BASE_ADDR) :
         // 
         levelUnlocked[j] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C6 + i*0x0C);
         levelBeaten[j] =   *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C5 + i*0x0C);
-        levelBeatenOld[j] = *levelBeaten[j];
+        levelBeatenPrev[j] = *levelBeaten[j];
         //
         levelKitCount[j] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C3 + i*0x0C);
         //

@@ -441,15 +441,43 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     DWORD loops = 0;
     //SubLevelKits* saveKitData = game.levels.levelKitSaveData;
     //SubLevelKits levelKitData;
-    BYTE levprev = game.currentLevel;
+    BYTE sublevprev = game.currentLevel;
+    BYTE lev = sublevelToLevel(game.currentLevel);
+    BYTE levprev = lev;
     while (true) {
-        if (game.currentLevel != levprev) {
+        if (game.currentLevel != sublevprev) {
             std::cout << "Sub Level Changed to " 
                       << std::hex << (int)game.currentLevel 
                       << ". Level " << std::dec << (int)sublevelToLevel(game.currentLevel)
                       << std::endl;
 
-            levprev = game.currentLevel;
+            sublevprev = game.currentLevel;
+
+            if (lev != sublevelToLevel(sublevprev)) {
+                // Level changed
+                lev = sublevelToLevel(sublevprev);
+                std::cout << "Level Changed to " 
+                      << std::dec << (int)lev
+                      << std::endl;
+                if (lev <= LevelName::V3_5) {
+                    // entered a level
+                    std::cout << "entered a level." << std::endl;
+                    for (size_t i = 0; i < 30; i++)
+                    {
+                        *game.levels.levelBeaten[i] = 0;
+                    }
+                    
+
+                } else if (lev >= LevelName::Shop_Room && lev <= LevelName::Mission_Room) {
+                    // entered hub or Unknown
+                    std::cout << "entered hub." << std::endl;
+                    for (size_t i = 0; i < 30; i++)
+                    {
+                        if (*game.levels.levelUnlocked[i] == 1 && (game.levels.levelBeatenPrev[i] == 1 || Settings::lb1_freeplay_or_story == 1)) *game.levels.levelBeaten[i] = 1;
+                    }
+                }
+                levprev = lev;
+            }
         }
         
         loopTest(game,loops);
@@ -555,15 +583,20 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
         // Levels
-        for (size_t i = 0; i < 30; i++) {
-            if (*game.levels.levelBeaten[i] != game.levels.levelBeatenOld[i]) {
-                std::cout
-                    << "new level beaten " << (int) i 
-                    << std::endl;
-                LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 425 + i);
-                game.levels.levelBeatenOld[i] = *game.levels.levelBeaten[i];
+        if (lev >= LevelName::Shop_Room && lev <= LevelName::Mission_Room) {}
+        else {
+            // not in hub    
+            for (size_t i = 0; i < 30; i++) {
+                if (*game.levels.levelBeaten[i] != game.levels.levelBeatenPrev[i]) {
+                    std::cout
+                        << "new level beaten " << (int) i 
+                        << std::endl;
+                    LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 425 + i);
+                    game.levels.levelBeatenPrev[i] = *game.levels.levelBeaten[i];
+                }
             }
         }
+        
         
 
         // True Status // WARN: some are broken
