@@ -333,7 +333,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     
     // disable game overwriting level beaten.
     // WARN: might be more than that.
-    WriteCode((BYTE*)(BASE_ADDR + 0x000ABB7D),(BYTE[]){0x89,0x30},NOP,2);
+    //WriteCode((BYTE*)(BASE_ADDR + 0x000ABB7D),(BYTE[]){0x89,0x30},NOP,2);
 
 
     // disable default levels
@@ -359,6 +359,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //file << "Patched damage function." << std::endl;
 
 
+
+    // Wait to be in hub
+    messageBox.holdMessage("Please Exit to hub.");
+    while (sublevelToLevel(game.currentLevel) != LevelName::Mission_Room) {
+        Sleep(100);
+    }
+    messageBox.releaseMessage();
 
 
 

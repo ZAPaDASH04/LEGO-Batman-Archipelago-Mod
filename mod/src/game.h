@@ -44,6 +44,7 @@ enum ExtraName {
     Invincibility
 };
 
+
 enum SuitName {
     Batsuit =      0,
     Demosuit =     3,

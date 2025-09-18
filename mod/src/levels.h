@@ -21,9 +21,14 @@ enum LevelName {
     V1_1, V1_2, V1_3, V1_4, V1_5,
     V2_1, V2_2, V2_3, V2_4, V2_5,
     V3_1, V3_2, V3_3, V3_4, V3_5,
+    // The order of the Above cannot be changed
     Wayne_Manor,
     Arkham_Asylum,
-    UnknownLevelName
+    Shop_Room,
+    Trophy_Room,
+    Experiment_Room, //TODO: get actual name in dat files
+    Mission_Room,
+    UnknownLevelName = -1
 };
 
 BYTE sublevelToLevel(BYTE);

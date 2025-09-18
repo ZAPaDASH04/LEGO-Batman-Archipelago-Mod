@@ -17,7 +17,15 @@ BYTE sublevelToLevel(BYTE id) {
 
     switch (id)
     {
-    case 0x09: return UnknownLevelName; // maybe efficient?
+    // TODO: remove reduntant returns.
+
+    case 0x05: return Shop_Room; // both
+    case 0x06: return Trophy_Room; // hero
+    case 0x07: return Trophy_Room; // evil
+    case 0x08: return Experiment_Room; // evil custom character
+    case 0x09: return Mission_Room; // hero
+    case 0x0A: return Mission_Room; // evil
+    
     case 0x12: return H1_1;
     case 0x13: return H1_1;
     case 0x1E: return H1_2;

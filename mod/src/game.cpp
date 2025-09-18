@@ -47,6 +47,7 @@ Game::Game(DWORD BASE_ADDR) :
     inLevelPowerBrickPrev(0),
     inLevelTrueStatusPrev(0),
     inShopSubMenuPrev(0)
+    
 {
     //currentLevel = ((volatile BYTE*)(BASE_ADDR + 0x006C98C4));
     for (size_t i = 0; i < 10; i++)
