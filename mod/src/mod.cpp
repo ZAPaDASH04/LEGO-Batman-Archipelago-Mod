@@ -586,15 +586,26 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         if (lev >= LevelName::Shop_Room && lev <= LevelName::Mission_Room) {}
         else {
             // not in hub    
-            for (size_t i = 0; i < 30; i++) {
-                if (*game.levels.levelBeaten[i] != game.levels.levelBeatenPrev[i]) {
-                    std::cout
-                        << "new level beaten " << (int) i 
+
+            // for (size_t i = 0; i < 30; i++) {
+            //     if (*game.levels.levelBeaten[i] != game.levels.levelBeatenPrev[i]) {
+            //         std::cout
+            //             << "new level beaten " << (int) i 
+            //             << std::endl;
+            //         LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 425 + i);
+            //         game.levels.levelBeatenPrev[i] = *game.levels.levelBeaten[i];
+            //     }
+            // }
+            if (game.levels.levelBeatenPrev[lev] != 1 && game.inFinalStatusScreen == 1) {
+                // level beaten
+                std::cout
+                        << "new level beaten " << (int) lev
                         << std::endl;
-                    LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 425 + i);
-                    game.levels.levelBeatenPrev[i] = *game.levels.levelBeaten[i];
-                }
+                    LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 425 + lev);
+                    *game.levels.levelBeaten[lev] = 1;
+                    game.levels.levelBeatenPrev[lev] = *game.levels.levelBeaten[lev];
             }
+
         }
         
         
