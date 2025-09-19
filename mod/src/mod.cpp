@@ -269,8 +269,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         //std::cout << "waiting for game..." << std::endl;
         Sleep(100);
     }
-    volatile BYTE* playerControlPtr = (*playerControlOnP) + 0x258;
-    volatile BYTE& playerControl = *playerControlPtr;
+    volatile BYTE& playerControl = *(volatile BYTE*)((*playerControlOnP) + 0x258);
+
 
 
 
@@ -342,14 +342,26 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     *game.levels.levelUnlocked[5] = 0; // H2-1
     *game.levels.levelUnlocked[10] = 0; // H3-1
 
-    // Wait to be in hub
+    // Send to Hub instead of YCBoB for New Game
+    volatile DWORD& loadingZonePTR = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x6CA89C);
+    volatile DWORD& hubAddress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x6CA8B4);
+
+    std::cout << "Hub Pointer Address: " << hubAddress << std::endl;
+    std::cout << "Loading Zone PTR Value: " << loadingZonePTR << std::endl;
+
+
     if(sublevelToLevel(game.currentLevel) != LevelName::Mission_Room){
-        messageBox.holdMessage("Please Exit to hub.");
+        // messageBox.holdMessage("Please Exit to hub.");
+        // while (sublevelToLevel(game.currentLevel) != LevelName::Mission_Room) {
+        //     messageBox.tick();
+        //     Sleep(50);
+        // }
+        // messageBox.releaseMessage();
         while (sublevelToLevel(game.currentLevel) != LevelName::Mission_Room) {
-            messageBox.tick();
+            std::cout << "Loading Zone PTR Value: " << loadingZonePTR << std::endl;
+            loadingZonePTR = hubAddress;
             Sleep(50);
         }
-        messageBox.releaseMessage();
     }
 
     while (playerControl != 1) Sleep(100);
