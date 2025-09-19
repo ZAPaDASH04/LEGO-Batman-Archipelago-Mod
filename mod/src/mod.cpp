@@ -269,7 +269,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         //std::cout << "waiting for game..." << std::endl;
         Sleep(100);
     }
-    
+    volatile BYTE* playerControlPtr = (*playerControlOnP) + 0x258;
+    volatile BYTE& playerControl = *playerControlPtr;
 
 
 
@@ -350,6 +351,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         }
         messageBox.releaseMessage();
     }
+
+    while (playerControl != 1) Sleep(100);
 
     // AP testing.
     messageBox.holdMessage("Holy Archipelago Batman!!! Attempting to connect...");
