@@ -56,17 +56,6 @@ void LB1AP_send_item(int64_t location_id){  //function to send an item
 
 void LB1AP_receiveItem(int itemID, bool notify){
     itemID -= LB1AP_ITEM_ID_OFFSET;
-    // if(itemID >= 100 && itemID < 400){ //if the item is a minikit
-    //     if(lb1AP_items[itemID] == false){ //TODO: make it so we can call location checked here
-    //         lb1AP_items[itemID] = true;
-    //         minikits++;
-    //         printf("Total Minikits: %d\n", minikits);
-    //     } else {
-    //         printf("Minikit %d already received.\n", itemID);
-    //     }
-    // }else{
-    //     printf("Received Unknown Item: %d\n", itemID);
-    // }
     printf("Item Received\n");
     if (itemID < 100) {
         printf("Received Unknown Item: %d\n", itemID);
@@ -161,13 +150,13 @@ void LB1AP_Connect(){
                 std::cout << "Connection file changed, reconnecting..." << std::endl;
                 break; // file has changed, break out of loop
             }
-            if(AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused){
+            if(LB1AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused){
                 printf("Connection Refused, please correct the connection file. \n");
-            } else if(AP_GetConnectionStatus() == AP_ConnectionStatus::Authenticated){
+            } else if(LB1AP_GetConnectionStatus() == AP_ConnectionStatus::Authenticated){
                 connected = true;
                 break;
             }
-            Sleep(2000); //wait 2 second before trying again
+            Sleep(100);
             std::cout << "Waiting for connection about to loop" << std::endl;
         }
     }
@@ -185,23 +174,13 @@ const char* readFile(std::ifstream& file){
 }
 
 AP_Message* LB1AP_GetMessage(){
-    if(AP_GetConnectionStatus() == AP_ConnectionStatus::Disconnected) {return nullptr;}
-    if(AP_GetConnectionStatus() == AP_ConnectionStatus::Connected) {return nullptr;}
-    if(AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused){
+    if(LB1AP_GetConnectionStatus() == AP_ConnectionStatus::Disconnected) {return nullptr;}
+    if(LB1AP_GetConnectionStatus() == AP_ConnectionStatus::Connected) {return nullptr;}
+    if(LB1AP_GetConnectionStatus() == AP_ConnectionStatus::ConnectionRefused){
         std::cout << "Connection Refused, please correct the connection file and restart the game" << std::endl;
     }
     if(!AP_IsMessagePending()) return nullptr;
     AP_Message* msg = AP_GetLatestMessage();
-    // if(msg->type == AP_MessageType::ItemSend){
-    //     AP_ItemSendMessage* s_msg = static_cast<AP_ItemSendMessage*>(msg);
-    //     std::cout << s_msg->item << " was sent to " << s_msg->recvPlayer << std::endl;
-    // } else if(msg->type == AP_MessageType::ItemRecv){
-    //     AP_ItemRecvMessage* s_msg = static_cast<AP_ItemRecvMessage*>(msg);
-    //     std::cout << "You received " << s_msg->item << " from " << s_msg->sendPlayer << std::endl;
-    // } else {
-    //     std::cout << msg->text << std::endl;
-    // }
-
     AP_ClearLatestMessage();
     return msg;
 }
@@ -281,4 +260,8 @@ void LB1AP_LevelComplete(){
     int flag = 1;
     req.operations = std::vector<AP_DataStorageOperation>{{{"add", &flag}}};
     AP_SetServerData(&req);
+}
+
+AP_ConnectionStatus LB1AP_GetConnectionStatus(){
+    return AP_GetConnectionStatus();
 }

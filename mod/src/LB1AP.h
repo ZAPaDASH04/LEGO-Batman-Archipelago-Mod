@@ -68,3 +68,4 @@ void LB1AP_LevelComplete();
 void LB1AP_SetMinikitSanity(int num);
 void LB1AP_SetTrueStatusSanity(int num);
 void LB1AP_SetFreeplayOrStory(int num);
+AP_ConnectionStatus LB1AP_GetConnectionStatus();

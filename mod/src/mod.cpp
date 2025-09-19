@@ -341,13 +341,25 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     *game.levels.levelUnlocked[5] = 0; // H2-1
     *game.levels.levelUnlocked[10] = 0; // H3-1
 
-
+    // Wait to be in hub
+    if(sublevelToLevel(game.currentLevel) != LevelName::Mission_Room){
+        messageBox.holdMessage("Please Exit to hub.");
+        while (sublevelToLevel(game.currentLevel) != LevelName::Mission_Room) {
+            messageBox.tick();
+            Sleep(50);
+        }
+        messageBox.releaseMessage();
+    }
 
     // AP testing.
     messageBox.holdMessage("Holy Archipelago Batman!!! Attempting to connect...");
     // TODO: doesn't hold forever :(
     //TODO: add remove player movement
     LB1AP_Connect();
+    while(LB1AP_GetConnectionStatus() != AP_ConnectionStatus::Authenticated) {
+        messageBox.tick();
+        Sleep(50);
+    }
     messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
     messageBox.releaseMessage();
     //TODO: restore player movement
@@ -357,16 +369,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //file << "Patching damage function..." << std::endl;
     //WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
     //file << "Patched damage function." << std::endl;
-
-
-
-    // Wait to be in hub
-    messageBox.holdMessage("Please Exit to hub.");
-    while (sublevelToLevel(game.currentLevel) != LevelName::Mission_Room) {
-        Sleep(100);
-    }
-    messageBox.releaseMessage();
-
 
 
 
