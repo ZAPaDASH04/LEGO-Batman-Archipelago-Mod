@@ -331,6 +331,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // for beating episode
     WriteCode((BYTE*)(BASE_ADDR + 0x000788BF),(BYTE[]){0xC6, 0x84, 0x81, 0xDA, 0x77, 0x00, 0x00, 0x01},NOP,8);
 
+    // disable game enabling suit upgrades
+    // LEGOBatman.exe+1CE96D - 88 44 8A 18           - mov [edx+ecx*4+18],al
+    WriteCode((BYTE*)(BASE_ADDR + 0x001CE96D),(BYTE[]){0x88, 0x44, 0x8A, 0x18},NOP,4);
+
     
     // disable game overwriting level beaten.
     // WARN: might be more than that.
