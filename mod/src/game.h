@@ -83,7 +83,8 @@ public:
     volatile BYTE& inLevelPowerBrick; // TODO: test
     volatile BYTE& inLevelTrueStatus;
     volatile DWORD64& extraPurchased;
-    BYTE* extraEnabled[21]; 
+    BYTE* extraEnabled[21];
+    BYTE* suitUpgradeEnabled[15];
     volatile WORD& suitUnlocked1; // active value
     volatile WORD& suitUnlocked2; // loaded value. (when loading sets unlocked1 to unlocked2)
     //volatile DWORD& powerBrickEnabled;

@@ -731,7 +731,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 // TODO: test
                 std::cout << "Red Brick Unlocked!" << std::endl;
                 game.powerBrickState[i-515] |= 0b1000;
-                if (!game.isInShop()) game.extraPurchased |= (((DWORD64)1) << (DWORD64)(i-((DWORD64)515)+((DWORD)1)));
+                if (!game.isInShop()) {
+                    game.extraPurchased |= (((DWORD64)1) << (DWORD64)(i-((DWORD64)515)+((DWORD)1)));
+                    if (i-515 > 20) game.suitUpgradeEnabled[i-515-20]; 
+                }
 
                 
 

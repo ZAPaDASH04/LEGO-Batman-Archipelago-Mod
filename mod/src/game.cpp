@@ -62,6 +62,12 @@ Game::Game(DWORD BASE_ADDR) :
         extraEnabled[i] = ((BYTE*)(BASE_ADDR + 0x00536DE0 + i*0x1C));
     }
 
+    for (size_t i = 0; i < 15; i++)
+    {
+        suitUpgradeEnabled[i] = ((BYTE*)(BASE_ADDR + 0x0053702C + i*0x1C));
+    }
+    
+
     extraPurchasedPrev = extraPurchased;
 
     for (size_t i = 0; i < 35; i++)
