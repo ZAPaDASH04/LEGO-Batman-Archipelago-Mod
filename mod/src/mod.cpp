@@ -287,16 +287,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     BYTE NOP[16] = {0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90};
 
 
-    
-
-    if (game.saveSlot == 0xFF) {
-        // NEW GAME started
-        // TODO: Find some way to make the player save.
-    } else {
-        // preexisting save file.
-    }
-
-
     /*////////////////////////////////
     -////  Pre Loop Setup Begin  ////-
     ////////////////////////////////*/
@@ -728,7 +718,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 game.powerBrickState[i-485] |= 0b0010;
 
 
-            } else if (i < 549) { // Red Brick purchased
+            } else if (i < 550) { // Red Brick purchased
                 // TODO: test
                 std::cout << "Red Brick Unlocked!" << std::endl;
                 game.powerBrickState[i-515] |= 0b1000;
