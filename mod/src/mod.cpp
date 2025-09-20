@@ -726,7 +726,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     game.extraPurchased |= (((DWORD64)1) << (DWORD64)(i-((DWORD64)515)+((DWORD)1)));
                     
                 }
-                if (i-515 > 20) *game.suitUpgradeEnabled[i-515-20] = 1; 
+                if (i-515 >= 20) *game.suitUpgradeEnabled[i-515-20] = 1; 
 
                 
 
