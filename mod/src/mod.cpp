@@ -17,6 +17,9 @@
 #include "game.h"
 #include "hintmessagebox.h"
 
+#include <cctype> //TODO: remove if isSnolid is removed
+#include <algorithm> //TODO: remove if isSnolid is removed
+
 std::ofstream file;
 std::ofstream b_file;
 
@@ -345,21 +348,34 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // Send to Hub instead of YCBoB for New Game
     volatile DWORD& loadingZonePTR = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x6CA89C);
     volatile DWORD& hubAddress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x6CA8B4);
+    volatile DWORD& villainMissionAdress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x5CA7B8);
+    volatile DWORD& harbouringAGrudgeAddress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x5CA818);
 
     std::cout << "Hub Pointer Address: " << hubAddress << std::endl;
     std::cout << "Loading Zone PTR Value: " << loadingZonePTR << std::endl;
 
+    std::ifstream connectionFile("APConnect.txt");
+    std::string line;
+    std::getline(connectionFile, line);
+    std::getline(connectionFile, line);
+    std::getline(connectionFile, line);
+    transform(line.begin(), line.end(), line.begin(), ::tolower);
+    bool isSnolid = (line.find("snolid") != std::string::npos);
+    std::cout << "isSnolid: " << isSnolid << std::endl;
+    connectionFile.close();
 
-    if(sublevelToLevel(game.currentLevel) != LevelName::Mission_Room){
-        // messageBox.holdMessage("Please Exit to hub.");
-        // while (sublevelToLevel(game.currentLevel) != LevelName::Mission_Room) {
-        //     messageBox.tick();
-        //     Sleep(50);
-        // }
-        // messageBox.releaseMessage();
-        while (sublevelToLevel(game.currentLevel) != LevelName::Mission_Room) {
-            std::cout << "Loading Zone PTR Value: " << loadingZonePTR << std::endl;
-            loadingZonePTR = hubAddress;
+    if(sublevelToLevel(game.currentLevel) != LevelName::V2_3 && isSnolid){
+        while (sublevelToLevel(game.currentLevel) != LevelName::V2_3){
+            std::cout << "Loading Zone PTR Value Snolid: " << loadingZonePTR << std::endl;
+            loadingZonePTR = harbouringAGrudgeAddress;
+            Sleep(50);
+        }
+    }
+
+    if(sublevelToLevel(game.currentLevel) != LevelName::Mission_Room && !isSnolid){
+        while (sublevelToLevel(game.currentLevel) != LevelName::Mission_Room){
+                std::cout << "Loading Zone PTR Value: " << loadingZonePTR << std::endl;
+                loadingZonePTR = hubAddress;
             Sleep(50);
         }
     }
