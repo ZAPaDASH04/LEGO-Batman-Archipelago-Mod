@@ -580,25 +580,27 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         // TODO: extract each of these to functions. probably in this file.
 
         // Minikits
-        if (game.inLevelKitCount < game.inLevelKitCountPrev) {
-            // left level
-            game.inLevelKitCountPrev = 0;
+        if (Settings::lb1_minikit_sanity) {
+            if (game.inLevelKitCount < game.inLevelKitCountPrev) {
+                // left level
+                game.inLevelKitCountPrev = 0;
 
-        } else for (BYTE i = game.inLevelKitCountPrev; i < game.inLevelKitCount; i++)
-        {
-            // new kit picked up.
-            std::cout  
-                << (int) *game.inLevelKitLocations[i] << " " << game.inLevelKits[i] << " : "
-                << (int) game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i])
-                << std::endl;
-            
-            LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 100 + game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i]));
-            /** 
-             * TODO: auto save the kit to the file.
-             * levelKitData = game.levels.levelKitSaveData[*game.inLevelKitLocations[i]];
-             * strncpy(levelKitData.kits[levelKitData.count], game.inLevelKits[i], 8);
-             */ 
-            game.inLevelKitCountPrev++;
+            } else for (BYTE i = game.inLevelKitCountPrev; i < game.inLevelKitCount; i++)
+            {
+                // new kit picked up.
+                std::cout  
+                    << (int) *game.inLevelKitLocations[i] << " " << game.inLevelKits[i] << " : "
+                    << (int) game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i])
+                    << std::endl;
+                
+                LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 100 + game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i]));
+                /** 
+                 * TODO: auto save the kit to the file.
+                 * levelKitData = game.levels.levelKitSaveData[*game.inLevelKitLocations[i]];
+                 * strncpy(levelKitData.kits[levelKitData.count], game.inLevelKits[i], 8);
+                 */ 
+                game.inLevelKitCountPrev++;
+            }
         }
 
 
@@ -644,21 +646,23 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         
 
         // True Status // WARN: some are broken
-        if (game.inLevelTrueStatus != game.inLevelTrueStatusPrev) {
-            if (game.inLevelTrueStatus < game.inLevelTrueStatusPrev) {
-                // left level
-                game.inLevelTrueStatusPrev = 0;
+        if (Settings::lb1_true_status_sanity) {
+            if (game.inLevelTrueStatus != game.inLevelTrueStatusPrev) {
+                if (game.inLevelTrueStatus < game.inLevelTrueStatusPrev) {
+                    // left level
+                    game.inLevelTrueStatusPrev = 0;
 
-            } else {
-                // TrueStatus Get
-                std::cout
-                    << "new True Status"
-                    << std::endl;
-                // WARN: high probability to fail. NEEDS SIGNIFICANT TESTING    
-                LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 455 + sublevelToLevel(game.currentLevel));
-                game.inLevelTrueStatusPrev = game.inLevelTrueStatus;
+                } else {
+                    // TrueStatus Get
+                    std::cout
+                        << "new True Status"
+                        << std::endl;
+                    // WARN: high probability to fail. NEEDS SIGNIFICANT TESTING    
+                    LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 455 + sublevelToLevel(game.currentLevel));
+                    game.inLevelTrueStatusPrev = game.inLevelTrueStatus;
+                }
+
             }
-
         }
 
         // Red Brick Collected ?? WARN: some are broken
