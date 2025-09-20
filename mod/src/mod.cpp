@@ -367,7 +367,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         while (sublevelToLevel(game.currentLevel) != LevelName::Mission_Room){
                 std::cout << "Loading Zone PTR Value: " << loadingZonePTR << std::endl;
                 loadingZonePTR = hubAddress;
-            Sleep(50);
+            Sleep(10);
         }
     }
 
@@ -380,7 +380,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     LB1AP_Connect();
     while(LB1AP_GetConnectionStatus() != AP_ConnectionStatus::Authenticated) {
         messageBox.tick();
-        Sleep(50);
+        Sleep(10);
     }
     messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
     messageBox.releaseMessage();
@@ -745,7 +745,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         messageBox.tick();
 
-        Sleep(50);
+        Sleep(10);
         loops++;
     }
 

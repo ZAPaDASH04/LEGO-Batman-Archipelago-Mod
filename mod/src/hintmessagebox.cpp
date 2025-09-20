@@ -129,7 +129,7 @@ void HintMessageBox::tick() {
             timer = 0.0;
         }
     } else {
-        timer += 0.05; // TODO: adjust
+        timer += 0.01; // TODO: adjust
         timerPrev = timer;
     }
 }
