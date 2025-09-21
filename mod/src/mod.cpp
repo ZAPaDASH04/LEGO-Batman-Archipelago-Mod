@@ -497,7 +497,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     std::cout << "entered hub." << std::endl;
                     for (size_t i = 0; i < 30; i++)
                     {
-                        if (*game.levels.levelUnlocked[i] == 1 && (game.levels.levelBeatenPrev[i] == 1 || Settings::lb1_freeplay_or_story == 1)) *game.levels.levelBeaten[i] = 1;
+                        if (*game.levels.levelUnlocked[i] == 1 && (game.levels.levelBeatenPrev[i] == 1 || Settings::lb1_freeplayUnlocked == 1)) *game.levels.levelBeaten[i] = 1;
                     }
                 }
                 levprev = lev;
@@ -571,7 +571,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         // TODO: extract each of these to functions. probably in this file.
 
         // Minikits
-        if (Settings::lb1_minikit_sanity) {
+        if (Settings::lb1_minikitSanity) {
             if (game.inLevelKitCount < game.inLevelKitCountPrev) {
                 // left level
                 game.inLevelKitCountPrev = 0;
@@ -584,7 +584,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     << (int) game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i])
                     << std::endl;
                 
-                LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 100 + game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i]));
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 100 + game.minikits.findKitIndex(*game.inLevelKitLocations[i], game.inLevelKits[i]));
                 /** 
                  * TODO: auto save the kit to the file.
                  * levelKitData = game.levels.levelKitSaveData[*game.inLevelKitLocations[i]];
@@ -602,7 +602,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 << "new hostage " << (int) hostageCheck 
                 << ". hostagedata " << std::hex << (int) *game.levels.hostages
                 << std::endl;
-            LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 400 + hostageCheck);
+            LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 400 + hostageCheck);
             game.levels.hostagesOld = *game.levels.hostages;
             // TODO: setup receives when hush is unlockable?
         }
@@ -627,7 +627,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout
                         << "new level beaten " << (int) lev
                         << std::endl;
-                    LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 425 + lev);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 425 + lev);
                     *game.levels.levelBeaten[lev] = 1;
                     game.levels.levelBeatenPrev[lev] = *game.levels.levelBeaten[lev];
             }
@@ -637,7 +637,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         
 
         // True Status // WARN: some are broken
-        if (Settings::lb1_true_status_sanity) {
+        if (Settings::lb1_trueStatusSanity) {
             if (game.inLevelTrueStatus != game.inLevelTrueStatusPrev) {
                 if (game.inLevelTrueStatus < game.inLevelTrueStatusPrev) {
                     // left level
@@ -649,7 +649,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                         << "new True Status"
                         << std::endl;
                     // WARN: high probability to fail. NEEDS SIGNIFICANT TESTING    
-                    LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 455 + sublevelToLevel(game.currentLevel));
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 455 + sublevelToLevel(game.currentLevel));
                     game.inLevelTrueStatusPrev = game.inLevelTrueStatus;
                 }
 
@@ -668,7 +668,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     << "new Power Brick found"
                     << std::endl;
                 // WARN: high probability to fail. NEEDS SIGNIFICANT TESTING    
-                LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 485 + sublevelToLevel(game.currentLevel));
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 485 + sublevelToLevel(game.currentLevel));
                 game.inLevelPowerBrickPrev = game.inLevelPowerBrick;
                 game.powerBrickState[sublevelToLevel(game.currentLevel)] |= 0b0001;
             }
@@ -683,7 +683,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     << "new PowerBrick " << (int) powerBrickCheck
                     << ". PowerBrickdata " << std::hex << (int) game.extraPurchased
                     << std::endl;
-                LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 515 + powerBrickCheck);
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 515 + powerBrickCheck);
                 game.powerBrickState[powerBrickCheck] != 0b0100;
                 game.extraPurchasedPrev = game.extraPurchased;
             }
@@ -707,8 +707,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             } else if (i < 455) { // Level Unlock
                 std::cout << "Level Unlocked!" << std::endl;
                 *game.levels.levelUnlocked[i-425] = 1;
-                std::cout << "freeplay? " << Settings::lb1_freeplay_or_story << std::endl;
-                if (Settings::lb1_freeplay_or_story==1) *game.levels.levelBeaten[i-425] = 1;
+                std::cout << "freeplay? " << Settings::lb1_freeplayUnlocked << std::endl;
+                if (Settings::lb1_freeplayUnlocked==1) *game.levels.levelBeaten[i-425] = 1;
 
             } else if (i < 485) { // True status
                 std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;

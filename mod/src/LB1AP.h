@@ -30,7 +30,7 @@
 
 #define LB1AP_LOCATION_ID_OFFSET 400000 
 #define LB1AP_ITEM_ID_OFFSET 400000 
-#define LB1AP_NUM_LOCS_AND_ITEMS 600 //number of total locations and items TODO: update once fully implemented
+#define LB1AP_NUM_LOCS_AND_ITEMS 600 //number of total locations and items
 #define GAME_NAME "Lego Batman: The Video Game"
 
 extern std::queue<int> receiveQueue;
@@ -40,22 +40,22 @@ extern std::queue<int> receiveQueue;
 struct Settings {
     static int minikits; //number of minikits received
     static int hostages; // number of hostages received
-    static int lb1_End_Goal; //0 = minikits which is currently default
-    static int lb1_minikits_to_win; //number of minikits required to win. Default is 200
-    static int lb1_levels_to_win; //number of levels required to win. Default is 20
-    static int lb1_minikit_sanity; //1 if minikit sanity check is enabled, 0 if not
-    static int lb1_true_status_sanity; //1 if true status sanity check is enabled, 0 if not
-    static int lb1_freeplay_or_story; //0 if level unlocks send story mode, 1 if freeplay is sent
+    static int lb1_endGoal; //0 = minikits which is currently default
+    static int lb1_minikitsToWin; //number of minikits required to win. Default is 200
+    static int lb1_levelsToWin; //number of levels required to win. Default is 20
+    static int lb1_minikitSanity; //1 if minikit sanity check is enabled, 0 if not
+    static int lb1_trueStatusSanity; //1 if true status sanity check is enabled, 0 if not
+    static int lb1_freeplayUnlocked; //0 if level unlocks send story mode, 1 if freeplay is sent
 };
 
 
 void LB1AP_Init(const char* ip, const char* player_name, const char* passwd);
 void LB1AP_CheckLocation(int64_t location_id);
-bool LB1AP_location_checked(int64_t location_id);
-void LB1AP_send_item(int64_t location_id);
-void LB1AP_receiveItem(int itemID, bool notify);
-void LB1AP_reset();
-void LB1AP_CheckWinCon();
+bool LB1AP_LocationChecked(int64_t location_id);
+void LB1AP_SendItem(int64_t location_id);
+void LB1AP_ReceiveItem(int itemID, bool notify);
+void LB1AP_Reset();
+void LB1AP_CheckMinikitWinCon();
 void LB1AP_Complete();
 void LB1AP_Connect();
 const char* readFile(std::ifstream& file);
