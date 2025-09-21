@@ -26,7 +26,7 @@ Special shout out to N00byKing for developing the APCpp client library to connec
 - Hostages
 - True Status
 - Extra & Suit Purchases
-    - These become available after the associated Red Brick is received from the MutliWorld
+    - These become available to buy after the associated Red Brick is received from the MutliWorld
 
 ## Instructions
 
@@ -49,6 +49,6 @@ Special shout out to N00byKing for developing the APCpp client library to connec
     - Please note that this does NOT support any other mods to LB1.
 - With Lego Batman selected in Reloaded II, click "Launch Application".
     - If you would like to play windowed, have DXWND open at the same time as clicking "Launch Application". (Make sure that Lego Batman is setup in DXWND for it to work)
-- Make a new game and **EXIT THE LEVEL**. If you already have an AP game then just load the save.
+- Make a new game. If you already have an AP game then just load the save.
 - You should receive a hint message that you are connected or connecting.
 - Check the AP game webpage to see that you have connected.
