@@ -321,9 +321,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // for beating episode
     WriteCode((BYTE*)(BASE_ADDR + 0x000788BF),(BYTE[]){0xC6, 0x84, 0x81, 0xDA, 0x77, 0x00, 0x00, 0x01},NOP,8);
 
-    // disable game enabling suit upgrades
+    // disable game enabling/disabling extras. including in the extras menu.
     // LEGOBatman.exe+1CE96D - 88 44 8A 18           - mov [edx+ecx*4+18],al
-    WriteCode((BYTE*)(BASE_ADDR + 0x001CE96D),(BYTE[]){0x88, 0x44, 0x8A, 0x18},NOP,4);
+    //WriteCode((BYTE*)(BASE_ADDR + 0x001CE96D),(BYTE[]){0x88, 0x44, 0x8A, 0x18},NOP,4);
 
     
     // disable game overwriting level beaten.
@@ -686,6 +686,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 515 + powerBrickCheck);
                 game.powerBrickState[powerBrickCheck] != 0b0100;
                 game.extraPurchasedPrev = game.extraPurchased;
+                if (powerBrickCheck >= 20) *game.suitUpgradeEnabled[powerBrickCheck-20] = 0; 
             }
         }
 
