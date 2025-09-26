@@ -1,11 +1,8 @@
 /**
  * @file levels.cpp
  * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
- * @brief 
- * @version 0.1
+ * @brief Level Progress data object
  * @date 2025-07-31
- * 
- * @copyright Copyright (c) 2025
  * 
  */
 
@@ -238,21 +235,16 @@ Levels::Levels(DWORD BASE_ADDR) :
         levelKitCount[j] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C3 + i*0x0C);
         //
         levelRedBrick[j] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + (-0x4C1 + i*0x0C);
-        //levelRedBrickOld[j] = *levelRedBrick[j];
         j++;
     }
-    //hostages = *((DWORD32**)(BASE_ADDR + 0x006AF8B0)) + 0x240; // 4 bytes. at least 32bits
+    // 4 bytes. at least 32bits
     hostages = reinterpret_cast<DWORD32*>(
             reinterpret_cast<uintptr_t>(
                 *reinterpret_cast<void**>(BASE_ADDR + 0x006AF8B0)
             ) + 0x240
         );
     hostagesOld = *hostages;
-    //levelKitSaveData = reinterpret_cast<LevelKits*>(BASE_ADDR - 0x1000 + 0x006CA8FC); // point to beginning of save data then interperet as object
-    
-    levelKitSaveData = *reinterpret_cast<SubLevelKits**>(BASE_ADDR + 0x006C98FC);
-    //std::cout << std::hex;
-    //std::cout << "[DEBUG] levelKitSaveData = " << reinterpret_cast<DWORD>(levelKitSaveData) << "\n";
+    levelKitSaveData = *reinterpret_cast<SubLevelKits**>(BASE_ADDR + 0x006C98FC); // point to beginning of save data then interperet as object
     
 }
 Levels::~Levels() = default; // TODO: why did I have to add this???

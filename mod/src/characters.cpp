@@ -1,11 +1,8 @@
 /**
  * @file characters.cpp
  * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
- * @brief 
- * @version 0.1
+ * @brief Characters object and stuff for Characters.
  * @date 2025-07-31
- * 
- * @copyright Copyright (c) 2025
  * 
  */
 

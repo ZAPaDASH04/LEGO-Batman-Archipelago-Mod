@@ -1,11 +1,8 @@
 /**
  * @file game.cpp
  * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
- * @brief 
- * @version 0.1
+ * @brief contains all pointers, and objects that have pointers, needed for rando
  * @date 2025-07-31
- * 
- * @copyright Copyright (c) 2025
  * 
  */
 
@@ -32,7 +29,6 @@ Game::Game(DWORD BASE_ADDR) :
         )
     ),
     suitUnlocked1(*reinterpret_cast<volatile WORD*>(BASE_ADDR + 0x006C9450)),
-    //suitUnlocked3(*reinterpret_cast<volatile WORD*>(BASE_ADDR + 0x005C9294)),
     suitUnlocked2(
         *reinterpret_cast<volatile WORD*>(
             reinterpret_cast<uintptr_t>(
@@ -50,7 +46,8 @@ Game::Game(DWORD BASE_ADDR) :
     inShopSubMenuPrev(0)
 
 {
-    //currentLevel = ((volatile BYTE*)(BASE_ADDR + 0x006C98C4));
+
+    // in level minikits
     for (size_t i = 0; i < 10; i++)
     {
         inLevelKits[i] = ((char*)(BASE_ADDR + 0x006D00E0 + i*0x0C)); // TODO: test. size is uncertain
@@ -58,10 +55,12 @@ Game::Game(DWORD BASE_ADDR) :
 
     }
 
+    // extras
     for (size_t i = 0; i < 21; i++) {
         extraEnabled[i] = ((BYTE*)(BASE_ADDR + 0x00536DE0 + i*0x1C));
     }
 
+    // suit upgrades
     for (size_t i = 0; i < 15; i++)
     {
         suitUpgradeEnabled[i] = ((BYTE*)(BASE_ADDR + 0x0053702C + i*0x1C));
@@ -70,9 +69,9 @@ Game::Game(DWORD BASE_ADDR) :
 
     extraPurchasedPrev = extraPurchased;
 
+    // red brick stuff
     for (size_t i = 0; i < 35; i++)
     {
-        // red brick stuff
         powerBrickState[i] = 0;
     }
     

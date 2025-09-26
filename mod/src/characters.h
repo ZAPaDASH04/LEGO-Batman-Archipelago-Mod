@@ -1,11 +1,8 @@
 /**
  * @file characters.h
  * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
- * @brief 
- * @version 0.1
+ * @brief Characters object and stuff for Characters.
  * @date 2025-07-31
- * 
- * @copyright Copyright (c) 2025
  * 
  */
 
@@ -58,7 +55,7 @@ public:
      * @return BYTE* 
      */
     // TODO: see if this can return volatile reference.
-    BYTE* operator[](int i);// { return _characterBytes[i]; };
+    BYTE* operator[](int i);
 
 };
 

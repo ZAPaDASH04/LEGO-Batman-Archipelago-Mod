@@ -1,121 +1,130 @@
 {
-    "files.associations": {
-        "chrono": "cpp",
-        "algorithm": "cpp",
-        "atomic": "cpp",
-        "bit": "cpp",
-        "cctype": "cpp",
-        "charconv": "cpp",
-        "clocale": "cpp",
-        "cmath": "cpp",
-        "compare": "cpp",
-        "concepts": "cpp",
-        "cstddef": "cpp",
-        "cstdint": "cpp",
-        "cstdio": "cpp",
-        "cstdlib": "cpp",
-        "cstring": "cpp",
-        "ctime": "cpp",
-        "cwchar": "cpp",
-        "exception": "cpp",
-        "filesystem": "cpp",
-        "format": "cpp",
-        "forward_list": "cpp",
-        "initializer_list": "cpp",
-        "iomanip": "cpp",
-        "ios": "cpp",
-        "iosfwd": "cpp",
-        "iostream": "cpp",
-        "istream": "cpp",
-        "iterator": "cpp",
-        "limits": "cpp",
-        "list": "cpp",
-        "locale": "cpp",
-        "map": "cpp",
-        "memory": "cpp",
-        "mutex": "cpp",
-        "new": "cpp",
-        "optional": "cpp",
-        "ostream": "cpp",
-        "ratio": "cpp",
-        "sstream": "cpp",
-        "stdexcept": "cpp",
-        "stop_token": "cpp",
-        "streambuf": "cpp",
-        "string": "cpp",
-        "system_error": "cpp",
-        "thread": "cpp",
-        "tuple": "cpp",
-        "type_traits": "cpp",
-        "typeinfo": "cpp",
-        "utility": "cpp",
-        "vector": "cpp",
-        "xfacet": "cpp",
-        "xiosbase": "cpp",
-        "xlocale": "cpp",
-        "xlocbuf": "cpp",
-        "xlocinfo": "cpp",
-        "xlocmes": "cpp",
-        "xlocmon": "cpp",
-        "xlocnum": "cpp",
-        "xloctime": "cpp",
-        "xmemory": "cpp",
-        "xstddef": "cpp",
-        "xstring": "cpp",
-        "xtr1common": "cpp",
-        "xtree": "cpp",
-        "xutility": "cpp",
-        "fstream": "cpp",
-        "array": "cpp",
-        "codecvt": "cpp",
-        "cstdarg": "cpp",
-        "cwctype": "cpp",
-        "deque": "cpp",
-        "unordered_map": "cpp",
-        "functional": "cpp",
-        "memory_resource": "cpp",
-        "numeric": "cpp",
-        "random": "cpp",
-        "string_view": "cpp",
-        "numbers": "cpp",
-        "ranges": "cpp",
-        "span": "cpp",
-        "text_encoding": "cpp",
-        "variant": "cpp",
-        "any": "cpp",
-        "bitset": "cpp",
-        "cinttypes": "cpp",
-        "condition_variable": "cpp",
-        "csignal": "cpp",
-        "set": "cpp",
-        "unordered_set": "cpp",
-        "regex": "cpp",
-        "future": "cpp",
-        "semaphore": "cpp",
-        "valarray": "cpp",
-        "coroutine": "cpp",
-        "source_location": "cpp",
-        "queue": "cpp"
+  "files.associations": {
+    "chrono": "cpp",
+    "algorithm": "cpp",
+    "atomic": "cpp",
+    "bit": "cpp",
+    "cctype": "cpp",
+    "charconv": "cpp",
+    "clocale": "cpp",
+    "cmath": "cpp",
+    "compare": "cpp",
+    "concepts": "cpp",
+    "cstddef": "cpp",
+    "cstdint": "cpp",
+    "cstdio": "cpp",
+    "cstdlib": "cpp",
+    "cstring": "cpp",
+    "ctime": "cpp",
+    "cwchar": "cpp",
+    "exception": "cpp",
+    "filesystem": "cpp",
+    "format": "cpp",
+    "forward_list": "cpp",
+    "initializer_list": "cpp",
+    "iomanip": "cpp",
+    "ios": "cpp",
+    "iosfwd": "cpp",
+    "iostream": "cpp",
+    "istream": "cpp",
+    "iterator": "cpp",
+    "limits": "cpp",
+    "list": "cpp",
+    "locale": "cpp",
+    "map": "cpp",
+    "memory": "cpp",
+    "mutex": "cpp",
+    "new": "cpp",
+    "optional": "cpp",
+    "ostream": "cpp",
+    "ratio": "cpp",
+    "sstream": "cpp",
+    "stdexcept": "cpp",
+    "stop_token": "cpp",
+    "streambuf": "cpp",
+    "string": "cpp",
+    "system_error": "cpp",
+    "thread": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "typeinfo": "cpp",
+    "utility": "cpp",
+    "vector": "cpp",
+    "xfacet": "cpp",
+    "xiosbase": "cpp",
+    "xlocale": "cpp",
+    "xlocbuf": "cpp",
+    "xlocinfo": "cpp",
+    "xlocmes": "cpp",
+    "xlocmon": "cpp",
+    "xlocnum": "cpp",
+    "xloctime": "cpp",
+    "xmemory": "cpp",
+    "xstddef": "cpp",
+    "xstring": "cpp",
+    "xtr1common": "cpp",
+    "xtree": "cpp",
+    "xutility": "cpp",
+    "fstream": "cpp",
+    "array": "cpp",
+    "codecvt": "cpp",
+    "cstdarg": "cpp",
+    "cwctype": "cpp",
+    "deque": "cpp",
+    "unordered_map": "cpp",
+    "functional": "cpp",
+    "memory_resource": "cpp",
+    "numeric": "cpp",
+    "random": "cpp",
+    "string_view": "cpp",
+    "numbers": "cpp",
+    "ranges": "cpp",
+    "span": "cpp",
+    "text_encoding": "cpp",
+    "variant": "cpp",
+    "any": "cpp",
+    "bitset": "cpp",
+    "cinttypes": "cpp",
+    "condition_variable": "cpp",
+    "csignal": "cpp",
+    "set": "cpp",
+    "unordered_set": "cpp",
+    "regex": "cpp",
+    "future": "cpp",
+    "semaphore": "cpp",
+    "valarray": "cpp",
+    "coroutine": "cpp",
+    "source_location": "cpp",
+    "queue": "cpp"
+  },
+  "C_Cpp.default.compilerPath": "C:/msys64/mingw32/bin/i686-w64-mingw32-g++.exe",
+  "todohighlight.keywords": [
+    {
+      "text": "WARNING:", // Your custom keyword
+      "color": "#000000", // Text color
+      "backgroundColor": "Yellow", // Background color
+      "overviewRulerColor": "Yellow", // Color in the overview ruler
+      "border": "1px solid Yellow", // Border style
+      "borderRadius": "3px", // Border radius
+      "isWholeLine": false // Set to true to highlight the entire line
     },
-    "C_Cpp.default.compilerPath": "C:/msys64/mingw32/bin/i686-w64-mingw32-g++.exe",
-    "todohighlight.keywords": [
-        {
-        "text": "WARNING:", // Your custom keyword
-        "color": "#000000", // Text color
-        "backgroundColor": "LightCoral", // Background color
-        "overviewRulerColor": "LightCoral", // Color in the overview ruler
-        "border": "1px solid LightCoral", // Border style
-        "borderRadius": "3px", // Border radius
-        "isWholeLine": false // Set to true to highlight the entire line
-        },
-        {
-        "text": "WARN:", // Your custom keyword
-        "color": "#000000", // Text color
-        "backgroundColor": "Red", // Background color
-        "overviewRulerColor": "LightCoral", // Color in the overview ruler
-        "border": "1px solid Red", // Border style
-        "borderRadius": "0px", // Border radius
-        "isWholeLine": false // Set to true to highlight the entire line
-        }
-    ]
+    {
+      "text": "WARN:", // Your custom keyword
+      "color": "#000000", // Text color
+      "backgroundColor": "Red", // Background color
+      "overviewRulerColor": "Red", // Color in the overview ruler
+      "border": "1px solid Red", // Border style
+      "borderRadius": "0px", // Border radius
+      "isWholeLine": false // Set to true to highlight the entire line
+    },
+    {
+      "text": "PLAN:", // Your custom keyword
+      "color": "#00F0F0", // Text color
+      "backgroundColor": "blue", // Background color
+      "overviewRulerColor": "blue", // Color in the overview ruler
+      "border": "1px solid blue", // Border style
+      "borderRadius": "0px", // Border radius
+      "isWholeLine": false // Set to true to highlight the entire line
+    }
+  ]
 }

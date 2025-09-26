@@ -1,11 +1,8 @@
 /**
  * @file minikits.cpp
  * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
- * @brief 
- * @version 0.1
+ * @brief Minikits object and stuff for Minikits.
  * @date 2025-08-01
- * 
- * @copyright Copyright (c) 2025
  * 
  */
 
@@ -16,20 +13,10 @@
 Minikits::Minikits(DWORD BASE_ADDR) :
     BASE_ADDR(BASE_ADDR)
 {
-    // kitTable[{0x12, "pup4"     }] = 0;
-    // kitTable[{0x12, "m_pup1"   }] = 1;
-    // 12 pup3
-    // 12 pup2
-    // 12 pup1
-    // 12 pup5
-    // 13 m_pup1
-    // 13 pup2
-    // 13 pup1
-    // 13 MIN_FO5
     kitTable = {
 
         // Episode 1
-
+        
         {{0x12, "pup4"      },   0},
         {{0x12, "m_pup1"    },   1},
         {{0x12, "pup3"      },   2},

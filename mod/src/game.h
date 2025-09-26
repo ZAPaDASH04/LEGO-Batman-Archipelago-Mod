@@ -1,11 +1,8 @@
 /**
  * @file game.h
  * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
- * @brief 
- * @version 0.1
+ * @brief contains all pointers, and objects that have pointers, needed for rando
  * @date 2025-07-31
- * 
- * @copyright Copyright (c) 2025
  * 
  */
 
@@ -72,9 +69,6 @@ public:
     volatile BYTE& currentLevel; // TODO: test
     
     // some of these may be 4 bytes in size but only ever use 1 byte.
-    // const BYTE* saveSlot; // TODO: test
-    // const BYTE* inLevelTotalKitCount; // this is saved kit count + inLevelKitCount
-    // const BYTE* inLevelKitCount; // TODO: test
     volatile BYTE& saveSlot;
     volatile BYTE& inLevelTotalKitCount;
     volatile BYTE& inLevelKitCount;
@@ -87,10 +81,8 @@ public:
     BYTE* suitUpgradeEnabled[15];
     volatile WORD& suitUnlocked1; // active value
     volatile WORD& suitUnlocked2; // loaded value. (when loading sets unlocked1 to unlocked2)
-    //volatile DWORD& powerBrickEnabled;
     volatile BYTE& inShopSubMenu;
     volatile BYTE& inFinalStatusScreen;
-
 
     // Tracking
     BYTE inLevelKitCountPrev;
@@ -106,6 +98,9 @@ public:
      * bit 4 = Purchased Item
      */
     BYTE powerBrickState[35];
+
+
+
     Game(DWORD BASE_ADDR);
 
     int checkPowerBricks();

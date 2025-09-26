@@ -3,7 +3,6 @@
  * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
  * @authors jr (jradcode23@gmail.com) @jr5768
  * @brief 
- * @version 0.3
  * @date 2025-07-07
  * 
  */
@@ -164,27 +163,7 @@ void loopTest(Game game, DWORD loops) {
                   //<< std::hex << game.currentLevel << std::endl
                   << "levels:" << std::endl
                   << "Hero:" << std::endl;
-        
-        // for (size_t i = 0; i < 16; i++)
-        // {
-        //     std::cout << " lev" << std::dec << i << std::hex;
-        //     std::cout << " " << (int) *game.levels.levelUnlocked[i] 
-        //               << " " << (int) *game.levels.levelBeaten[i] 
-        //               << " " << (int) *game.levels.levelKitCount[i]
-        //               << " " << (int) *game.levels.levelRedBrick[i];
-        //               //<< " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
-            
-        // }
-        // std::cout << std::endl << "Villain:" << std::endl;
-        // for (size_t i = 16; i < 32; i++)
-        // {
-        //     std::cout << " lev" << std::dec << i << std::hex;
-        //     std::cout << " " << (int) *game.levels.levelUnlocked[i] 
-        //               << " " << (int) *game.levels.levelBeaten[i] 
-        //               << " " << (int) *game.levels.levelKitCount[i]
-        //               << " " << (int) *game.levels.levelRedBrick[i];
-        //               //<< " " << (int) (((*game.levels.hostages) & ((DWORD32)0x1 << i)) > 0);
-        // }
+
 
         std::cout << std::endl << "inlevel stuff" << std::endl 
                   << std::hex << (int) game.currentLevel << " " 
@@ -211,14 +190,6 @@ void loopTest(Game game, DWORD loops) {
     
 }
 
-// bool isValid(void* addr) {
-//     MEMORY_BASIC_INFORMATION mbi;
-//     if (VirtualQuery(addr, &mbi, sizeof(mbi))) {
-//         return (mbi.State == MEM_COMMIT) &&
-//                !(mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD));
-//     }
-//     return false;
-// }
 
 
 DWORD WINAPI ThreadProc(LPVOID lpParam) {
@@ -239,8 +210,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     std::cout << "cout test" << std::endl;
     std::cerr << "cerr test" << std::endl;
     printf("stdout test\n");
-    //fprintf(stderr, "stderr test\n"); // TODO: untested
-    file << "ThreadProc started" << std::endl;
+    file << "ThreadProc started" << std::endl;\
 
     
     
@@ -259,20 +229,12 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     // Wait for data and code to be readable and writable
     BYTE** playerControlOnP = ((BYTE**)(BASE_ADDR + UP + 0x006B264C));
-    
-    // while (!isValid(playerControlOnP) || isValid((*playerControlOnP) + 0x258)) {
-    //     std::cout << ">:)" << std::endl;
-    //     Sleep(100);
-    // }
 
     while ((*playerControlOnP == nullptr) || (*((*playerControlOnP) + 0x258) == 0)) {
-        //std::cout << "waiting for game..." << std::endl;
+        // Waiting for game to be ready for modification
         Sleep(100);
     }
     volatile BYTE& playerControl = *(volatile BYTE*)((*playerControlOnP) + 0x258);
-
-
-
 
 
 
@@ -283,8 +245,12 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     std::cout << "before message box" << std::endl;
     HintMessageBox messageBox(BASE_ADDR + UP);
 
-    // Nops for overwriting code
-    BYTE NOP[16] = {0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90};
+
+
+
+
+
+
 
 
     /*////////////////////////////////
@@ -292,6 +258,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     ////////////////////////////////*/
 
 
+    // Nops for overwriting code
+    BYTE NOP[16] = {0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90};
 
     
     // 7 byte add function
@@ -301,7 +269,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     //BYTE* dmgFuncAddr = (BYTE*)(BASE_ADDR + (0x20) + (0x1C356D)); // not the damage function instead it's a pointer to an add function that adds -1 to health.
     
 
-    // Message box code overwrites
+    // Message box overwrites
 
     // code that sets the hint id. LEGOBatman.exe+1D522D - 89 35 246FAC00        - mov [LEGOBatman.exe+6C6F24],esi
     WriteCode((BYTE*)(BASE_ADDR + 0x001D522D),(BYTE[]){0x89,0x35,0x24,0x6F,0xAC,0x00},NOP,6);
@@ -314,6 +282,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // code that resets time to 0 on level change? LEGOBatman.exe+1D4E3D - D9 15 346FAC00        - fst dword ptr [LEGOBatman.exe+6C6F34]
     WriteCode((BYTE*)(BASE_ADDR + 0x001D4E3D),(BYTE[]){0xD9,0x15,0x34,0x6F,0xAC,0x00},NOP,6);
 
+    // Level unlocking overwrites
 
     // disable game unlocking levels
     WriteCode((BYTE*)(BASE_ADDR + 0x0024E254),(BYTE[]){0xC6,0x44,0x90,0x02,0x01},NOP,5);
@@ -321,14 +290,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // for beating episode
     WriteCode((BYTE*)(BASE_ADDR + 0x000788BF),(BYTE[]){0xC6, 0x84, 0x81, 0xDA, 0x77, 0x00, 0x00, 0x01},NOP,8);
 
+    // PLAN: could be a trap.
     // disable game enabling/disabling extras. including in the extras menu.
     // LEGOBatman.exe+1CE96D - 88 44 8A 18           - mov [edx+ecx*4+18],al
     //WriteCode((BYTE*)(BASE_ADDR + 0x001CE96D),(BYTE[]){0x88, 0x44, 0x8A, 0x18},NOP,4);
 
-    
-    // disable game overwriting level beaten.
-    // WARN: might be more than that.
-    //WriteCode((BYTE*)(BASE_ADDR + 0x000ABB7D),(BYTE[]){0x89,0x30},NOP,2);
 
 
     // disable default levels
@@ -371,12 +337,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         }
     }
 
-    while (playerControl != 1) Sleep(100);
+    while (playerControl != 1) Sleep(100); // Wait till loaded into level
 
     // AP testing.
     messageBox.holdMessage("Holy Archipelago Batman!!! Attempting to connect...");
-    // TODO: doesn't hold forever :(
-    //TODO: add remove player movement
+    //TODO: remove player movement
     LB1AP_Connect();
     while(LB1AP_GetConnectionStatus() != AP_ConnectionStatus::Authenticated) {
         messageBox.tick();
@@ -385,12 +350,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
     messageBox.releaseMessage();
     //TODO: restore player movement
-
-    
-    //Turn off damage player function
-    //file << "Patching damage function..." << std::endl;
-    //WriteCode(dmgFuncAddr, 0, (BYTE[]){0x80,0x87,0xC7,0x15,0x00,0x00,0xFF}, NOP, 7);
-    //file << "Patched damage function." << std::endl;
 
 
 
@@ -406,30 +365,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
 
-
-
-    // fully unlock all levels
-    // for (size_t i = 0; i < 35; i++)
-    // {
-    //     //std::cout << std::hex << (void*)game.levels.levelUnlocked[i] << std::endl;
-    //     *game.levels.levelUnlocked[i] = 1;
-    //     *game.levels.levelBeaten[i] = 1;
-    // }
-    
-
-    // std::cout << "extra purch " << std::hex
-    //       << reinterpret_cast<uintptr_t>(&game.extraPurchased)
-    //       << std::endl;
-
-    // purchase all extras.
-    // for (size_t i = 0; i < 21; i++)
-    // {
-    //     game.extraPurchased |= (1 << i);
-    // }
-
-    // Easy true status
+    // Easier true status
     *game.extraEnabled[ExtraName::Always_Score_Multiply] = 1;
-    //*game.extraEnabled[ExtraName::Stud_Magnet] = 1;
     // Detectors on
     *game.extraEnabled[ExtraName::Minikit_Detector] = 1;
     *game.extraEnabled[ExtraName::Power_Brick_Detector] = 1;
@@ -438,14 +375,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // unlock all characters
     for (size_t i = 0; i < game.characters.characterCount; i++)
     {
-        //std::cout << "char " << std::hex << (int) game.characters._characterBytes[i] << std::endl;
         *game.characters._characterBytes[i] = 0x03;
-        //*game.characters[i] = 0x03;
     }
-
-    // std::cout << "suit unlock " << std::hex
-    //       << reinterpret_cast<uintptr_t>(&game.suitUnlocked1)
-    //       << std::endl;
 
     // unlock all suits
     for (size_t i = 0; i < 10; i++) 
@@ -454,21 +385,26 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         game.suitUnlocked2 |= (WORD)(1 << i);
     }
 
-    /*//////////////////////////////
-    -////  Pre Loop Setup End  ////-
-    //////////////////////////////*/
 
 
+
+
+
+
+
+
+    /*/////////////////////
+    -////  Main Loop  ////-
+    ////////////////////*/
 
     file << "About to loop." << std::endl;
 
     DWORD loops = 0;
-    //SubLevelKits* saveKitData = game.levels.levelKitSaveData;
-    //SubLevelKits levelKitData;
     BYTE sublevprev = game.currentLevel;
     BYTE lev = sublevelToLevel(game.currentLevel);
     BYTE levprev = lev;
     while (true) {
+        // Level changed
         if (game.currentLevel != sublevprev) {
             std::cout << "Sub Level Changed to " 
                       << std::hex << (int)game.currentLevel 
@@ -486,6 +422,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 if (lev <= LevelName::V3_5) {
                     // entered a level
                     std::cout << "entered a level." << std::endl;
+                    // TODO: can I make this level specifc. no loop?
                     for (size_t i = 0; i < 30; i++)
                     {
                         *game.levels.levelBeaten[i] = 0;
@@ -495,6 +432,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 } else if (lev >= LevelName::Shop_Room && lev <= LevelName::Mission_Room) {
                     // entered hub or Unknown
                     std::cout << "entered hub." << std::endl;
+                    // TODO: can I make this level specifc. no loop?
                     for (size_t i = 0; i < 30; i++)
                     {
                         if (*game.levels.levelUnlocked[i] == 1 && (game.levels.levelBeatenPrev[i] == 1 || Settings::lb1_freeplayUnlocked == 1)) *game.levels.levelBeaten[i] = 1;
@@ -504,16 +442,23 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             }
         }
         
+
+
+
+
         loopTest(game,loops);
+
+
+
+
 
         /*//////////////
         *//// Shop ////*
         //////////////*/
 
-        // TODO: test
         if (game.inShopSubMenuPrev != game.inShopSubMenu) {
             std::cout << "entered or exited shop." << std::endl;
-            BYTE a;
+            BYTE state;
             if (game.isInShop()) {
                 // entered shop
                 std::cout << "entered shop" << std::endl;
@@ -521,17 +466,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 // per level
                 for (DWORD64 i = 0; i < 35; i++)
                 {
-                    a = game.powerBrickState[i];
-                    std::cout << i << " : " << std::hex << (int)a << std::endl;
+                    state = game.powerBrickState[i];
+                    std::cout << i << " : " << std::hex << (int)state << std::endl;
 
-                    // Collected Item // TODO: test
+                    // Collected Item
                     if (i<30) {
-                        if (a & 0b0010) *game.levels.levelRedBrick[i] = 1;
+                        if (state & 0b0010) *game.levels.levelRedBrick[i] = 1;
                         else *game.levels.levelRedBrick[i] = 0;
                     }
 
-                    // Purchased Location // TODO: test
-                    if (a & 0b0100) game.extraPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+                    // Purchased Location
+                    if (state & 0b0100) game.extraPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
                     else game.extraPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
                     game.extraPurchasedPrev = game.extraPurchased;
                 }
@@ -544,17 +489,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 // per level
                 for (DWORD64 i = 0; i < 35; i++)
                 {
-                    std::cout << i << " : " << std::hex << (int)a << std::endl;
-                    a = game.powerBrickState[i];
+                    std::cout << i << " : " << std::hex << (int)state << std::endl;
+                    state = game.powerBrickState[i];
                     
-                    // Collected Location // TODO: test
+                    // Collected Location
                     
                     if (i<30) {
-                        if (a & 0b0001) *game.levels.levelRedBrick[i] = 1;
+                        if (state & 0b0001) *game.levels.levelRedBrick[i] = 1;
                         else *game.levels.levelRedBrick[i] = 0;
                     }
-                    // Purchased Item // TODO: test
-                    if (a & 0b1000) game.extraPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+                    // Purchased Item
+                    if (state & 0b1000) game.extraPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
                     else game.extraPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
                     game.extraPurchasedPrev = game.extraPurchased;
                 }
@@ -564,14 +509,20 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         }
 
 
+
+
+
         /*////////////////////////////
         *//// Location Detection ////*
         ////////////////////////////*/
 
         // TODO: extract each of these to functions. probably in this file.
+        // TODO: add autosaveing to some
+
 
         // Minikits
         if (Settings::lb1_minikitSanity) {
+            //TODO: improve
             if (game.inLevelKitCount < game.inLevelKitCountPrev) {
                 // left level
                 game.inLevelKitCountPrev = 0;
@@ -604,24 +555,15 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 << std::endl;
             LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 400 + hostageCheck);
             game.levels.hostagesOld = *game.levels.hostages;
-            // TODO: setup receives when hush is unlockable?
+            // TODO: Hostage count/hush wincon
         }
 
 
         // Levels
-        if (lev >= LevelName::Shop_Room && lev <= LevelName::Mission_Room) {}
+        // TODO: simplify
+        if (lev >= LevelName::Shop_Room && lev <= LevelName::Mission_Room) {} // not in a level?
         else {
-            // not in hub    
-
-            // for (size_t i = 0; i < 30; i++) {
-            //     if (*game.levels.levelBeaten[i] != game.levels.levelBeatenPrev[i]) {
-            //         std::cout
-            //             << "new level beaten " << (int) i 
-            //             << std::endl;
-            //         LB1AP_send_item(LB1AP_LOCATION_ID_OFFSET + 425 + i);
-            //         game.levels.levelBeatenPrev[i] = *game.levels.levelBeaten[i];
-            //     }
-            // }
+            
             if (game.levels.levelBeatenPrev[lev] != 1 && game.inFinalStatusScreen == 1) {
                 // level beaten
                 std::cout
@@ -634,9 +576,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         }
         
-        
 
-        // True Status // WARN: some are broken
+        // True Status
         if (Settings::lb1_trueStatusSanity) {
             if (game.inLevelTrueStatus != game.inLevelTrueStatusPrev) {
                 if (game.inLevelTrueStatus < game.inLevelTrueStatusPrev) {
@@ -646,9 +587,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 } else {
                     // TrueStatus Get
                     std::cout
-                        << "new True Status"
+                        << "new True Status " << (int) lev
                         << std::endl;
-                    // WARN: high probability to fail. NEEDS SIGNIFICANT TESTING    
                     LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 455 + sublevelToLevel(game.currentLevel));
                     game.inLevelTrueStatusPrev = game.inLevelTrueStatus;
                 }
@@ -656,7 +596,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             }
         }
 
-        // Red Brick Collected ?? WARN: some are broken
+        // Red Brick Collected
         if (game.inLevelPowerBrick != game.inLevelPowerBrickPrev) {
             if (game.inLevelPowerBrick < 2) {
                 // left level
@@ -665,9 +605,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             } else {
                 // PowerBrick Get
                 std::cout
-                    << "new Power Brick found"
+                    << "new Power Brick found " << (int) lev
                     << std::endl;
-                // WARN: high probability to fail. NEEDS SIGNIFICANT TESTING    
                 LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 485 + sublevelToLevel(game.currentLevel));
                 game.inLevelPowerBrickPrev = game.inLevelPowerBrick;
                 game.powerBrickState[sublevelToLevel(game.currentLevel)] |= 0b0001;
@@ -679,18 +618,24 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         if (game.isInShop() && (game.extraPurchasedPrev != game.extraPurchased)) {
             int powerBrickCheck = game.checkPowerBricks() - 1;
             if (powerBrickCheck != -1) { // TODO: I don't think this will ever not trigger.
+                // std::cout
+                //     << "new PowerBrick " << (int) powerBrickCheck
+                //     << ". PowerBrickdata " << std::hex << (int) game.extraPurchased
+                //     << std::endl;
                 std::cout
-                    << "new PowerBrick " << (int) powerBrickCheck
-                    << ". PowerBrickdata " << std::hex << (int) game.extraPurchased
-                    << std::endl;
+                    << "new Power Brick purchased " << (int) lev
+                        << std::endl;
                 LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 515 + powerBrickCheck);
                 game.powerBrickState[powerBrickCheck] != 0b0100;
                 game.extraPurchasedPrev = game.extraPurchased;
-                if (powerBrickCheck >= 20) *game.suitUpgradeEnabled[powerBrickCheck-20] = 0; 
+                if (powerBrickCheck >= 20) *game.suitUpgradeEnabled[powerBrickCheck-20] = 0; // enable suit upgrade
             }
         }
 
 
+
+
+        
         /*////////////////////////
         *//// Item Receiving ////*
         ////////////////////////*/
@@ -714,16 +659,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             } else if (i < 485) { // True status
                 std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
             } else if (i < 515) { // Red Brick
-                // TODO: test
                 std::cout << "Red Brick Collected!" << std::endl;
-                game.powerBrickState[i-485] |= 0b0010;
+                game.powerBrickState[i-485] |= 0b0010; // set state to item received
 
 
             } else if (i < 550) { // Red Brick purchased
-                // TODO: test
                 std::cout << "Red Brick Unlocked!" << std::endl;
-                game.powerBrickState[i-515] |= 0b1000;
-                if (!game.isInShop()) {
+                game.powerBrickState[i-515] |= 0b1000; // set state to item received
+                if (!game.isInShop()) { // enable if not in shop
                     game.extraPurchased |= (((DWORD64)1) << (DWORD64)(i-((DWORD64)515)+((DWORD)1)));
                     
                 }
@@ -740,6 +683,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         
 
 
+
         /*////////////////////////
         *//// Post Detection ////*
         ////////////////////////*/
@@ -750,10 +694,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         loops++;
     }
 
+    // WARN: Crashed?
+
     file.close();
     b_file.close(); // close file before infinite loop. //temporarily moved to test sending/receiving items via archi
 
-    // Never reached but good practice
     FreeLibraryAndExitThread(hSelf, 0);
     return 0;
 }

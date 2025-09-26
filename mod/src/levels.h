@@ -1,11 +1,8 @@
 /**
  * @file levels.h
  * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
- * @brief 
- * @version 0.1
+ * @brief Level Progress data object
  * @date 2025-07-31
- * 
- * @copyright Copyright (c) 2025
  * 
  */
 
@@ -33,7 +30,6 @@ enum LevelName {
 
 BYTE sublevelToLevel(BYTE);
 
-#pragma pack(push, 1) // restricts size
 
 /**
  * // sublevel kit save data structure
@@ -50,18 +46,16 @@ BYTE sublevelToLevel(BYTE);
  * 4 DWORD32 kit count - 84 dec
  */
 
+#pragma pack(push, 1) // restricts size
+
 struct SubLevelKits {
     char kits[10][8];
     DWORD32 count; // seems to limit to intended ammount. ie there are more than 10 kits
 };
 
-// struct LevelKits
-// {
-//     SubLevelKits lev[6];
-// };
-//typedef SubLevelKits LevelKits[6];
-
 #pragma pack(pop)
+
+
 
 
 class Table {
@@ -84,32 +78,17 @@ public:
 
 class Levels
 {
-private:
-    // + 12 = + 0x0C
-    //BYTE* levelBeatenH1_1 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4C5; // you can bank on batman beaten
-    // + 12 = + 0x0C
-    //BYTE* levelUnlockedH1_1 = *((BYTE**)(BASE_ADDR + UP + 0x006CA830)) + -0x4C6; 
-    
-    // uncertain if the special levels work properly
-    // first 15 hero. next 1 manor?. next 15 villain. next 1 asylum
-    // BYTE* levelUnlocked[32];
-    // BYTE* levelBeaten[32];
-    // BYTE* levelKitCount[32];
-    // BYTE* levelRedBrick[32];
-    // DWORD32* hostages;
-    
 public:
     const DWORD BASE_ADDR; // TODO: can be removed later if only used in constructor.
     BYTE* levelUnlocked[30];
     BYTE* levelBeaten  [30];
     BYTE* levelKitCount[30]; // TODO: test
-    BYTE* levelRedBrick[30]; // TODO: test
+    BYTE* levelRedBrick[30];
     DWORD32* hostages;
     // usage: levelKitSaveData[levelid]
-    SubLevelKits* levelKitSaveData; // WARN: this should not be public.
+    SubLevelKits* levelKitSaveData; // WARN: this should not be public in future.
 
     BYTE levelBeatenPrev[30];
-    //BYTE levelRedBrickOld[30]
     DWORD32 hostagesOld;
     
     /**
@@ -121,11 +100,11 @@ public:
     ~Levels();
 
     /**
-     * @brief checks if new hostage
+     * @brief checks if there is a new hostage
      * 
-     * @return BYTE -1 for no change
+     * @return BYTE which hostage. -1 for no new hostage.
      */
-    int checkHostages(); // TODO: test
+    int checkHostages(); 
     
 };
 

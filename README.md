@@ -25,12 +25,12 @@ Special shout out to N00byKing for developing the APCpp client library to connec
 - Red Bricks Collected
 - Hostages
 - True Status
-- Extra & Suit Purchases
+- Extra & Suit Upgrade Purchases
     - These become available to buy after the associated Red Brick is received from the MutliWorld
 
-## Instructions
+# Instructions
 
-#### Onetime Setup
+## Onetime Setup
 
 - Install [Reloaded II](https://reloaded-project.github.io/Reloaded-II/QuickStart)
 - Add lego batman either through setup or by clicking the + on the left. Must use the exe found in the steam legobatman folder (LEGOBatman.exe).
@@ -40,10 +40,10 @@ Special shout out to N00byKing for developing the APCpp client library to connec
 - Lastly move APConnect.txt from this folder to be in the Steam folder that has the LEGOBatman.exe (Steam folder, NOT Reloaded folder).
     - You can easily access this folder by right clicking the game in Steam, "Manage", then "Browse local files".
   
-#### Setup AP game
+## Setup AP game
 - Set up an AP game using the lego_batman_1.apworld
     - If you aren't familiar with archipelago, please use the command &apworld and/or &template in the archipelago discord server.
-- Open the APConnect.txt file (should be in the same folder as LEGOBatman.exe) and add the AP info. Follow instructions on the first line.
+- Open the APConnect.txt file (should be in the same folder as LEGOBatman.exe) and add the AP info. Follow instructions on the first line. (Do not delete the instructions on first line)
 - In "Configure Mods" of Reloaded II, enable LB1 Archipelago. 
     - LB1 Client Connector should be a filled red box.
     - Please note that this does NOT support any other mods to LB1.
@@ -52,3 +52,13 @@ Special shout out to N00byKing for developing the APCpp client library to connec
 - Make a new game. If you already have an AP game then just load the save.
 - You should receive a hint message that you are connected or connecting.
 - Check the AP game webpage to see that you have connected.
+
+## Updating
+### Mod
+You can update the mod at any time even when a game has already genned. (This is doable but not supported.)
+- Download the new version.
+- Navigate to the "Mods" folder in wherever you installed Reloaded II (usually desktop .\Reloaded-II\Mods)
+- Move the 2 folders "legobatman1.apconnectsupport" and "legobatman1.apsupport" into the Reloaded II Mods folder.
+- Done.
+### Apworld
+You can update the apworld by doing the same thing you did to add it the first time. Archipelago will replace the old one.

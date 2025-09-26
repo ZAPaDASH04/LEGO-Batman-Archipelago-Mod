@@ -1,13 +1,11 @@
- /**
- * @file messagebox.cpp
- * @author your name (you@domain.com)
- * @brief 
- * @version 0.1
+/**
+ * @file hintmessagebox.h
+ * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
+ * @brief handles the message box for AP messages
  * @date 2025-08-09
  * 
- * @copyright Copyright (c) 2025
- * 
  */
+
 
 #pragma once
 
@@ -20,13 +18,13 @@
     DWORD BASE_ADDR;
     DWORD hintId = 0x0093D3EC;
     // hint timer float LEGOBatman.exe+6C6F34 // disapears at ~7.5 // gets set to 7 when other text shows up.
-    volatile float& timer; // TODO: test
+    volatile float& timer;
     // hint to show LEGOBatman.exe+6C6F24
-    volatile DWORD& shownHint; // TODO: test
+    volatile DWORD& shownHint;
     // color of text byte LEGOBatman.exe+6C6F29
     volatile BYTE& theme; // TODO: test
     // hint text *(LEGOBatman.exe+6957F8) + 0x203
-    char* text; // TODO: test
+    char* text; 
 
     float timerPrev;
     float messageSpacing;
@@ -40,8 +38,8 @@ public:
     HintMessageBox(DWORD BASE_ADDR);
     ~HintMessageBox();
 
-    void setText(std::string text); // TODO: test
-    void tick(); // TODO: test
+    void setText(std::string text);
+    void tick(); 
     void holdMessage();
     void holdMessage(std::string text);
     void releaseMessage();
