@@ -1,11 +1,8 @@
 /**
  * @file game.h
  * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
- * @brief 
- * @version 0.1
+ * @brief contains all pointers, and objects that have pointers, needed for rando
  * @date 2025-07-31
- * 
- * @copyright Copyright (c) 2025
  * 
  */
 
@@ -44,6 +41,7 @@ enum ExtraName {
     Invincibility
 };
 
+
 enum SuitName {
     Batsuit =      0,
     Demosuit =     3,
@@ -71,24 +69,41 @@ public:
     volatile BYTE& currentLevel; // TODO: test
     
     // some of these may be 4 bytes in size but only ever use 1 byte.
-    // const BYTE* saveSlot; // TODO: test
-    // const BYTE* inLevelTotalKitCount; // this is saved kit count + inLevelKitCount
-    // const BYTE* inLevelKitCount; // TODO: test
     volatile BYTE& saveSlot;
     volatile BYTE& inLevelTotalKitCount;
     volatile BYTE& inLevelKitCount;
-    const char* inLevelKits[10]; // TODO: test. size is uncertain
-    const BYTE* inLevelKitLocations[10]; // TODO: test. size is uncertain
-    volatile DWORD& extraPurchased;
-    BYTE* extraEnabled[21]; 
+    const char* inLevelKits[10]; 
+    const BYTE* inLevelKitLocations[10];
+    volatile BYTE& inLevelPowerBrick; // TODO: test
+    volatile BYTE& inLevelTrueStatus;
+    volatile DWORD64& powerBrickPurchased;
+    BYTE* extraEnabled[21];
+    BYTE* suitUpgradeEnabled[15];
     volatile WORD& suitUnlocked1; // active value
     volatile WORD& suitUnlocked2; // loaded value. (when loading sets unlocked1 to unlocked2)
-    //volatile DWORD& powerBrickEnabled;
-    //volatile BYTE* inLevelKitLocations[10];
-    
+    volatile BYTE& inShopSubMenu;
+    volatile BYTE& inFinalStatusScreen;
+
+    // Tracking
     BYTE inLevelKitCountPrev;
+    BYTE inLevelPowerBrickPrev;
+    BYTE inLevelTrueStatusPrev;
+    DWORD64 extraPurchasedPrev;
+    BYTE inShopSubMenuPrev;
+    /**
+     * @brief 4 flags
+     * bit 1 = Collected Location
+     * bit 2 = Collected Item
+     * bit 3 = Purchased Location
+     * bit 4 = Purchased Item
+     */
+    BYTE powerBrickState[35];
+
+
+
     Game(DWORD BASE_ADDR);
 
-    
+    int checkPowerBricks();
+    bool isInShop();
 
 };

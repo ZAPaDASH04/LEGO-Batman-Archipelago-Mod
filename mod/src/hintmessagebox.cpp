@@ -1,16 +1,14 @@
 /**
  * @file messagebox.cpp
- * @author your name (you@domain.com)
- * @brief 
- * @version 0.1
+ * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
+ * @brief handles the message box for AP messages
  * @date 2025-08-09
- * 
- * @copyright Copyright (c) 2025
  * 
  */
 
 #include "hintmessagebox.h"
 #include "LB1AP.h"
+
 
 
 
@@ -26,10 +24,10 @@ HintMessageBox::HintMessageBox(DWORD BASE_ADDR):
             ) + 0x2039
         )
     ),
+
     messageSpacing(1.0),
     hold(false)
 {
-    // setText("Holy Archipelago Batman!!! Attempting to connect...");
     std::cout << "initializing timer" << std::endl;
     timer = 0;
     timerPrev = timer;
@@ -45,8 +43,8 @@ void HintMessageBox::setText(std::string text)
 {
     constexpr size_t limit = 324; // buffer size including '\0'
 
-    if (text.size() >= limit) { // LIMIT untested
-        // 
+    if (text.size() >= limit) { // WARN: LIMIT untested
+        // TODO: test
         size_t copyLen = limit - 4; // space for "..." + '\0'
         memcpy(this->text, text.c_str(), copyLen);
         this->text[copyLen]     = '.';
@@ -66,16 +64,16 @@ void HintMessageBox::tick() {
         // intial or hint was cleared.
         shownHint = hintId;
         std::cout << "id doesn't match prev " << std::hex << shownHint << " " << hintId << std::endl;
-        //return; // right????
     }
 
-    // 
+    // check if game as force set the timer.
+    // TODO: this needs to be improved eventually.
     if (timer != timerPrev) {
         std::cout << "timer doesn't match prev " << (float) timer << " " << timerPrev << std::endl;
-        timer = -2.0;
+        timer = -2.0; // buffer
     }
 
-    if (hold) return;
+    if (hold) return; // holding message
 
 
     // subtract timer.
@@ -88,7 +86,7 @@ void HintMessageBox::tick() {
             // there is a new message
             switch (message->type)
             {
-            case AP_MessageType::Plaintext: { // WARN: what is this?
+            case AP_MessageType::Plaintext: { // TODO: does this include chat? if so might want to put this somewhere else.
                 // theme = 4;
                 //setText("Plaintext: " + message->text);
                 return;
@@ -111,24 +109,24 @@ void HintMessageBox::tick() {
                 setText("Hint: " + msg->text);
                 break;
             }
-            case AP_MessageType::Countdown: { // WARN: what is this?
+            case AP_MessageType::Countdown: { // TODO: add this functionality. It would need to use hold and settext instead of waiting out the timer each time.
                 // theme = 5;
-                std::cout << "what is countdown?" << std::endl;
-                tick(); // skip?
+                // WARN: this is untested
+                tick(); // skip
                 return;
                 break;
             }
 
             default:
                 // Unkown message type
-                std::cerr << "attempted Unknown message type in hint message box." << std::endl;
+                std::cerr << "Attempted Unknown message type in hint message box." << std::endl;
                 return;
             }
 
-            timer = 0.0;
+            timer = 0.0; // TODO: May want to adjust this closer to 7 for faster messages.
         }
     } else {
-        timer += 0.05; // TODO: adjust
+        timer += 0.01;
         timerPrev = timer;
     }
 }
@@ -147,7 +145,6 @@ void HintMessageBox::holdMessage(std::string text)
     // may want to also store/restore previous message if used for other things.
     shownHint = hintId;
     setText(text);
-    //setText("Holy Archipelago Batman!!! Attempting to connect...");
     std::cout << "holdMessage clearing timer" << std::endl;
     timer = 0;
     timerPrev = timer;
