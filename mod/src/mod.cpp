@@ -45,24 +45,13 @@ bool IsMemoryReadable(void* addr, size_t size) {
 bool WriteCode(LPVOID pAddress, void* bytesOld, void* bytes, int byteCount){
     int maxWaitMs = 20000;
     file << "Writing code." << std::endl;
-    file << "Waiting for executable memory..." << std::endl;
-    // if (!WaitForExecutableMemory((void*)pAddress)) {
-    //     // Now it's safe to patch
-    //     file << "Failed. Memory never became executable." << std::endl;
-    //     return false;
-    // }
-    
 
     int waited = 0;
     while (waited < maxWaitMs) {
-        if (/*IsMemoryReadable(pAddress, byteCount)*/ true) {
-            // TODO: figure out if you can avoid this vvv
-            if (memcmp(pAddress, bytesOld, byteCount) == 0) {
-                file << "Matches." << std::endl;
-                break; // Pattern matched, safe to patch
-            }
-            file << "Doesn't Match." << std::endl;
+        if (memcmp(pAddress, bytesOld, byteCount) == 0) {
+            break; // Pattern matched, safe to patch
         }
+        file << "Doesn't Match." << std::endl;
         Sleep(200);
         waited += 200;
     }
@@ -83,14 +72,12 @@ bool WriteCode(LPVOID pAddress, void* bytesOld, void* bytes, int byteCount){
         file << "Failed to change protections." << std::endl;
         return false;
     }
-    file << "VirtPro." << std::endl;
     // Write the bytes
     memcpy(pAddress, bytes, byteCount);
     file << "Written." << std::endl;
 
     // Restore the original protection
     VirtualProtect(pAddress, byteCount, oldProtect, &oldProtect);
-    file << "ReVirtPro." << std::endl;
 
     return true;
 
