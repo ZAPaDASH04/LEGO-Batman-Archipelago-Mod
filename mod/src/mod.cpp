@@ -41,45 +41,6 @@ bool IsMemoryReadable(void* addr, size_t size) {
     return false;
 }
 
-bool IsMemoryWritable(void* addr, size_t size) {
-    MEMORY_BASIC_INFORMATION mbi;
-    if (!VirtualQuery(addr, &mbi, sizeof(mbi)))
-        return false;
-
-    if (mbi.State != MEM_COMMIT)
-        return false;
-
-    if (mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD))
-        return false;
-
-    // Check if protection allows writing
-    if (mbi.Protect & (PAGE_READWRITE | PAGE_EXECUTE_READWRITE | PAGE_WRITECOPY | PAGE_EXECUTE_WRITECOPY))
-        return true;
-
-    return false;
-}
-
-bool WaitForExecutableMemory(void* addr, DWORD timeoutMs = 10000) {
-    DWORD elapsed = 0;
-    MEMORY_BASIC_INFORMATION mbi;
-    //std::ofstream file("a.txt", std::ios::app);
-    file << "WaitForExecutableMemory." << std::endl;
-
-    while (elapsed < timeoutMs) {
-        if (VirtualQuery(addr, &mbi, sizeof(mbi))) {
-            file << "Checking state." << std::endl;
-            if (mbi.State == MEM_COMMIT &&
-                (mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE))) {
-                file << "Succeeded." << std::endl;
-                return true;
-            }
-        }
-        file << "VirtualQuery Failed." << std::endl;
-        Sleep(50);
-        elapsed += 50;
-    }
-    return false;
-}
 
 bool WriteCode(LPVOID pAddress, void* bytesOld, void* bytes, int byteCount){
     int maxWaitMs = 20000;
@@ -94,7 +55,7 @@ bool WriteCode(LPVOID pAddress, void* bytesOld, void* bytes, int byteCount){
 
     int waited = 0;
     while (waited < maxWaitMs) {
-        if (IsMemoryReadable(pAddress, byteCount)) {
+        if (/*IsMemoryReadable(pAddress, byteCount)*/ true) {
             // TODO: figure out if you can avoid this vvv
             if (memcmp(pAddress, bytesOld, byteCount) == 0) {
                 file << "Matches." << std::endl;
