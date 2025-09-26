@@ -83,31 +83,15 @@ bool WaitForExecutableMemory(void* addr, DWORD timeoutMs = 10000) {
 
 bool WriteCode(LPVOID pAddress, void* bytesOld, void* bytes, int byteCount){
     int maxWaitMs = 20000;
-       // Resolve multilevel pointer, if depth > 0
-    //std::ofstream file("a.txt", std::ios::app);
     file << "Writing code." << std::endl;
     file << "Waiting for executable memory..." << std::endl;
-    if (!WaitForExecutableMemory((void*)pAddress)) {
-        // Now it's safe to patch
-        file << "Failed. Memory never became executable." << std::endl;
-        return false;
-    }
-    // for (int i = 0; i < depth; ++i) {
-    //     if (IsBadReadPtr(pAddress, sizeof(LPVOID))) {
-    //         file << "IsBadReadPtr." << std::endl;
-    //         return false;
-    //     }
-    //     pAddress = *((LPVOID*)pAddress);
-    // }
-
-    // // Ensure the address is valid before writing
-    // if (IsBadWritePtr(pAddress, byteCount)) {
-    //     file << "IsBadWritePtr." << std::endl;
+    // if (!WaitForExecutableMemory((void*)pAddress)) {
+    //     // Now it's safe to patch
+    //     file << "Failed. Memory never became executable." << std::endl;
     //     return false;
     // }
     
 
-    //legobatman.exe+1C356D - 80 87 C7150000 FF     - add byte ptr [edi+000015C7],-01
     int waited = 0;
     while (waited < maxWaitMs) {
         if (IsMemoryReadable(pAddress, byteCount)) {
