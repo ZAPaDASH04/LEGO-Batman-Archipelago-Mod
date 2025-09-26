@@ -1,8 +1,7 @@
 /**
  * @file LB1AP.cpp
  * @author jrad (jradcode23@gmail.com) @jrad5768
- * @brief 
- * @version 0.1
+ * @brief Handles the connection between Lego Batman 1 and archipelago
  * @date 2025-07-30
  * 
  * 
