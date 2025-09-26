@@ -84,7 +84,7 @@ public:
     BYTE* levelBeaten  [30];
     BYTE* levelKitCount[30]; // TODO: test
     BYTE* levelRedBrick[30];
-    DWORD32* hostages;
+    volatile DWORD32& hostages;
     // usage: levelKitSaveData[levelid]
     SubLevelKits* levelKitSaveData; // WARN: this should not be public in future.
 

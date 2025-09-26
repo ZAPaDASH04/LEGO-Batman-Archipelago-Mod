@@ -76,7 +76,7 @@ public:
     const BYTE* inLevelKitLocations[10];
     volatile BYTE& inLevelPowerBrick; // TODO: test
     volatile BYTE& inLevelTrueStatus;
-    volatile DWORD64& extraPurchased;
+    volatile DWORD64& powerBrickPurchased;
     BYTE* extraEnabled[21];
     BYTE* suitUpgradeEnabled[15];
     volatile WORD& suitUnlocked1; // active value

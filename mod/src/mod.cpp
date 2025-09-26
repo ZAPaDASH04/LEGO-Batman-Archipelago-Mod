@@ -22,26 +22,6 @@
 std::ofstream file;
 std::ofstream b_file;
 
-
-bool IsMemoryReadable(void* addr, size_t size) {
-    MEMORY_BASIC_INFORMATION mbi;
-    if (!VirtualQuery(addr, &mbi, sizeof(mbi)))
-        return false;
-    if (mbi.State != MEM_COMMIT)
-        return false;
-
-    // Check if protection allows reading
-    if (mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD))
-        return false;
-
-    // Sometimes PAGE_EXECUTE_READ, PAGE_READONLY, PAGE_READWRITE, PAGE_EXECUTE_READWRITE etc are valid
-    if (mbi.Protect & (PAGE_READONLY | PAGE_READWRITE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE))
-        return true;
-
-    return false;
-}
-
-
 bool WriteCode(LPVOID pAddress, void* bytesOld, void* bytes, int byteCount){
     int maxWaitMs = 20000;
     file << "Writing code." << std::endl;
@@ -408,9 +388,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     }
 
                     // Purchased Location
-                    if (state & 0b0100) game.extraPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
-                    else game.extraPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
-                    game.extraPurchasedPrev = game.extraPurchased;
+                    if (state & 0b0100) game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+                    else game.powerBrickPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+                    game.extraPurchasedPrev = game.powerBrickPurchased;
                 }
 
                 
@@ -431,9 +411,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                         else *game.levels.levelRedBrick[i] = 0;
                     }
                     // Purchased Item
-                    if (state & 0b1000) game.extraPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
-                    else game.extraPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
-                    game.extraPurchasedPrev = game.extraPurchased;
+                    if (state & 0b1000) game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+                    else game.powerBrickPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+                    game.extraPurchasedPrev = game.powerBrickPurchased;
                 }
                 
             }
@@ -483,10 +463,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         if (hostageCheck != -1) { // TODO: I don't know if this is how logic works
             std::cout
                 << "new hostage " << (int) hostageCheck 
-                << ". hostagedata " << std::hex << (int) *game.levels.hostages
+                << ". hostagedata " << std::hex << (int) game.levels.hostages
                 << std::endl;
             LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 400 + hostageCheck);
-            game.levels.hostagesOld = *game.levels.hostages;
+            game.levels.hostagesOld = game.levels.hostages;
             // TODO: Hostage count/hush wincon
         }
 
@@ -547,19 +527,19 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         }
 
         // Red Brick Purchased
-        if (game.isInShop() && (game.extraPurchasedPrev != game.extraPurchased)) {
+        if (game.isInShop() && (game.extraPurchasedPrev != game.powerBrickPurchased)) {
             int powerBrickCheck = game.checkPowerBricks() - 1;
             if (powerBrickCheck != -1) { // TODO: I don't think this will ever not trigger.
                 // std::cout
                 //     << "new PowerBrick " << (int) powerBrickCheck
-                //     << ". PowerBrickdata " << std::hex << (int) game.extraPurchased
+                //     << ". PowerBrickdata " << std::hex << (int) game.powerBrickPurchased
                 //     << std::endl;
                 std::cout
                     << "new Power Brick purchased " << (int) lev
                         << std::endl;
                 LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 515 + powerBrickCheck);
                 game.powerBrickState[powerBrickCheck] != 0b0100;
-                game.extraPurchasedPrev = game.extraPurchased;
+                game.extraPurchasedPrev = game.powerBrickPurchased;
                 if (powerBrickCheck >= 20) *game.suitUpgradeEnabled[powerBrickCheck-20] = 0; // enable suit upgrade
             }
         }
@@ -599,7 +579,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout << "Red Brick Unlocked!" << std::endl;
                 game.powerBrickState[i-515] |= 0b1000; // set state to item received
                 if (!game.isInShop()) { // enable if not in shop
-                    game.extraPurchased |= (((DWORD64)1) << (DWORD64)(i-((DWORD64)515)+((DWORD)1)));
+                    game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i-((DWORD64)515)+((DWORD)1)));
                     
                 }
                 if (i-515 >= 20) *game.suitUpgradeEnabled[i-515-20] = 1; 

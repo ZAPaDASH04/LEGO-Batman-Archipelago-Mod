@@ -221,7 +221,13 @@ DWORD Table::operator[](BYTE* name)
 
 
 Levels::Levels(DWORD BASE_ADDR) :
-    BASE_ADDR(BASE_ADDR)
+    BASE_ADDR(BASE_ADDR),
+    hostages(*reinterpret_cast<volatile DWORD32*>(
+            reinterpret_cast<uintptr_t>(
+                *reinterpret_cast<void**>(BASE_ADDR + 0x006AF8B0)
+            ) + 0x240
+        )
+    )
 {
     size_t j = 0;
     for (size_t i = 0; i < 35; i++) {
@@ -238,12 +244,7 @@ Levels::Levels(DWORD BASE_ADDR) :
         j++;
     }
     // 4 bytes. at least 32bits
-    hostages = reinterpret_cast<DWORD32*>(
-            reinterpret_cast<uintptr_t>(
-                *reinterpret_cast<void**>(BASE_ADDR + 0x006AF8B0)
-            ) + 0x240
-        );
-    hostagesOld = *hostages;
+    hostagesOld = hostages;
     levelKitSaveData = *reinterpret_cast<SubLevelKits**>(BASE_ADDR + 0x006C98FC); // point to beginning of save data then interperet as object
     
 }
@@ -262,6 +263,6 @@ int Levels::checkHostages()
     // }
     int i = -1; // -1 is no new hostages.
     // how many right shifts // WARN: does not account for loading a different save or losing hostage progress.
-    for (int a = *hostages - hostagesOld; a > 0; a = a >> 1) i++;
+    for (int a = hostages - hostagesOld; a > 0; a = a >> 1) i++;
     return i; 
 }

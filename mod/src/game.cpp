@@ -21,7 +21,7 @@ Game::Game(DWORD BASE_ADDR) :
     inLevelKitCount(*(volatile BYTE*)(BASE_ADDR + 0x006C9428)),
     inLevelPowerBrick(*(volatile BYTE*)(BASE_ADDR + 0x006C9420)),
     inLevelTrueStatus(*(volatile BYTE*)(BASE_ADDR + 0x006AF854)),
-    extraPurchased(
+    powerBrickPurchased(
         *reinterpret_cast<volatile DWORD64*>(
             reinterpret_cast<uintptr_t>(
                 *reinterpret_cast<void**>(BASE_ADDR + 0x006D01C8)
@@ -67,7 +67,7 @@ Game::Game(DWORD BASE_ADDR) :
     }
     
 
-    extraPurchasedPrev = extraPurchased;
+    extraPurchasedPrev = powerBrickPurchased;
 
     // red brick stuff
     for (size_t i = 0; i < 35; i++)
@@ -82,7 +82,7 @@ int Game::checkPowerBricks()
 
     int i = -1; // -1 is no powerbrick.
     // how many right shifts // WARN: does not account for loading a different save or losing hostage progress.
-    for (DWORD64 a =  extraPurchasedPrev ^ extraPurchased; a > 0; a = a >> ((DWORD64)1)) i++;
+    for (DWORD64 a =  extraPurchasedPrev ^ powerBrickPurchased; a > 0; a = a >> ((DWORD64)1)) i++;
     return i; 
 }
 
