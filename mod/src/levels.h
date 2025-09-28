@@ -29,7 +29,7 @@ enum LevelName {
 };
 
 BYTE sublevelToLevel(BYTE);
-
+bool isSublevelStatus(BYTE);
 
 /**
  * // sublevel kit save data structure

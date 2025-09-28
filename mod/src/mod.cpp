@@ -477,13 +477,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         else {
             
             if (game.levels.levelBeatenPrev[lev] != 1 && game.inFinalStatusScreen == 1) {
-                // level beaten
-                std::cout
-                        << "new level beaten " << (int) lev
-                        << std::endl;
-                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 425 + lev);
-                    *game.levels.levelBeaten[lev] = 1;
-                    game.levels.levelBeatenPrev[lev] = *game.levels.levelBeaten[lev];
+                if(isSublevelStatus(game.currentLevel)) {
+                    // level beaten
+                    std::cout
+                            << "new level beaten " << (int) lev
+                            << std::endl;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 425 + lev);
+                        *game.levels.levelBeaten[lev] = 1;
+                        game.levels.levelBeatenPrev[lev] = *game.levels.levelBeaten[lev]; 
+                } else {
+                    break; // not on a status screen
+                }
             }
 
         }
