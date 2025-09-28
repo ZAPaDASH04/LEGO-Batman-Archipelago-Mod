@@ -122,7 +122,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     std::cout << "cout test" << std::endl;
     std::cerr << "cerr test" << std::endl;
     printf("stdout test\n");
-    file << "ThreadProc started" << std::endl;\
+    file << "ThreadProc started" << std::endl;
+    std::cout << "Using Version 0.2.1-alpha" << std::endl;
 
     
     
