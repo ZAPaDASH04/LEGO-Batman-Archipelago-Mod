@@ -38,7 +38,7 @@ Game::Game(DWORD BASE_ADDR) :
     ),
 
     inShopSubMenu(*(volatile BYTE*)(BASE_ADDR + 0x005CBC90)),
-    inFinalStatusScreen(*(volatile BYTE*)(BASE_ADDR + 0x00696BA8)),
+    // inFinalStatusScreen(*(volatile BYTE*)(BASE_ADDR + 0x00696BA8)), //Comment out since may be faulty? Doesn't appear to constantly be 1 so mashing may skip past it?
     //powerBrickEnabled(*(volatile DWORD*)(BASE_ADDR + 0x00536DE0)), // TODO: test
     inLevelKitCountPrev(0),
     inLevelPowerBrickPrev(0),

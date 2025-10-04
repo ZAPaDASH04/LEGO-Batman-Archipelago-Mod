@@ -95,7 +95,15 @@ void loopTest(Game game, DWORD loops) {
         std::cout << std::hex << &(game.levels.levelKitSaveData[0x12]) << std::endl;
         std::cout << (char*)game.levels.levelKitSaveData[0x12].kits[0] << std::endl << std::endl;
 
-
+        // Level Beaten info.
+        if (sublevelToLevel(game.currentLevel) >= LevelName::Shop_Room && sublevelToLevel(game.currentLevel) <= LevelName::Mission_Room) {} // not in a level?
+        else {
+            std::cout << "Level Beaten Debug: " << std::endl;
+            std::cout << "Sublevel: " << (int) game.currentLevel << std::endl; 
+            std::cout << "Level Previously Considered Beaten: " << (int) game.levels.levelBeatenPrev[sublevelToLevel(game.currentLevel)] << std::endl; // 0 not beaten, 1 beaten
+            std::cout << "On Final Status Screen: " << isSublevelStatus(game.currentLevel) << std::endl;
+            std::cout << std::endl;
+        }
         
     }
     
@@ -122,7 +130,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     std::cout << "cout test" << std::endl;
     std::cerr << "cerr test" << std::endl;
     printf("stdout test\n");
-    file << "ThreadProc started" << std::endl;\
+    file << "ThreadProc started" << std::endl;
+    std::cout << "Using Version 0.2.2-alpha" << std::endl;
 
     
     
@@ -475,15 +484,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         // TODO: simplify
         if (lev >= LevelName::Shop_Room && lev <= LevelName::Mission_Room) {} // not in a level?
         else {
-            
-            if (game.levels.levelBeatenPrev[lev] != 1 && game.inFinalStatusScreen == 1) {
+
+            if (game.levels.levelBeatenPrev[lev] != 1 && isSublevelStatus(game.currentLevel)) {
                 // level beaten
-                std::cout
-                        << "new level beaten " << (int) lev
-                        << std::endl;
-                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 425 + lev);
-                    *game.levels.levelBeaten[lev] = 1;
-                    game.levels.levelBeatenPrev[lev] = *game.levels.levelBeaten[lev];
+                std::cout << "New Level Beaten: " << (int) lev << std::endl;
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 425 + lev);
+                std::cout << "Changing Level Beaten Previous" << std:: endl;
+                *game.levels.levelBeaten[lev] = 1;
+                game.levels.levelBeatenPrev[lev] = *game.levels.levelBeaten[lev]; 
             }
 
         }

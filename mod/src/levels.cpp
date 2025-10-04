@@ -161,6 +161,45 @@ BYTE sublevelToLevel(BYTE id) {
     }
 }
 
+bool isSublevelStatus(BYTE id) {
+    switch (id)
+    {
+    case 0x16: // H1-1
+    case 0x22: // H1-2
+    case 0x2E: // H1-3
+    case 0x35: // H1-4
+    case 0x4D: // H1-5
+    case 0x5F: // H2-1
+    case 0x79: // H2-2
+    case 0x6B: // H2-3
+    case 0x8C: // H2-4
+    case 0x94: // H2-5
+    case 0xA4: // H3-1
+    case 0xAA: // H3-2
+    case 0xB0: // H3-3
+    case 0xBE: // H3-4
+    case 0xCA: // H3-5
+    case 0x1C: // V1-1
+    case 0x29: // V1-2
+    case 0x3D: // V1-3
+    case 0x45: // V1-4
+    case 0x55: // V1-5
+    case 0x85: // V2-1
+    case 0x65: // V2-2
+    case 0x7F: // V2-3
+    case 0x72: // V2-4
+    case 0x9C: // V2-5
+    case 0xB6: // V3-1
+    case 0xD6: // V3-2
+    case 0xDC: // V3-3
+    case 0xC4: // V3-4
+    case 0xD0: // V3-5
+        return true;
+    
+    default:
+        return false;
+    }
+}
 
 Table::Table(DWORD size):
     size(size),
