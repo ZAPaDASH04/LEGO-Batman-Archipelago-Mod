@@ -3,4 +3,4 @@ call .\compile.bat
 rem xcopy /Y /E /I .\Reloadedii\* .\export\LB1AP
 cp .\README.md .\export\LB1AP\README.md
 
-powershell Compress-Archive -Path ".\export\LB1AP\*" -DestinationPath ".\export\LB1APv0.2.1-alpha.zip" -Force
+powershell Compress-Archive -Path ".\export\LB1AP\*" -DestinationPath ".\export\LB1APv0.2.2-alpha.zip" -Force

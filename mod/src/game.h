@@ -82,7 +82,7 @@ public:
     volatile WORD& suitUnlocked1; // active value
     volatile WORD& suitUnlocked2; // loaded value. (when loading sets unlocked1 to unlocked2)
     volatile BYTE& inShopSubMenu;
-    volatile BYTE& inFinalStatusScreen;
+    // volatile BYTE& inFinalStatusScreen; //Comment out since may be faulty?
 
     // Tracking
     BYTE inLevelKitCountPrev;
