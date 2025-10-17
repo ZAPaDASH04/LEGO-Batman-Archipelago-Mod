@@ -309,6 +309,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             Sleep(50);
         }
         messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
+        while (playerControl != 1) Sleep(100); // Wait till loaded into level
     }
     // End Easter Egg
     
