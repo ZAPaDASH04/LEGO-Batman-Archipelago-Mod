@@ -58,6 +58,7 @@ void HintMessageBox::setText(std::string text)
     }
 
     timer = 0.0; // TODO: Hope this works...
+    timerPrev = 0.0;
 }
 
 void HintMessageBox::tick() {

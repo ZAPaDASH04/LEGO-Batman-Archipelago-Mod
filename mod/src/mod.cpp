@@ -309,7 +309,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             Sleep(50);
         }
         messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
-        messageBox.releaseMessage();
     }
     // End Easter Egg
     
