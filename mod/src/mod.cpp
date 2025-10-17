@@ -261,6 +261,30 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     std::cout << "Hub Pointer Address: " << hubAddress << std::endl;
     std::cout << "Loading Zone PTR Value: " << loadingZonePTR << std::endl;
     
+   
+
+    if(sublevelToLevel(game.currentLevel) != LevelName::Mission_Room){
+        while (sublevelToLevel(game.currentLevel) != LevelName::Mission_Room){
+                std::cout << "Loading Zone PTR Value: " << loadingZonePTR << std::endl;
+                loadingZonePTR = hubAddress;
+            Sleep(10);
+        }
+    }
+
+    while (playerControl != 1) Sleep(100); // Wait till loaded into level
+
+    
+    messageBox.holdMessage("Holy Archipelago Batman!!! Attempting to connect...");
+    //TODO: block player movement
+    LB1AP_Connect();
+    while(LB1AP_GetConnectionStatus() != AP_ConnectionStatus::Authenticated) {
+        messageBox.tick();
+        Sleep(10);
+    }
+    messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
+    messageBox.releaseMessage();
+    //TODO: restore player movement
+
     std::ifstream connectionFile("APConnect.txt");
     std::string c_host;
     std::string c_player;
@@ -284,30 +308,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             loadingZonePTR = harbouringAGrudgeAddress;
             Sleep(50);
         }
+        messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
+        messageBox.releaseMessage();
     }
-
-    if(sublevelToLevel(game.currentLevel) != LevelName::Mission_Room && !isSnolid){
-        while (sublevelToLevel(game.currentLevel) != LevelName::Mission_Room){
-                std::cout << "Loading Zone PTR Value: " << loadingZonePTR << std::endl;
-                loadingZonePTR = hubAddress;
-            Sleep(10);
-        }
-    }
-
-    while (playerControl != 1) Sleep(100); // Wait till loaded into level
-
+    // End Easter Egg
     
-    messageBox.holdMessage("Holy Archipelago Batman!!! Attempting to connect...");
-    //TODO: block player movement
-    LB1AP_Connect();
-    while(LB1AP_GetConnectionStatus() != AP_ConnectionStatus::Authenticated) {
-        messageBox.tick();
-        Sleep(10);
-    }
-    messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
-    messageBox.releaseMessage();
-    //TODO: restore player movement
-    
+
+    // check if need to clear log.
+
     std::ifstream b_filein("b.txt");
     std::string sessionId = c_player + "@" + c_host; 
     std::string line;

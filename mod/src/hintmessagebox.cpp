@@ -56,6 +56,8 @@ void HintMessageBox::setText(std::string text)
         // copy string + terminator
         memcpy(this->text, text.c_str(), text.size() + 1);
     }
+
+    timer = 0.0; // TODO: Hope this works...
 }
 
 void HintMessageBox::tick() {
@@ -123,7 +125,7 @@ void HintMessageBox::tick() {
                 return;
             }
 
-            timer = 0.0; // TODO: May want to adjust this closer to 7 for faster messages.
+            //timer = 0.0; // TODO: May want to adjust this closer to 7 for faster messages.
         }
     } else {
         timer += 0.01;
