@@ -22,6 +22,8 @@
 std::ofstream file;
 std::ofstream b_file;
 
+#define RESTART_MARKER "\n================Restart================\n"
+
 bool WriteCode(LPVOID pAddress, void* bytesOld, void* bytes, int byteCount){
     int maxWaitMs = 20000;
     file << "Writing code." << std::endl;
@@ -111,6 +113,32 @@ void loopTest(Game game, DWORD loops) {
 }
 
 
+void resetLog(std::string filename, std::string sessionId) {
+    std::ifstream fin(filename);
+    std::stringstream buffer;
+    std::string line;
+    bool keep = false;
+
+    while (std::getline(fin, line)) {
+        if (line == RESTART_MARKER)
+            buffer.str(""); // clear prev?
+            buffer.clear();
+            keep = true;
+        if (keep)
+            buffer << line << "\n";
+    }
+    fin.close();
+
+    std::ofstream fout(filename, std::ios::trunc);
+    fout << sessionId << std::endl;
+    fout << buffer.str();
+}
+
+void resetLogs(std::string sessionId) {
+    resetLog("a.txt", sessionId);
+    resetLog("b.txt", sessionId);
+}
+
 
 DWORD WINAPI ThreadProc(LPVOID lpParam) {
     HMODULE hSelf = (HMODULE)lpParam;
@@ -127,9 +155,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     freopen("b.txt", "a", stdout);
     freopen("b.txt", "a", stderr);
     setvbuf(stdout, NULL, _IONBF, 0);
-    std::cout << "cout test" << std::endl;
-    std::cerr << "cerr test" << std::endl;
-    printf("stdout test\n");
+    // std::cout << "cout test" << std::endl;
+    // std::cerr << "cerr test" << std::endl;
+    std::cout << RESTART_MARKER;
+    printf(RESTART_MARKER);
+
     file << "ThreadProc started" << std::endl;
     std::cout << "Using Version 0.2.2-alpha" << std::endl;
 
@@ -226,21 +256,27 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // Send to Hub instead of YCBoB for New Game
     volatile DWORD& loadingZonePTR = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x6CA89C);
     volatile DWORD& hubAddress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x6CA8B4);
-    volatile DWORD& villainMissionAdress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x5CA7B8);
-    volatile DWORD& harbouringAGrudgeAddress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x5CA818);
-
+    volatile DWORD& villainMissionAdress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x5CA7B8); // WARN: What is this?
+    
     std::cout << "Hub Pointer Address: " << hubAddress << std::endl;
     std::cout << "Loading Zone PTR Value: " << loadingZonePTR << std::endl;
-
+    
     std::ifstream connectionFile("APConnect.txt");
-    std::string line;
-    std::getline(connectionFile, line);
-    std::getline(connectionFile, line);
-    std::getline(connectionFile, line);
-    transform(line.begin(), line.end(), line.begin(), ::tolower);
-    bool isSnolid = (line.find("snolid") != std::string::npos);
-    std::cout << "isSnolid: " << isSnolid << std::endl;
+    std::string c_host;
+    std::string c_player;
+    std::getline(connectionFile, c_host);
+    std::getline(connectionFile, c_host);
+    std::getline(connectionFile, c_player);
     connectionFile.close();
+    
+    
+    // Easter Egg: Snolid
+    volatile DWORD& harbouringAGrudgeAddress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x5CA818);
+    
+    transform(c_player.begin(), c_player.end(), c_player.begin(), ::tolower);
+    bool isSnolid = (c_player.find("snolid") != std::string::npos);
+    std::cout << "isSnolid: " << isSnolid << std::endl;
+
 
     if(sublevelToLevel(game.currentLevel) != LevelName::V2_3 && isSnolid){
         while (sublevelToLevel(game.currentLevel) != LevelName::V2_3){
@@ -260,9 +296,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
     while (playerControl != 1) Sleep(100); // Wait till loaded into level
 
-    // AP testing.
+    
     messageBox.holdMessage("Holy Archipelago Batman!!! Attempting to connect...");
-    //TODO: remove player movement
+    //TODO: block player movement
     LB1AP_Connect();
     while(LB1AP_GetConnectionStatus() != AP_ConnectionStatus::Authenticated) {
         messageBox.tick();
@@ -271,6 +307,15 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
     messageBox.releaseMessage();
     //TODO: restore player movement
+    
+    std::ifstream b_filein("b.txt");
+    std::string sessionId = c_player + "@" + c_host; 
+    std::string line;
+    if (!(getline(b_filein,line) && (line == sessionId))) {
+        // different session need to clear
+        resetLogs(sessionId);
+    }
+
 
 
 
