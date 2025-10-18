@@ -120,12 +120,12 @@ void resetLog(std::string filename, std::string sessionId) {
     bool keep = false;
 
     while (std::getline(fin, line)) {
-        if (line == RESTART_MARKER)
+        if (line == RESTART_MARKER) {
             buffer.str(""); // clear prev?
             buffer.clear();
             keep = true;
-        if (keep)
-            buffer << line << "\n";
+        }
+        if (keep) buffer << line << "\n";
     }
     fin.close();
 
@@ -321,7 +321,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     std::string line;
     if (!(getline(b_filein,line) && (line == sessionId))) {
         // different session need to clear
-        
+        std::cout << "===============clearing logs" << std::endl;
         resetLogs(sessionId);
     }
 
