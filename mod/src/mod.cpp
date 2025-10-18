@@ -135,7 +135,7 @@ void resetLog(std::string filename, std::string sessionId) {
 }
 
 void resetLogs(std::string sessionId) {
-    resetLog("a.txt", sessionId);
+    //resetLog("a.txt", sessionId);
     resetLog("b.txt", sessionId);
 }
 
@@ -148,8 +148,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)hSelf, &dummy);
     
 
-    file.open("a.txt");
-    b_file.open("b.txt");
+    file.open("a.txt", std::ios::app);
+    b_file.open("b.txt", std::ios::app);
     std::cout.rdbuf(file.rdbuf());
     std::cerr.rdbuf(file.rdbuf());
     freopen("b.txt", "a", stdout);
@@ -321,6 +321,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     std::string line;
     if (!(getline(b_filein,line) && (line == sessionId))) {
         // different session need to clear
+        
         resetLogs(sessionId);
     }
 
