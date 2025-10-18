@@ -22,7 +22,7 @@
 std::ofstream file;
 std::ofstream b_file;
 
-#define RESTART_MARKER "\n================Restart================\n"
+#define RESTART_MARKER "================Restart================"
 
 bool WriteCode(LPVOID pAddress, void* bytesOld, void* bytes, int byteCount){
     int maxWaitMs = 20000;
@@ -122,7 +122,7 @@ void resetLog(std::string filename, std::string sessionId) {
     while (std::getline(fin, line)) {
         if (line == RESTART_MARKER) {
             buffer.str(""); // clear prev?
-            buffer.clear();
+            buffer.clear(); // clear err?
             keep = true;
             buffer << line << "\n";
         }
@@ -144,20 +144,23 @@ void resetLogs(std::string sessionId) {
 DWORD WINAPI ThreadProc(LPVOID lpParam) {
     HMODULE hSelf = (HMODULE)lpParam;
 
-    // Prevent the DLL from being unloaded? TODO: I don't know if this works
+    // Prevent the DLL from being unloaded? TODO: I don't know if this actually does anything
     HMODULE dummy;
     GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)hSelf, &dummy);
     
 
     file.open("a.txt", std::ios::app);
     b_file.open("b.txt", std::ios::app);
+
     std::cout.rdbuf(file.rdbuf());
     std::cerr.rdbuf(file.rdbuf());
+    
     freopen("b.txt", "a", stdout);
     freopen("b.txt", "a", stderr);
     setvbuf(stdout, NULL, _IONBF, 0);
-    std::cout << RESTART_MARKER;
-    printf(RESTART_MARKER);
+    
+    std::cout << "\n" RESTART_MARKER "\n";
+    printf("\n" RESTART_MARKER "\n"); // I hope this works
 
     file << "ThreadProc started" << std::endl;
     std::cout << "Using Version 0.2.2-alpha" << std::endl;
