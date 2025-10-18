@@ -124,6 +124,7 @@ void resetLog(std::string filename, std::string sessionId) {
             buffer.str(""); // clear prev?
             buffer.clear();
             keep = true;
+            buffer << line << "\n";
         }
         if (keep) buffer << line << "\n";
     }
@@ -135,7 +136,7 @@ void resetLog(std::string filename, std::string sessionId) {
 }
 
 void resetLogs(std::string sessionId) {
-    //resetLog("a.txt", sessionId);
+    resetLog("a.txt", sessionId);
     resetLog("b.txt", sessionId);
 }
 
@@ -155,8 +156,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     freopen("b.txt", "a", stdout);
     freopen("b.txt", "a", stderr);
     setvbuf(stdout, NULL, _IONBF, 0);
-    // std::cout << "cout test" << std::endl;
-    // std::cerr << "cerr test" << std::endl;
     std::cout << RESTART_MARKER;
     printf(RESTART_MARKER);
 
@@ -260,8 +259,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     
     std::cout << "Hub Pointer Address: " << hubAddress << std::endl;
     std::cout << "Loading Zone PTR Value: " << loadingZonePTR << std::endl;
-    
-   
 
     if(sublevelToLevel(game.currentLevel) != LevelName::Mission_Room){
         while (sublevelToLevel(game.currentLevel) != LevelName::Mission_Room){
