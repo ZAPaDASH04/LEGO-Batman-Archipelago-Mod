@@ -108,6 +108,7 @@ BYTE sublevelToLevel(BYTE id) {
     case 0x40: return V1_4;
     case 0x41: return V1_4;
     case 0x42: return V1_4;
+    case 0x43: return V1_4; // redbrick room
     case 0x45: return V1_4;
     case 0x50: return V1_5;
     case 0x51: return V1_5;
