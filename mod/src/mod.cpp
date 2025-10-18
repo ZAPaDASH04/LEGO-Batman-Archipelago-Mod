@@ -124,7 +124,7 @@ void resetLog(std::string filename, std::string sessionId) {
             buffer.str(""); // clear prev?
             buffer.clear(); // clear err?
             keep = true;
-            buffer << line << "\n";
+            //buffer << line << "\n";
         }
         if (keep) buffer << line << "\n";
     }
@@ -163,7 +163,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     printf("\n" RESTART_MARKER "\n"); // I hope this works
 
     file << "ThreadProc started" << std::endl;
-    std::cout << "Using Version 0.2.2-alpha" << std::endl;
+    std::cout << "Using Version 0.2.3-alpha" << std::endl;
 
     
     
