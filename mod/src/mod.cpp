@@ -16,8 +16,8 @@
 #include "game.h"
 #include "hintmessagebox.h"
 
-#include <cctype> //TODO: remove if isSnolid is removed
-#include <algorithm> //TODO: remove if isSnolid is removed
+#include <cctype> //TODO: remove if easter egg 1 is removed
+#include <algorithm> //TODO: remove if easter egg 1 is removed
 
 std::ofstream file;
 std::ofstream b_file;
