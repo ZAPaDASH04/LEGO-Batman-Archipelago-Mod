@@ -456,6 +456,26 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     game.extraPurchasedPrev = game.powerBrickPurchased;
                 }
 
+                // per character
+                for (DWORD64 i = 0; i < Characters::characterCount; i++)
+                {
+                    // if (game.characters.Token[i] && !game.characters.characterPurchased[i]) {
+                    //     *game.characters[i] = 0x02;
+                    // }
+                    if (game.characters.token[i]) {
+                        if (game.characters.purchased[i]){
+                            *game.characters[i] = 0x03;
+                            // FIXME: lock purchase
+                        } else {
+                            *game.characters[i] = 0x02;
+                            // FIXME: unlock purchase
+                        }
+                    } else {
+                        *game.characters[i] = 0x00; // this is so that it's a silouhette
+                    }
+                }
+                
+
                 
             } else {
                 // left shop
@@ -479,6 +499,27 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     game.extraPurchasedPrev = game.powerBrickPurchased;
                 }
                 
+                // per character
+                for (DWORD64 i = 0; i < Characters::characterCount; i++)
+                {
+                    // if (game.characters.token[i]) {
+                    //     if (game.characters.Purchased[i]){
+                    //         *game.characters[i] = 0x03;
+                    //         // FIXME: lock purchase
+                    //     } else {
+                    //         *game.characters[i] = 0x02;
+                    //         // FIXME: unlock purchase
+                    //     }
+                    // } else {
+                    //     *game.characters[i] = 0x00; // this is so that it's a silouhette
+                    // }
+                    if (game.characters.unlocked[i]) {
+                        *game.characters[i] = 0x03;
+                    } else {
+                        *game.characters[i] = 0x00;
+                    }
+                }
+
             }
             game.inShopSubMenuPrev = game.inShopSubMenu;
         }
@@ -588,22 +629,32 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         }
 
-        // Red Brick Purchased
-        if (game.isInShop() && (game.extraPurchasedPrev != game.powerBrickPurchased)) {
-            int powerBrickCheck = game.checkPowerBricks() - 1;
-            if (powerBrickCheck != -1) { // TODO: I don't think this will ever not trigger.
-                // std::cout
-                //     << "new PowerBrick " << (int) powerBrickCheck
-                //     << ". PowerBrickdata " << std::hex << (int) game.powerBrickPurchased
-                //     << std::endl;
-                std::cout
-                    << "new Power Brick purchased " << (int) lev
-                        << std::endl;
-                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 515 + powerBrickCheck);
-                game.powerBrickState[powerBrickCheck] != 0b0100;
-                game.extraPurchasedPrev = game.powerBrickPurchased;
-                if (powerBrickCheck >= 20) *game.suitUpgradeEnabled[powerBrickCheck-20] = 0; // enable suit upgrade
+
+
+        // Shop locations
+        if (game.isInShop()) {
+
+            // Red Brick Purchased
+            if (game.extraPurchasedPrev != game.powerBrickPurchased) {
+                int powerBrickCheck = game.checkPowerBricks() - 1;
+                if (powerBrickCheck != -1) { // TODO: I don't think this will ever not trigger.
+                    // std::cout
+                    //     << "new PowerBrick " << (int) powerBrickCheck
+                    //     << ". PowerBrickdata " << std::hex << (int) game.powerBrickPurchased
+                    //     << std::endl;
+                    std::cout
+                        << "new Power Brick purchased " << (int) lev
+                            << std::endl;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 515 + powerBrickCheck);
+                    game.powerBrickState[powerBrickCheck] != 0b0100;
+                    game.extraPurchasedPrev = game.powerBrickPurchased;
+                    if (powerBrickCheck >= 20) *game.suitUpgradeEnabled[powerBrickCheck-20] = 0; // enable suit upgrade
+                }
             }
+
+            // Character Purchased
+            // TODO: do that.
+
         }
 
 
@@ -618,12 +669,24 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         {
             int i = receiveQueue.front();
             std::cout << "Received an Item!" << std::endl;
-            if (i < 100) {
-                std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
+            if (i < 78) {
+                // Characters
+                std::cout << "Playable Character Unlocked!" << std::endl;
+                game.characters.unlocked[i] = true;
+                //*game.characters[i] = 0x03;
+                //std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
+            } else if (i < 81) {
+                std::cerr << "Invalid Character Received." << std::endl;
+            } else if (i < 90) {
+                // Suits
+                std::cout << "Suit Unlocked!" << std::endl;
+
+            } else if (i < 100) {
+                std::cerr << "Invalid Suit Received." << std::endl;
             } else if (i < 400) { // Minikits
-                std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
+                std::cerr << "You should not be getting Minikits (report to devs)" << std::endl;
             } else if (i < 425) { // Hostages
-                std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
+                std::cerr << "You should not be getting Hostages (report to devs)" << std::endl;
             } else if (i < 455) { // Level Unlock
                 std::cout << "Level Unlocked!" << std::endl;
                 *game.levels.levelUnlocked[i-425] = 1;
@@ -631,13 +694,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 if (Settings::lb1_freeplayUnlocked==1) *game.levels.levelBeaten[i-425] = 1;
 
             } else if (i < 485) { // True status
-                std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
-            } else if (i < 515) { // Red Brick
-                std::cout << "Red Brick Collected!" << std::endl;
+                std::cerr << "You should not be getting true statuses (report to devs)" << std::endl;
+            } else if (i < 515) { // Red Brick token
+                std::cout << "Red Brick Token Unlocked!" << std::endl;
                 game.powerBrickState[i-485] |= 0b0010; // set state to item received
 
 
-            } else if (i < 550) { // Red Brick purchased
+            } else if (i < 550) { // Red Brick Purchased
                 std::cout << "Red Brick Unlocked!" << std::endl;
                 game.powerBrickState[i-515] |= 0b1000; // set state to item received
                 if (!game.isInShop()) { // enable if not in shop
@@ -648,6 +711,74 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
                 
 
+            } else if (i < 602) {
+                // Character Tokens
+                /* vanilla shop tokens
+                    brucewayne
+                    alfred
+                    batgirl
+                    nightwing
+                    commissionergordon
+                    policeman_2
+                    fish_monger
+                    military_policeman
+                    securityguard_1
+                    swatteam
+                    scientist
+                    navy_sailor
+                    policemarksman
+                    catwoman2
+                    manbat
+                    madhatter
+                    jokerhawaiian
+                    poisonivy_goon
+                    zoosweeper
+                    f_goon
+                    f_yeti
+                    r_goon
+                    r_goon_gun
+                    p_goon
+                    p_goon_gun
+                    penguingoon
+                    j_goon
+                    j_goon_gun
+                    Clown_Goon
+                    Hush
+                    Ras
+                    policecarFP
+                    policebikeFP
+                    policevanFP
+                    batTank
+                    catbike
+                    twofacetruck
+                    mrfreezekart
+                    harlequin4x4
+                    jokerVanFP
+                    dustbinLorry
+                    robinsub
+                    policejetski
+                    police_boat
+                    penguinsub
+                    mrfreezeberg
+                    madPedalo
+                    harbourchopper
+                    policechopperFP
+                    learjet
+                    gooncopter
+                    riddlerjet
+                    madGlider
+                */
+                // switch (i-550) {
+                //     case Bruce_Wayne:
+                //         break;
+                // }
+                //*game.characters[i-550] = 0x02; 
+                //game.characters.Purchased
+                std::cout << "Character Token Unlocked!" << std::endl;
+                game.characters.token[i-550] = true;
+                if (game.isInShop()) { // TODO: this is untested and I'm not sure if it does what I want.
+                    *game.characters[i-550] = 0x02;
+                }
             } else { // out of bound
                 std::cout << "Received Unknown Item: " << (int) i;
             }

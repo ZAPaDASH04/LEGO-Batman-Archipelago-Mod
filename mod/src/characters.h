@@ -22,15 +22,21 @@ enum CharacterName {
     The_Joker,              The_Joker_Tropical, Poison_Ivy_Goon,    Zoo_Sweeper,            Freeze_Girl,        Yeti,
 
     Riddler_Goon,           Riddler_Henchman,   Penguin_Goon,       Penguin_Henchman,       Penguin_Minion,     Joker_Goon,   
-    Joker_Henchman,         Clown_Goon,         Hush,               Ras_Al_Ghul,            Hero_1,             Hero_2
-
-    // TODO: add vehicles.
+    Joker_Henchman,         Clown_Goon,         Hush,               Ras_Al_Ghul,            Hero_1,             Hero_2,
 
     // landcraft
-
+    Batmobile,      Batcycle,   Police_Car,             Police_Bike, 
+    Police_Van,     Bat_Tank,   Catwomans_Motorcycle,   Two_Faces_Armoured_Truck, 
+    Mr_Freezes_Kart, Harley_Quinns_Hammer_Truck, The_Jokers_Van, Garbage_Truck, 
+    
     // watercraft
+    Batboat,    Robins_Watercraft,  Robins_Submarine,   Police_Watercraft,  Police_Boat, 
+    Penguins_Submarine, Killer_Crocs_Swamp_Rider, Penguin_Goon_Submarine, Mr_Freezes_Iceberg, Mad_Hatters_Steamboat, 
 
     // aircraft
+    Batwing, Batcopter, Harbour_Helicopter, Police_Helicopter, Bruce_Waynes_Private_Jet, 
+    The_Jokers_Helicopter, The_Scarecrows_Biplane, Goon_Helicopter, Riddlers_jet, Mad_Hatters_Glider
+
 };
 
 
@@ -42,6 +48,9 @@ private:
     static const DWORD32 _offsets[characterCount];
 public:
     BYTE* _characterBytes[characterCount];
+    bool token[characterCount]; // item
+    bool purchased[characterCount]; // location
+    bool unlocked[characterCount]; // item
     /**
      * @brief Construct a new Characters object
      * 
