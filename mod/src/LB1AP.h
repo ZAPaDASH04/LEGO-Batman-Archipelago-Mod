@@ -31,7 +31,7 @@
 #define LB1AP_LOCATION_ID_OFFSET 400000 
 #define LB1AP_ITEM_ID_OFFSET 400000 
 #define LB1AP_NUM_LOCS_AND_ITEMS 600 //number of total locations and items
-#define GAME_NAME "Lego Batman: The Video Game"
+#define GAME_NAME "Lego Batman The Video Game"
 
 extern std::queue<int> receiveQueue;
 
@@ -46,6 +46,10 @@ struct Settings {
     static int lb1_minikitSanity; //1 if minikit sanity check is enabled, 0 if not
     static int lb1_trueStatusSanity; //1 if true status sanity check is enabled, 0 if not
     static int lb1_freeplayUnlocked; //0 if level unlocks send story mode, 1 if freeplay is sent
+    static int lb1_decoupledTokens; //1 for decoupled from purchases, 0 for coupled
+    static int lb1_shuffleHushandRas; //1 to shuffle hush and ras, 0 to not
+    static int lb1_hushUnlockCondition; //Number of hostages required to unlock purchase option
+    static int lb1_rasUnlockCondition; //Number of minikits required to unlock purchase option
 };
 
 
@@ -68,4 +72,8 @@ void LB1AP_LevelComplete();
 void LB1AP_SetMinikitSanity(int num);
 void LB1AP_SetTrueStatusSanity(int num);
 void LB1AP_SetFreeplayOrStory(int num);
+void LB1AP_SetDecoupledTokens(int num);
+void LB1AP_SetShuffleHushAndRas(int num);
+void LB1AP_SetHushUnlockCondition(int num);
+void LB1AP_SetRasUnlockCondition(int num);
 AP_ConnectionStatus LB1AP_GetConnectionStatus();

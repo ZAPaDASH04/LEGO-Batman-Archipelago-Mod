@@ -100,7 +100,6 @@ public:
     BYTE powerBrickState[35];
 
 
-
     Game(DWORD BASE_ADDR);
 
     int checkPowerBricks();

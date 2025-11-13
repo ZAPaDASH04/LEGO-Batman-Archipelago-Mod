@@ -20,6 +20,10 @@ int Settings::lb1_levelsToWin {}; // Number of levels required to win. Default i
 int Settings::lb1_minikitSanity {}; // 1 if minikit sanity check is enabled, 0 if not
 int Settings::lb1_trueStatusSanity {}; // 1 if true status sanity check is enabled, 0 if not
 int Settings::lb1_freeplayUnlocked {}; // 1 if freeplay is unlocked, 0 if story mode is unlocked
+int Settings::lb1_decoupledTokens {}; //1 for decoupled from purchases, 0 for coupled
+int Settings::lb1_shuffleHushandRas {}; //1 to shuffle hush and ras, 0 to not
+int Settings::lb1_hushUnlockCondition {}; //Number of hostages required to unlock purchase option
+int Settings::lb1_rasUnlockCondition {}; //Number of minikits required to unlock purchase option
 
 std::queue<int> receiveQueue;
 
@@ -30,12 +34,17 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
     AP_SetLocationCheckedCallback(&LB1AP_CheckLocation); // What to do when a location is checked
     AP_SetNotify(AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal", AP_DataType::Int); // Used to make sure Level Complete win condition is properly calculated between sessions
     AP_RegisterSetReplyCallback(&LB1AP_SetReplyHanlder); // Set reply hanlder for Level complete win condition
-    AP_RegisterSlotDataIntCallback("EndGoal", &LB1AP_SetCompletionType); // Read slot data for completion type
-    AP_RegisterSlotDataIntCallback("MinikitsToWin", &LB1AP_SetMinikitsToWin); // Read slot data for number of minikits to win
-    AP_RegisterSlotDataIntCallback("LevelsToWin", &LB1AP_SetLevelsToWin); // Read slot data for number of levels to win
-    AP_RegisterSlotDataIntCallback("MinikitSanity", &LB1AP_SetMinikitSanity); // Read slot data for minikit sanity setting
-    AP_RegisterSlotDataIntCallback("TrueStatusSanity", &LB1AP_SetTrueStatusSanity); // Read slot data for true status sanity setting
-    AP_RegisterSlotDataIntCallback("FreeplayOrStory", &LB1AP_SetFreeplayOrStory); // Read slot data for freeplay or story mode setting
+    // Read Slot Data
+    AP_RegisterSlotDataIntCallback("EndGoal", &LB1AP_SetCompletionType);
+    AP_RegisterSlotDataIntCallback("MinikitsToWin", &LB1AP_SetMinikitsToWin);
+    AP_RegisterSlotDataIntCallback("LevelsToWin", &LB1AP_SetLevelsToWin);
+    AP_RegisterSlotDataIntCallback("MinikitSanity", &LB1AP_SetMinikitSanity);
+    AP_RegisterSlotDataIntCallback("TrueStatusSanity", &LB1AP_SetTrueStatusSanity);
+    AP_RegisterSlotDataIntCallback("FreeplayOrStory", &LB1AP_SetFreeplayOrStory);
+    AP_RegisterSlotDataIntCallback("DecoupledTokens", &LB1AP_SetDecoupledTokens);
+    AP_RegisterSlotDataIntCallback("ShuffleHushAndRas", &LB1AP_SetShuffleHushAndRas);
+    AP_RegisterSlotDataIntCallback("HushUnlockCondition", &LB1AP_SetHushUnlockCondition);
+    AP_RegisterSlotDataIntCallback("RasUnlockCondition", &LB1AP_SetRasUnlockCondition);
     AP_Start();
 }
 
@@ -61,8 +70,14 @@ void LB1AP_SendItem(int64_t location_id){
 void LB1AP_ReceiveItem(int itemID, bool notify){
     itemID -= LB1AP_ITEM_ID_OFFSET;
     printf("Item %d Received\n", itemID);
-    if (itemID < 100) {
+    if (itemID < 0) {
         printf("Received Unknown Item: %d\n", itemID);
+    } else if (itemID < 80) { // Characters
+        printf("Character Unlocked: %d\n", itemID);
+        receiveQueue.push(itemID);
+    } else if (itemID < 80) { // Suit
+        printf("Suit Unlocked: %d\n", itemID);
+        receiveQueue.push(itemID);
     } else if (itemID < 400) { // Minikits
         Settings::minikits++;
         printf("Number of Minikits: %d\n", Settings::minikits);
@@ -79,6 +94,9 @@ void LB1AP_ReceiveItem(int itemID, bool notify){
         receiveQueue.push(itemID);
     } else if (itemID < 550) { // Red Brick purchased
         printf("Red Brick Purchased\n");
+        receiveQueue.push(itemID);
+    } else if (itemID < 630) { // Tokens
+        printf("Token Collected: %d\n", itemID);
         receiveQueue.push(itemID);
     } else { // Out of bounds
         printf("Received Unknown Item: %d\n", itemID);
@@ -161,7 +179,7 @@ void LB1AP_Connect(){
                 connected = true;
                 break;
             }
-            Sleep(100);
+            Sleep(10000); // wait 10 seconds before trying again
             std::cout << "Waiting for connection about to loop" << std::endl;
         }
     }
@@ -249,6 +267,50 @@ void LB1AP_SetFreeplayOrStory(int num){
     }
     Settings::lb1_freeplayUnlocked = num;
     std::cout << "Freeplay setting set to: " << Settings::lb1_freeplayUnlocked << std::endl;
+}
+
+// Read Decoupled Tokens setting based on slot data
+void LB1AP_SetDecoupledTokens(int num){
+    if(num < 0 || num > 1){
+        std::cout << "Could not read the Decoupled Tokens setting. Please report this to the devs. Setting to default" << std::endl;
+        Settings::lb1_decoupledTokens = 1; // Set to default
+        return;
+    }
+    Settings::lb1_decoupledTokens = num;
+    std::cout << "Decoupled Token setting set to: " << Settings::lb1_decoupledTokens<< std::endl;
+}
+
+// Read Shuffle Hush and Ras setting based on slot data
+void LB1AP_SetShuffleHushAndRas(int num){
+    if(num < 0 || num > 1){
+        std::cout << "Could not read the Shuffle Hush and Ras setting. Please report this to the devs. Setting to default" << std::endl;
+        Settings::lb1_shuffleHushandRas = 1; // Set to default
+        return;
+    }
+    Settings::lb1_shuffleHushandRas = num;
+    std::cout << "Shuffle Ras and Hush setting set to: " << Settings::lb1_shuffleHushandRas << std::endl;
+}
+
+// Read Hush Unlock Condition based on slot data
+void LB1AP_SetHushUnlockCondition(int num){
+    if(num < 0 || num > 25){
+        std::cout << "Could not read the Hush Unlock Condition setting. Please report this to the devs. Setting to default" << std::endl;
+        Settings::lb1_hushUnlockCondition = 12; // Set to default
+        return;
+    }
+    Settings::lb1_hushUnlockCondition = num;
+    std::cout << "Hush Unlock Condition setting set to: " << Settings::lb1_hushUnlockCondition << std::endl;
+}
+
+// Read Ras Unlock Condition based on slot data
+void LB1AP_SetRasUnlockCondition(int num){
+    if(num < 0 || num > 300){
+        std::cout << "Could not read the Ras Unlock Condition setting. Please report this to the devs. Setting to default" << std::endl;
+        Settings::lb1_rasUnlockCondition = 150; // Set to default
+        return;
+    }
+    Settings::lb1_rasUnlockCondition = num;
+    std::cout << "Ras Unlock Condition setting set to: " << Settings::lb1_rasUnlockCondition << std::endl;
 }
 
 // Handles reply from the server. Implemented for level beaten win condition
