@@ -669,20 +669,18 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         {
             int i = receiveQueue.front();
             std::cout << "Received an Item!" << std::endl;
-            if (i < 78) {
+            if (i < 80) {
                 // Characters
                 std::cout << "Playable Character Unlocked!" << std::endl;
                 game.characters.unlocked[i] = true;
                 //*game.characters[i] = 0x03;
                 //std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
-            } else if (i < 81) {
-                std::cerr << "Invalid Character Received." << std::endl;
             } else if (i < 90) {
                 // Suits
                 std::cout << "Suit Unlocked!" << std::endl;
 
             } else if (i < 100) {
-                std::cerr << "Invalid Suit Received." << std::endl;
+                std::cerr << "Invalid Suit? Received." << std::endl;
             } else if (i < 400) { // Minikits
                 std::cerr << "You should not be getting Minikits (report to devs)" << std::endl;
             } else if (i < 425) { // Hostages
@@ -711,7 +709,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
                 
 
-            } else if (i < 602) {
+            } else if (i < 630) {
                 // Character Tokens
                 /* vanilla shop tokens
                     brucewayne

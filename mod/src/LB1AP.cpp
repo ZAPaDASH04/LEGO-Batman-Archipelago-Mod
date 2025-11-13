@@ -75,7 +75,7 @@ void LB1AP_ReceiveItem(int itemID, bool notify){
     } else if (itemID < 80) { // Characters
         printf("Character Unlocked: %d\n", itemID);
         receiveQueue.push(itemID);
-    } else if (itemID < 80) { // Suit
+    } else if (itemID < 90) { // Suit
         printf("Suit Unlocked: %d\n", itemID);
         receiveQueue.push(itemID);
     } else if (itemID < 400) { // Minikits
