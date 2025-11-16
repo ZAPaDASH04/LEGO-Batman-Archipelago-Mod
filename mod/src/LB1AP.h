@@ -30,7 +30,7 @@
 
 #define LB1AP_LOCATION_ID_OFFSET 400000 
 #define LB1AP_ITEM_ID_OFFSET 400000 
-#define LB1AP_NUM_LOCS_AND_ITEMS 600 //number of total locations and items
+#define LB1AP_NUM_LOCS_AND_ITEMS 650 //number of total locations and items
 #define GAME_NAME "Lego Batman The Video Game"
 
 extern std::queue<int> receiveQueue;
