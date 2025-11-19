@@ -90,6 +90,7 @@ public:
     BYTE inLevelTrueStatusPrev;
     DWORD64 extraPurchasedPrev;
     BYTE inShopSubMenuPrev;
+    
     /**
      * @brief 4 flags
      * bit 1 = Collected Location

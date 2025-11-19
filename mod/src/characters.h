@@ -46,11 +46,16 @@ public: // WHY >:(
 private:
     const DWORD BASE_ADDR; // may eventually make global.
     static const DWORD32 _offsets[characterCount];
+    BYTE* _purchaseLocks;
 public:
     BYTE* _characterBytes[characterCount];
     bool token[characterCount]; // item
     bool purchased[characterCount]; // location
     bool unlocked[characterCount]; // item
+
+    static size_t vanillaShopCharacter(size_t i);
+
+
     /**
      * @brief Construct a new Characters object
      * 
@@ -66,6 +71,14 @@ public:
     // TODO: see if this can return volatile reference.
     BYTE* operator[](int i);
 
+    BYTE characterUnlocked(size_t i);
+    BYTE characterUnlocked(size_t i, BYTE value);
+
+    // void UnlockCharacter(size_t i);
+    // void UnlockToken(size_t i);
+    
+    void purchaseLocks(size_t i);
+    void purchaseLocks(size_t i, bool lock);
 };
 
 

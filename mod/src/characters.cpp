@@ -112,7 +112,13 @@ const DWORD32 Characters::_offsets[characterCount] =
 
 
 Characters::Characters(DWORD BASE_ADDR) : 
-    BASE_ADDR(BASE_ADDR)
+    BASE_ADDR(BASE_ADDR),
+    _purchaseLocks(reinterpret_cast<BYTE*>(
+            reinterpret_cast<uintptr_t>(
+                *reinterpret_cast<void**>(BASE_ADDR + 0x005C59CC)
+            ) +  0x7B88
+        )
+    )
 {
     for (size_t i = 0; i < characterCount; i++) {
         _characterBytes[i] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + _offsets[i];
@@ -124,4 +130,72 @@ Characters::Characters(DWORD BASE_ADDR) :
 
 BYTE* Characters::operator[](int i) {
     return _characterBytes[i];
+}
+
+BYTE Characters::characterUnlocked(size_t i)
+{
+    return *_characterBytes[i];
+};
+
+BYTE Characters::characterUnlocked(size_t i, BYTE value)
+{
+    *_characterBytes[i] = value;
+    return *_characterBytes[i];
+}
+
+// size_t Characters::OffsetToIndex(size_t offset) {
+//     for (DWORD i = 0; i < characterCount; i++)
+//     {
+//         if (index == _offsets[i]) return i;
+//     }
+// }
+
+size_t Characters::vanillaShopCharacter(size_t index) {
+    //TODO: Needs testing
+    size_t i = 0;
+    if (index > 1 && index < 15) {
+        return index-2;
+    } else if (index = 22) {
+        return 13;
+    } else if (index = 24) {
+        return 14;
+    } else if (index = 29) {
+        return 15;
+    } else if (index > 30 && index < 46) {
+        return 16 + (index-31);
+
+    } else if (index > 49 && index < 60) {
+        return 31 + (index-49);
+    } else if (index > 61 && index < 65) {
+        return 41 + (index-61);
+    } else if (index > 66 && index < 70) {
+        return 44 + (index-66);
+    } else if (index > 71 && index < 75) {
+        return 47 + (index-71);
+    } else {
+        // not valid
+        return -1;
+    }
+}
+
+/**
+ * @brief Will set lock to purchased state if no state specified.
+ * 
+ * @param i 
+ */
+void Characters::purchaseLocks(size_t i) {
+    purchaseLocks(i,!purchased[vanillaShopCharacter(i)]);
+};
+
+void Characters::purchaseLocks(size_t i, bool lock) {
+    i = vanillaShopCharacter(i);
+    if (i < 0 || i>7*8) {
+        // WARN: throw I guess.
+        return;
+    }
+    if (lock) {
+        _purchaseLocks[i/8] |= 0b1 << (i%8);
+    } else {
+        _purchaseLocks[i/8] &= ~(0b1 << (i%8));
+    }
 };

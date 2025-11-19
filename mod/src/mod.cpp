@@ -348,10 +348,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     
     
     // unlock all characters
-    for (size_t i = 0; i < game.characters.characterCount; i++)
-    {
-        *game.characters._characterBytes[i] = 0x03;
-    }
+    // for (size_t i = 0; i < game.characters.characterCount; i++)
+    // {
+    //     *game.characters._characterBytes[i] = 0x03;
+    // }
 
     // unlock all suits
     for (size_t i = 0; i < 10; i++) 
@@ -397,7 +397,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 if (lev <= LevelName::V3_5) {
                     // entered a level
                     std::cout << "entered a level." << std::endl;
-                    // TODO: can I make this level specifc. no loop?
+                    // TODO: can I make this level specifc. no loop? 
+                    // FIXME: I am pretty sure you can just use lev as the index
                     for (size_t i = 0; i < 30; i++)
                     {
                         *game.levels.levelBeaten[i] = 0;
@@ -408,6 +409,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     // entered hub or Unknown
                     std::cout << "entered hub." << std::endl;
                     // TODO: can I make this level specifc. no loop?
+                    // FIXME: I am pretty sure you can just use lev as the index
                     for (size_t i = 0; i < 30; i++)
                     {
                         if (*game.levels.levelUnlocked[i] == 1 && (game.levels.levelBeatenPrev[i] == 1 || Settings::lb1_freeplayUnlocked == 1)) *game.levels.levelBeaten[i] = 1;
@@ -465,13 +467,15 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     if (game.characters.token[i]) {
                         if (game.characters.purchased[i]){
                             *game.characters[i] = 0x03;
-                            // FIXME: lock purchase
+                            // TODO: do I need to lock purchase
                         } else {
                             *game.characters[i] = 0x02;
-                            // FIXME: unlock purchase
+                            game.characters.purchaseLocks(i); // should safely ignore invalid i
                         }
                     } else {
                         *game.characters[i] = 0x00; // this is so that it's a silouhette
+                        //game.characters.purchaseLocks(i);
+                        // TODO: does this work as intended?
                     }
                 }
                 
@@ -673,11 +677,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 // Characters
                 std::cout << "Playable Character Unlocked!" << std::endl;
                 game.characters.unlocked[i] = true;
-                //*game.characters[i] = 0x03;
+                if (!game.isInShop()) { // enable if not in shop
+                    *game.characters[i] = 0x03;
+                }
                 //std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
             } else if (i < 90) {
                 // Suits
                 std::cout << "Suit Unlocked!" << std::endl;
+                // TODO: implement
 
             } else if (i < 100) {
                 std::cerr << "Invalid Suit? Received." << std::endl;
@@ -776,6 +783,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 game.characters.token[i-550] = true;
                 if (game.isInShop()) { // TODO: this is untested and I'm not sure if it does what I want.
                     *game.characters[i-550] = 0x02;
+                    game.characters.purchaseLocks(i-550); // TODO: maybe need this.
                 }
             } else { // out of bound
                 std::cout << "Received Unknown Item: " << (int) i;
