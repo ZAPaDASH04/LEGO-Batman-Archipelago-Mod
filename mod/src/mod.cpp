@@ -352,6 +352,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // {
     //     *game.characters._characterBytes[i] = 0x03;
     // }
+    *game.characters._characterBytes[0] = 0x03;
+    *game.characters._characterBytes[1] = 0x03;
 
     // unlock all suits
     for (size_t i = 0; i < 10; i++) 
