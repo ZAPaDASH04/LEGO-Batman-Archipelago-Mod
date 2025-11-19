@@ -659,8 +659,18 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             }
 
             // Character Purchased
-            // TODO: do that.
-
+            for (size_t i = 0; i < Characters::characterCount; i++)
+            {
+                // TODO: may be bad logic
+                if (game.characters.purchased[i] == false && *game.characters[i] == 0x03) {
+                    std::cout
+                        << "new Character purchased " << (int) i
+                        << std::endl;
+                    game.characters.purchased[i] = true;
+                }
+                
+            }
+            
         }
 
 
