@@ -8,6 +8,7 @@
 
 #include "characters.h"
 #include <windows.h>
+#include <iostream>
 
 const DWORD32 Characters::_offsets[characterCount] = 
 {
@@ -115,7 +116,7 @@ Characters::Characters(DWORD BASE_ADDR) :
     BASE_ADDR(BASE_ADDR),
     _purchaseLocks(reinterpret_cast<BYTE*>(
             reinterpret_cast<uintptr_t>(
-                *reinterpret_cast<void**>(BASE_ADDR + 0x005C59CC)
+                *reinterpret_cast<void**>(BASE_ADDR + 0x005C49CC)
             ) +  0x7B88
         )
     )
@@ -184,12 +185,15 @@ size_t Characters::vanillaShopCharacter(size_t index) {
  * @param i 
  */
 void Characters::purchaseLocks(size_t i) {
-    purchaseLocks(i,!purchased[vanillaShopCharacter(i)]);
+    std::cout << "hegesdgf " << i << std::endl;
+    purchaseLocks(i,purchased[vanillaShopCharacter(i)]);
 };
 
 void Characters::purchaseLocks(size_t i, bool lock) {
     i = vanillaShopCharacter(i);
+    std::cout << "wollup " << i << " lock " << lock << std::endl;
     if (i < 0 || i>7*8) {
+        std::cout << "out of bounds" << std::endl;
         // WARN: throw I guess.
         return;
     }

@@ -95,7 +95,8 @@
     "valarray": "cpp",
     "coroutine": "cpp",
     "source_location": "cpp",
-    "queue": "cpp"
+    "queue": "cpp",
+    "print": "cpp"
   },
   "C_Cpp.default.compilerPath": "C:/msys64/mingw32/bin/i686-w64-mingw32-g++.exe",
   "todohighlight.keywords": [

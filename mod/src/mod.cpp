@@ -250,6 +250,21 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
 
+
+
+
+    /*/////////////////////
+    -////  Save Load  ////-
+    /////////////////////*/
+
+    // PLAN: need to deal with player loading a save or exiting to menu then loading their save.
+
+
+
+
+
+
+
     // disable default levels
     *game.levels.levelUnlocked[0] = 0; // H1-1
     *game.levels.levelUnlocked[5] = 0; // H2-1
@@ -331,6 +346,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     ///////// TODO: do a loop of all memory for missed checks.
 
 
+    for (DWORD64 i = 0; i < Characters::characterCount; i++) {
+        game.characters.purchaseLocks(i); // correct for load save case.
+    }
 
 
 
@@ -352,8 +370,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // {
     //     *game.characters._characterBytes[i] = 0x03;
     // }
-    *game.characters._characterBytes[0] = 0x03;
-    *game.characters._characterBytes[1] = 0x03;
+    // *game.characters._characterBytes[0] = 0x03;
+    // *game.characters._characterBytes[1] = 0x03;
 
     // unlock all suits
     for (size_t i = 0; i < 10; i++) 
@@ -469,10 +487,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     if (game.characters.token[i]) {
                         if (game.characters.purchased[i]){
                             *game.characters[i] = 0x03;
-                            // TODO: do I need to lock purchase
+                            game.characters.purchaseLocks(i);
                         } else {
                             *game.characters[i] = 0x02;
-                            game.characters.purchaseLocks(i); // should safely ignore invalid i
+                            game.characters.purchaseLocks(i); // TODO: may be unneeded. // should safely ignore invalid i
                         }
                     } else {
                         *game.characters[i] = 0x00; // this is so that it's a silouhette
@@ -794,7 +812,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout << "Character Token Unlocked!" << std::endl;
                 game.characters.token[i-550] = true;
                 if (game.isInShop()) { // TODO: this is untested and I'm not sure if it does what I want.
+                    std::cout << "heg" << std::endl;
                     *game.characters[i-550] = 0x02;
+                    std::cout << "purchlocks" << std::endl;
                     game.characters.purchaseLocks(i-550); // TODO: maybe need this.
                 }
             } else { // out of bound
