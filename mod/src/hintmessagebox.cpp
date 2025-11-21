@@ -72,7 +72,7 @@ void HintMessageBox::tick() {
     // check if game as force set the timer.
     // TODO: this needs to be improved eventually.
     if (timer != timerPrev) {
-        std::cout << "timer doesn't match prev " << (float) timer << " " << timerPrev << std::endl;
+        //std::cout << "timer doesn't match prev " << (float) timer << " " << timerPrev << std::endl;
         timer = -2.0; // buffer
     }
 

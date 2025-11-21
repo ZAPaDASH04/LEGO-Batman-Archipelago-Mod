@@ -113,13 +113,13 @@ const DWORD32 Characters::_offsets[characterCount] =
 
 
 Characters::Characters(DWORD BASE_ADDR) : 
-    BASE_ADDR(BASE_ADDR),
-    _purchaseLocks(reinterpret_cast<BYTE*>(
-            reinterpret_cast<uintptr_t>(
-                *reinterpret_cast<void**>(BASE_ADDR + 0x005C49CC)
-            ) +  0x7B88
-        )
-    )
+    BASE_ADDR(BASE_ADDR)
+    // _purchaseLocks(reinterpret_cast<BYTE*>(
+    //         reinterpret_cast<uintptr_t>(
+    //             *reinterpret_cast<void**>(BASE_ADDR + 0x005C49CC)
+    //         ) +  0x7B88
+    //     )
+    // )
 {
     for (size_t i = 0; i < characterCount; i++) {
         _characterBytes[i] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + _offsets[i];
@@ -153,14 +153,17 @@ BYTE Characters::characterUnlocked(size_t i, BYTE value)
 
 size_t Characters::vanillaShopCharacter(size_t index) {
     //TODO: Needs testing
-    size_t i = 0;
+    bool isVanilla = true; // set to false if all characters added to shop.
+    if (!isVanilla) return index;
+
+    //size_t i = 0;
     if (index > 1 && index < 15) {
         return index-2;
-    } else if (index = 22) {
+    } else if (index == 22) {
         return 13;
-    } else if (index = 24) {
+    } else if (index == 24) {
         return 14;
-    } else if (index = 29) {
+    } else if (index == 29) {
         return 15;
     } else if (index > 30 && index < 46) {
         return 16 + (index-31);
@@ -186,20 +189,25 @@ size_t Characters::vanillaShopCharacter(size_t index) {
  */
 void Characters::purchaseLocks(size_t i) {
     std::cout << "hegesdgf " << i << std::endl;
-    purchaseLocks(i,purchased[vanillaShopCharacter(i)]);
+    if (vanillaShopCharacter(i) == -1) return; //TODO: may be obsolete.
+    purchaseLocks(i,purchased[i]);
 };
 
 void Characters::purchaseLocks(size_t i, bool lock) {
     i = vanillaShopCharacter(i);
+    if (i == -1) return;
     std::cout << "wollup " << i << " lock " << lock << std::endl;
-    if (i < 0 || i>7*8) {
-        std::cout << "out of bounds" << std::endl;
-        // WARN: throw I guess.
+    uintptr_t addr = BASE_ADDR + 0x560894 - 0x1000; 
+    std::cout << "d";
+    addr = *(uintptr_t*)(*(uintptr_t*)addr + 0x53B0);     
+    if (!addr) {
+        std::cerr << "ERR: purchase locks being called outside of shoproom." << std::endl;
         return;
     }
-    if (lock) {
-        _purchaseLocks[i/8] |= 0b1 << (i%8);
-    } else {
-        _purchaseLocks[i/8] &= ~(0b1 << (i%8));
-    }
+    std::cout << "c";
+    addr = *(uintptr_t*)(addr + 0xC7C);
+    std::cout << "b";
+    addr += (i * 0x74) + 0x63;    
+    std::cout << "a" << std::endl;
+    *(BYTE*)addr = lock;
 };

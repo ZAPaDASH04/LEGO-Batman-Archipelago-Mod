@@ -43,10 +43,11 @@ enum CharacterName {
 class Characters {
 public: // WHY >:(
     static const DWORD characterCount = 48 + 12 + 10 + 10;
+    static const DWORD characterShopCount = 53;
 private:
     const DWORD BASE_ADDR; // may eventually make global.
     static const DWORD32 _offsets[characterCount];
-    BYTE* _purchaseLocks;
+    //BYTE* _purchaseLocks;
 public:
     BYTE* _characterBytes[characterCount];
     bool token[characterCount]; // item

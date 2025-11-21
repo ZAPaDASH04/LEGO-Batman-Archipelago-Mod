@@ -7,6 +7,27 @@
  * 
  */
 
+
+
+/////////////////////////////////
+/////////////////////////////////
+//// IF YOU ARE READING THIS ////
+//// This is mostly rapid a- ////
+//// -nd experimental code.  ////
+//// It will be cleaned up   ////
+//// in the restructure.     ////
+/////////////////////////////////
+/////////////////////////////////
+
+
+
+
+
+
+
+
+
+
 #include "LB1AP.h"
 
 #include <windows.h>
@@ -346,9 +367,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     ///////// TODO: do a loop of all memory for missed checks.
 
 
-    for (DWORD64 i = 0; i < Characters::characterCount; i++) {
-        game.characters.purchaseLocks(i); // correct for load save case.
-    }
+    /*/////////////////////////
+    -////  Load Checked  ////-
+    ////////////////////////*/
+
+    // PLAN: This is where my checked location loop would go... IF I HAD ONE! (/s) 
+
+
 
 
 
@@ -363,15 +388,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // Detectors on
     *game.extraEnabled[ExtraName::Minikit_Detector] = 1;
     *game.extraEnabled[ExtraName::Power_Brick_Detector] = 1;
-    
-    
-    // unlock all characters
-    // for (size_t i = 0; i < game.characters.characterCount; i++)
-    // {
-    //     *game.characters._characterBytes[i] = 0x03;
-    // }
-    // *game.characters._characterBytes[0] = 0x03;
-    // *game.characters._characterBytes[1] = 0x03;
 
     // unlock all suits
     for (size_t i = 0; i < 10; i++) 
@@ -453,6 +469,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         *//// Shop ////*
         //////////////*/
 
+        // not repetitive. only on enter and exit.
         if (game.inShopSubMenuPrev != game.inShopSubMenu) {
             std::cout << "entered or exited shop." << std::endl;
             BYTE state;
@@ -461,8 +478,16 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout << "entered shop" << std::endl;
 
                 // per level
+                for (DWORD64 i = 0; i < 30; i++) {
+                    *game.levels.levelBeaten[i] = (BYTE)0;
+                }
+
+                // per extra
                 for (DWORD64 i = 0; i < 35; i++)
                 {
+
+                    // red bricks
+
                     state = game.powerBrickState[i];
                     std::cout << i << " : " << std::hex << (int)state << std::endl;
 
@@ -484,9 +509,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     // if (game.characters.Token[i] && !game.characters.characterPurchased[i]) {
                     //     *game.characters[i] = 0x02;
                     // }
+                    // TODO: test
                     if (game.characters.token[i]) {
                         if (game.characters.purchased[i]){
-                            *game.characters[i] = 0x03;
+                            *game.characters[i] = 0x03; // TODO: test if I can set this to 0x02 and it still be blocked. because in villain room what if the character starts spawning in the hub while you are in the shop.
                             game.characters.purchaseLocks(i);
                         } else {
                             *game.characters[i] = 0x02;
@@ -494,8 +520,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                         }
                     } else {
                         *game.characters[i] = 0x00; // this is so that it's a silouhette
-                        //game.characters.purchaseLocks(i);
-                        // TODO: does this work as intended?
+                        game.characters.purchaseLocks(i); // if this is 1 and the character is 0x03 then it is locked but the bottom text is wrong.
                     }
                 }
                 
@@ -505,7 +530,12 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 // left shop
                 std::cout << "exited shop" << std::endl;
 
-                // per level
+                // per level 
+                for (DWORD64 i = 0; i < 30; i++) {
+                    *game.levels.levelBeaten[i] = game.levels.levelBeatenPrev[i]; // TODO: unsure whether this works as intended.
+                }
+
+                // per extra
                 for (DWORD64 i = 0; i < 35; i++)
                 {
                     std::cout << i << " : " << std::hex << (int)state << std::endl;
@@ -537,10 +567,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     // } else {
                     //     *game.characters[i] = 0x00; // this is so that it's a silouhette
                     // }
-                    if (game.characters.unlocked[i]) {
+                    if (game.characters.unlocked[i]) { // TODO: test
                         *game.characters[i] = 0x03;
                     } else {
-                        *game.characters[i] = 0x00;
+                        *game.characters[i] = 0x00; // for when character has been purchased it would be 3 when shouldn't
                     }
                 }
 
@@ -684,7 +714,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     std::cout
                         << "new Character purchased " << (int) i
                         << std::endl;
-                    game.characters.purchased[i] = true;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 550 + i);
+                    game.characters.purchased[i] = true; // WARN: needs to be stored and loaded.
                 }
                 
             }
@@ -815,7 +846,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     std::cout << "heg" << std::endl;
                     *game.characters[i-550] = 0x02;
                     std::cout << "purchlocks" << std::endl;
-                    game.characters.purchaseLocks(i-550); // TODO: maybe need this.
+                    game.characters.purchaseLocks(i-550);
                 }
             } else { // out of bound
                 std::cout << "Received Unknown Item: " << (int) i;
