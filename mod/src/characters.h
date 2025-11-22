@@ -22,7 +22,7 @@ enum CharacterName {
     The_Joker,              The_Joker_Tropical, Poison_Ivy_Goon,    Zoo_Sweeper,            Freeze_Girl,        Yeti,
 
     Riddler_Goon,           Riddler_Henchman,   Penguin_Goon,       Penguin_Henchman,       Penguin_Minion,     Joker_Goon,   
-    Joker_Henchman,         Clown_Goon,         Hush,               Ras_Al_Ghul,            Hero_1,             Hero_2,
+    Joker_Henchman,         Clown_Goon,         Hush,               Ras_Al_Ghul,            Hero_1,             Hero_2, // PLAN: we could make hero 1 and 2 into the 2 secret characters in the customizer
 
     // landcraft
     Batmobile,      Batcycle,   Police_Car,             Police_Bike, 
