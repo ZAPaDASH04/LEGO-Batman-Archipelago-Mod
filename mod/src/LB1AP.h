@@ -23,6 +23,7 @@
 #include <iomanip>
 #include <filesystem>
 #include <queue>
+#include <algorithm>
 
 
 #ifndef LB1AP_H
