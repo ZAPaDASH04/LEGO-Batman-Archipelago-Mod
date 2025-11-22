@@ -197,7 +197,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     DWORD BASE_ADDR = (DWORD)hModule; 
     
     DWORD UP0 = 0x0; // initial version
-    DWORD UP1 = 0x1000; // 7/9/2025 update | WARN: LEGO Batman suddenly updated and I assume this +0x1000 is the general fix for it at least when it comes to data addresses. code addresses vary.
+    DWORD UP1 = 0x1000; // 7/9/2025 update | LEGO Batman suddenly updated and I assume this +0x1000 is the general fix for it at least when it comes to data addresses. code addresses vary.
     DWORD UP = UP0 + UP1;
 
 
@@ -414,6 +414,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     BYTE sublevprev = game.currentLevel;
     BYTE lev = sublevelToLevel(game.currentLevel);
     BYTE levprev = lev;
+    uint8_t numHeroEpsisodesBeaten = 0;
+    bool firstHeroEpisodeBeaten = false;
+    bool firstHeroLevelBeaten = false;
     while (true) {
         // Level changed
         if (game.currentLevel != sublevprev) {
@@ -631,6 +634,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
         // Levels
         // TODO: simplify
+        bool beatNewLevel = false;
+        bool beatNewHeroLevel = false; // for batman and robin.
         if (lev >= LevelName::Shop_Room && lev <= LevelName::Mission_Room) {} // not in a level?
         else {
 
@@ -641,10 +646,423 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout << "Changing Level Beaten Previous" << std:: endl;
                 *game.levels.levelBeaten[lev] = 1;
                 game.levels.levelBeatenPrev[lev] = *game.levels.levelBeaten[lev]; 
+                beatNewLevel = true;
+
+                // character stuff
+                if (lev < 15) {
+                    // hero level beaten.
+                    beatNewHeroLevel = true; // for batman and robin.
+
+                    // episode beaten 
+                    numHeroEpsisodesBeaten++;
+                    for (size_t i = 0; i < 5; i++)
+                    {
+                        if (game.levels.levelBeatenPrev[(lev/5)*5 + i] != 1) {
+                            numHeroEpsisodesBeaten--;
+                            break;
+                        };
+                    }
+                }
+
             }
 
         }
         
+        // Character Found
+        if (beatNewLevel) {
+            // any H level
+            // if (beatNewHeroLevel && !firstHeroLevelBeaten) { // TODO: obsolete you can use purchased bool to prevent duplicates
+            //     firstHeroLevelBeaten = true; // prevent multiple
+                
+            //     game.characters.purchased[Batman] = 1;
+            //     game.characters.purchased[Robin] = 1;
+            //     LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batman);
+            //     LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robin);
+
+            // }
+
+            // any H episode beaten
+            if (numHeroEpsisodesBeaten == 1 && !firstHeroEpisodeBeaten) { // TODO: obsolete you can use purchased bool to prevent duplicates
+                // 1st hero episode beaten.
+                firstHeroEpisodeBeaten = true; // prevent multiple triggers.
+
+                // PLAN: these characters may get a setting to split them among the H?-5 levels
+                game.characters.purchased[Bruce_Wayne] = 1;
+                game.characters.purchased[Alfred_Pennyworth] = 1;
+                game.characters.purchased[Batgirl] = 1;
+                game.characters.purchased[Nightwing] = 1;
+                game.characters.purchased[Police_Officer] = 1;
+                game.characters.purchased[Military_Policeman] = 1;
+                game.characters.purchased[Security_Guard] = 1;
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Bruce_Wayne);
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Alfred_Pennyworth);
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batgirl);
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Nightwing);
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Police_Officer);
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Military_Policeman);
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Security_Guard);
+            
+            }
+
+            // all H episodes
+            if (numHeroEpsisodesBeaten==3) { // TODO: obsolete you can use purchased bool to prevent duplicates
+                numHeroEpsisodesBeaten++; // don't trigger again
+                game.characters.purchased[Bat_Tank] = 1;
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Bat_Tank);
+
+            }
+
+            // per level
+            
+            switch (lev) {
+                case H1_1: 
+                    game.characters.purchased[Riddler_Goon] = 1;
+                    game.characters.purchased[Riddler_Henchman] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Riddler_Goon);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Riddler_Henchman);
+                    if (!game.characters.purchased[Batman]) {
+                        game.characters.purchased[Batman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batman);
+                    }
+                    if (!game.characters.purchased[Robin]) {
+                        game.characters.purchased[Robin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robin);
+                    }
+                    break;
+                case H1_2:
+                    game.characters.purchased[Freeze_Girl] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Freeze_Girl);
+                    if (!game.characters.purchased[Batman]) {
+                        game.characters.purchased[Batman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batman);
+                    }
+                    if (!game.characters.purchased[Robin]) {
+                        game.characters.purchased[Robin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robin);
+                    }
+                    break;
+                case H1_3:
+                    game.characters.purchased[Batmobile] = 1;
+                    game.characters.purchased[Batcycle] = 1;
+                    game.characters.purchased[Police_Car] = 1;
+                    game.characters.purchased[Police_Bike] = 1;
+                    game.characters.purchased[Police_Van] = 1;
+                    game.characters.purchased[The_Jokers_Van] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batmobile);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batcycle);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Police_Car);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Police_Bike);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Police_Van);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Jokers_Van);
+                    break; 
+                case H1_4:
+                    game.characters.purchased[Poison_Ivy_Goon] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Poison_Ivy_Goon);
+                    if (!game.characters.purchased[Batman]) {
+                        game.characters.purchased[Batman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batman);
+                    }
+                    if (!game.characters.purchased[Robin]) {
+                        game.characters.purchased[Robin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robin);
+                    }
+                    break; 
+                case H1_5:
+                    if (!game.characters.purchased[Batman]) {
+                        game.characters.purchased[Batman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batman);
+                    }
+                    if (!game.characters.purchased[Robin]) {
+                        game.characters.purchased[Robin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robin);
+                    }
+                    break;
+                case H2_1: 
+                    game.characters.purchased[Fishmonger] = 1;
+                    game.characters.purchased[Penguin_Goon] = 1;
+                    game.characters.purchased[Penguin_Henchman] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Fishmonger);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Penguin_Goon);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Penguin_Henchman);
+                    if (!game.characters.purchased[Batman]) {
+                        game.characters.purchased[Batman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batman);
+                    }
+                    if (!game.characters.purchased[Robin]) {
+                        game.characters.purchased[Robin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robin);
+                    }
+                    break; 
+                case H2_2: 
+                    game.characters.purchased[Batboat] = 1;
+                    game.characters.purchased[Robins_Watercraft] = 1;
+                    game.characters.purchased[Robins_Submarine] = 1;
+                    game.characters.purchased[Penguin_Goon_Submarine] = 1;
+                    game.characters.purchased[Harbour_Helicopter] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batboat);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robins_Watercraft);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robins_Submarine);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Penguin_Goon_Submarine);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Harbour_Helicopter);
+                    break; 
+                case H2_3: // sewers
+                    break; 
+                case H2_4:
+                    game.characters.purchased[Zoo_Sweeper] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Zoo_Sweeper);
+                    if (!game.characters.purchased[Batman]) {
+                        game.characters.purchased[Batman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batman);
+                    }
+                    if (!game.characters.purchased[Robin]) {
+                        game.characters.purchased[Robin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robin);
+                    }
+                    break; 
+                case H2_5:
+                    game.characters.purchased[Man_Bat] = 1;
+                    game.characters.purchased[Yeti] = 1;
+                    game.characters.purchased[Penguin_Minion] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Man_Bat);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Yeti);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Penguin_Minion);
+                    if (!game.characters.purchased[Batman]) {
+                        game.characters.purchased[Batman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batman);
+                    }
+                    if (!game.characters.purchased[Robin]) {
+                        game.characters.purchased[Robin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robin);
+                    }
+                    break;
+                case H3_1: 
+                    game.characters.purchased[Mad_Hatter] = 1;
+                    game.characters.purchased[Joker_Goon] = 1;
+                    game.characters.purchased[Joker_Henchman] = 1;
+                    game.characters.purchased[Mad_Hatters_Steamboat] = 1;
+                    game.characters.purchased[Mad_Hatters_Glider] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Mad_Hatter);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Joker_Goon);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Joker_Henchman);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Mad_Hatters_Steamboat);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Mad_Hatters_Glider);
+                    if (!game.characters.purchased[Batman]) {
+                        game.characters.purchased[Batman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batman);
+                    }
+                    if (!game.characters.purchased[Robin]) {
+                        game.characters.purchased[Robin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robin);
+                    }
+                    break; 
+                case H3_2:
+                    game.characters.purchased[Clown_Goon] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Clown_Goon);
+                    if (!game.characters.purchased[Batman]) {
+                        game.characters.purchased[Batman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batman);
+                    }
+                    if (!game.characters.purchased[Robin]) {
+                        game.characters.purchased[Robin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robin);
+                    }
+                    break; 
+                case H3_3:
+                    game.characters.purchased[Batwing] = 1;
+                    game.characters.purchased[Batcopter] = 1;
+                    game.characters.purchased[Bruce_Waynes_Private_Jet] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batwing);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batcopter);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Bruce_Waynes_Private_Jet);
+                    break; 
+                case H3_4:
+                    if (!game.characters.purchased[Batman]) {
+                        game.characters.purchased[Batman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batman);
+                    }
+                    if (!game.characters.purchased[Robin]) {
+                        game.characters.purchased[Robin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robin);
+                    }
+                    break; 
+                case H3_5:
+                    if (!game.characters.purchased[Batman]) {
+                        game.characters.purchased[Batman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Batman);
+                    }
+                    if (!game.characters.purchased[Robin]) {
+                        game.characters.purchased[Robin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Robin);
+                    }
+                    break;
+                case V1_1:
+                    game.characters.purchased[Clayface] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Clayface);
+                    
+                    if (!game.characters.purchased[The_Riddler]) { // PLAN: this could be obsolete if you modify SendItem to not send duplicates.
+                        game.characters.purchased[The_Riddler] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Riddler);
+                    }
+                    break; 
+                case V1_2: 
+                    game.characters.purchased[Mr_Freeze] = 1;
+                    game.characters.purchased[Mr_Freezes_Kart] = 1;
+                    game.characters.purchased[Mr_Freezes_Iceberg] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Mr_Freeze);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Mr_Freezes_Kart);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Mr_Freezes_Iceberg);
+                    if (!game.characters.purchased[The_Riddler]) {
+                        game.characters.purchased[The_Riddler] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Riddler);
+                    }
+                    break; 
+                case V1_3:
+                    game.characters.purchased[Poison_Ivy] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Poison_Ivy);
+                    if (!game.characters.purchased[The_Riddler]) {
+                        game.characters.purchased[The_Riddler] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Riddler);
+                    }
+                    break; 
+                case V1_4:
+                    game.characters.purchased[Scientist] = 1;
+                    game.characters.purchased[Two_Faces_Armoured_Truck] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Scientist);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Two_Faces_Armoured_Truck);
+                    if (!game.characters.purchased[The_Riddler]) {
+                        game.characters.purchased[The_Riddler] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Riddler);
+                    }
+                    if (!game.characters.purchased[Two_Face]) {
+                        game.characters.purchased[Two_Face] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Two_Face);
+                    }
+                    break; 
+                case V1_5:
+                    game.characters.purchased[SWAT] = 1;
+                    game.characters.purchased[Riddlers_jet] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + SWAT);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Riddlers_jet);
+                    if (!game.characters.purchased[The_Riddler]) {
+                        game.characters.purchased[The_Riddler] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Riddler);
+                    }
+                    
+                    if (!game.characters.purchased[Two_Face]) {
+                        game.characters.purchased[Two_Face] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Two_Face);
+                    }
+                    break;
+                case V2_1: 
+                    game.characters.purchased[Sailor] = 1;
+                    game.characters.purchased[Bane] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Sailor);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Bane);
+                    if (!game.characters.purchased[The_Penguin]) {
+                        game.characters.purchased[The_Penguin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Penguin);
+                    }
+                    break; 
+                case V2_2: 
+                    game.characters.purchased[Catwoman_Classic] = 1;
+                    game.characters.purchased[Catwomans_Motorcycle] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Catwoman_Classic);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Catwomans_Motorcycle);
+                    if (!game.characters.purchased[Catwoman]) {
+                        game.characters.purchased[Catwoman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Catwoman);
+                    }
+                    if (!game.characters.purchased[The_Penguin]) {
+                        game.characters.purchased[The_Penguin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Penguin);
+                    }
+                    break; 
+                case V2_3:
+                    game.characters.purchased[Police_Watercraft] = 1;
+                    game.characters.purchased[Police_Boat] = 1;
+                    game.characters.purchased[Penguins_Submarine] = 1;
+                    game.characters.purchased[Killer_Crocs_Swamp_Rider] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Police_Watercraft);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Police_Boat);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Penguins_Submarine);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Killer_Crocs_Swamp_Rider);
+                    break; 
+                case V2_4:
+                    game.characters.purchased[Killer_Croc] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Killer_Croc);
+                    if (!game.characters.purchased[The_Penguin]) {
+                        game.characters.purchased[The_Penguin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Penguin);
+                    }
+                    break; 
+                case V2_5:
+                    if (!game.characters.purchased[Catwoman]) {
+                        game.characters.purchased[Catwoman] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Catwoman);
+                    }
+                    if (!game.characters.purchased[The_Penguin]) {
+                        game.characters.purchased[The_Penguin] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Penguin);
+                    }
+                    break;
+                case V3_1: 
+                    game.characters.purchased[Commissioner_Gordon] = 1;
+                    game.characters.purchased[Harley_Quinns_Hammer_Truck] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Commissioner_Gordon);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Harley_Quinns_Hammer_Truck);
+                    if (!game.characters.purchased[Harley_Quinn]) {
+                        game.characters.purchased[Harley_Quinn] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Harley_Quinn);
+                    }
+                    if (!game.characters.purchased[The_Joker]) {
+                        game.characters.purchased[The_Joker] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Joker);
+                    }
+                    break; 
+                case V3_2: 
+                    game.characters.purchased[The_Jokers_Helicopter] = 1;
+                    game.characters.purchased[The_Scarecrows_Biplane] = 1;
+                    game.characters.purchased[Police_Helicopter] = 1;
+                    game.characters.purchased[Goon_Helicopter] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Jokers_Helicopter);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Scarecrows_Biplane);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Police_Helicopter);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Goon_Helicopter);
+                    break; 
+                case V3_3:
+                    game.characters.purchased[The_Scarecrow] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Scarecrow);
+                    if (!game.characters.purchased[The_Joker]) {
+                        game.characters.purchased[The_Joker] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Joker);
+                    }
+                    break; 
+                case V3_4:
+                    game.characters.purchased[Killer_Moth] = 1;
+                    game.characters.purchased[Garbage_Truck] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Killer_Moth);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Garbage_Truck);
+                    if (!game.characters.purchased[The_Joker]) {
+                        game.characters.purchased[The_Joker] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Joker);
+                    }
+                    break; 
+                case V3_5:
+                    game.characters.purchased[Police_Marksman] = 1;
+                    game.characters.purchased[The_Joker_Tropical] = 1;
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Police_Marksman);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Joker_Tropical);
+                    if (!game.characters.purchased[Harley_Quinn]) {
+                        game.characters.purchased[Harley_Quinn] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Harley_Quinn);
+                    }
+                    if (!game.characters.purchased[The_Joker]) {
+                        game.characters.purchased[The_Joker] = 1;
+                        LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + The_Joker);
+                    }
+                    break;
+            }
+        }
 
         // True Status
         if (Settings::lb1_trueStatusSanity) {
