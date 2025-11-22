@@ -33,6 +33,8 @@
 #define LB1AP_NUM_LOCS_AND_ITEMS 650 //number of total locations and items
 #define GAME_NAME "Lego Batman The Video Game"
 
+extern bool lb1AP_locations[LB1AP_NUM_LOCS_AND_ITEMS]; // Array with the every location.
+extern bool lb1AP_items[LB1AP_NUM_LOCS_AND_ITEMS]; // Array with evert item.
 extern std::queue<int> receiveQueue;
 
 #endif

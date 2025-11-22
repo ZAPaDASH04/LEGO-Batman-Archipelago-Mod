@@ -330,24 +330,24 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     connectionFile.close();
     
     
-    // Easter Egg: Snolid
+    // Easter Egg 1 
     volatile DWORD& harbouringAGrudgeAddress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x5CA818);
     
     transform(c_player.begin(), c_player.end(), c_player.begin(), ::tolower);
-    bool isSnolid = (c_player.find("snolid") != std::string::npos);
-    std::cout << "isSnolid: " << isSnolid << std::endl;
+    bool isEasterEgg1 = (c_player.find("snolid") != std::string::npos);
+    std::cout << "EasterEgg1: " << isEasterEgg1 << std::endl;
 
 
-    if(sublevelToLevel(game.currentLevel) != LevelName::V2_3 && isSnolid){
+    if(sublevelToLevel(game.currentLevel) != LevelName::V2_3 && isEasterEgg1){
         while (sublevelToLevel(game.currentLevel) != LevelName::V2_3){
-            std::cout << "Loading Zone PTR Value Snolid: " << loadingZonePTR << std::endl;
+            std::cout << "Loading Zone PTR Value EasterEgg1: " << loadingZonePTR << std::endl;
             loadingZonePTR = harbouringAGrudgeAddress;
             Sleep(50);
         }
         messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
         while (playerControl != 1) Sleep(100); // Wait till loaded into level
     }
-    // End Easter Egg
+    // End Easter Egg 1
     
 
     // check if need to clear log.
@@ -371,9 +371,12 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     -////  Load Checked  ////-
     ////////////////////////*/
 
-    // PLAN: This is where my checked location loop would go... IF I HAD ONE! (/s) 
-
-
+    // TODO: test this.
+    for (size_t i = 0; i < Characters::characterCount; i++) 
+    {
+        game.characters.purchased[i] = lb1AP_locations[550+i];
+    }
+    
 
 
 
