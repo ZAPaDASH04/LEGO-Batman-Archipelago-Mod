@@ -44,18 +44,18 @@ enum ExtraName {
 };
 
 
-enum SuitName {
-    Batsuit =      0,
-    Demosuit =     3,
-    Glidesuit =    2,
-    Sonarsuit =    4,
-    Heatsuit =     1,
-    Robinsuit =    5,
-    Techsuit =     7,
-    Magnetsuit =   8,
-    Attractosuit = 9,
-    Divesuit =     6
-};
+// enum SuitName {
+//     Batsuit =      0,
+//     Demosuit =     3,
+//     Glidesuit =    2,
+//     Sonarsuit =    4,
+//     Heatsuit =     1,
+//     Robinsuit =    5,
+//     Techsuit =     7,
+//     Magnetsuit =   8,
+//     Attractosuit = 9,
+//     Divesuit =     6
+// };
 
 class Game
 {

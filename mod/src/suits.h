@@ -45,19 +45,17 @@ enum SuitID {
     5608:batman cowl only
     C6A8:batman cowl and cape (no wear)
     */
-    Bat_Suit        = 0x7608,
-    Heat_Suit       = 0x7658,
-    Glide_Suit      = 0x76A8,
-    Demo_Suit       = 0x76F8,
-    Sonar_Suit      = 0x7748,
-
-    Robin_Suit      = 0x7798,
-    Dive_Suit       = 0x77E8,
-    Tech_Suit       = 0x7838,
-    Magnat_Suit     = 0x7888,
-    Attracto_Suit   = 0x78D8,
-
-    Blocked_Suit    = 0xD628
+    Bat_SuitID        = 0x7608,
+    Heat_SuitID       = 0x7658,
+    Glide_SuitID      = 0x76A8,
+    Demo_SuitID       = 0x76F8,
+    Sonar_SuitID      = 0x7748,
+    Robin_SuitID      = 0x7798,
+    Dive_SuitID       = 0x77E8,
+    Tech_SuitID       = 0x7838,
+    Magnat_SuitID     = 0x7888,
+    Attracto_SuitID   = 0x78D8,
+    Blocked_SuitID    = 0xD628
 };
 
 class Suits {
@@ -76,6 +74,8 @@ public:
     void lock(size_t i);
     void unlock(size_t i);
     void reset();
+    void clearSignals();
+    void resetSignals();
     void fixSignals();
 
 };

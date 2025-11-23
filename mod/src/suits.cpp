@@ -48,9 +48,11 @@ void Suits::unlock(size_t i)
     // untested
     _unlocked1 &= !((WORD)(1 << i));
     _unlocked2 &= !((WORD)(1 << i));
+    fixSignals(); // TODO: maybe??
 }
 
-void Suits::reset() {
+void Suits::reset() 
+{
     for (size_t i = 0; i < 10; i++)
     {
         if (lb1AP_locations[80+i]) {
@@ -65,11 +67,29 @@ void Suits::reset() {
     
 }
 
+void Suits::clearSignals()
+{
+    for (size_t i = 0; i < 6; i++)
+    {
+        _signalsPrev[i] = 0x0000;
+    }
+    
+}
+
+void Suits::resetSignals()
+{
+    for (size_t i = 0; i < 6; i++)
+    {
+        _signalsPrev[i] = *_signals[i];
+    }
+    
+}
+
 void Suits::fixSignals()
 {
     for (size_t i = 0; i < 6; i++)
     {
-        switch (*_signals[i]) {
+        switch (_signalsPrev[i]) {
             case 0:
                 break;
             // case Bat_Suit: 
@@ -79,17 +99,17 @@ void Suits::fixSignals()
             //     break;
             case Heat_Suit: 
                 if (lb1AP_locations[80 + Heat_Suit]) {
-                    *_signals[i] = Blocked_Suit;
+                    *_signals[i] = Blocked_SuitID;
                 }
                 break;
             case Glide_Suit: 
                 if (lb1AP_locations[80 + Glide_Suit]) {
-                    *_signals[i] = Blocked_Suit;
+                    *_signals[i] = Blocked_SuitID;
                 }
                 break;
             case Demo_Suit: 
                 if (lb1AP_locations[80 + Glide_Suit]) {
-                    *_signals[i] = Blocked_Suit;
+                    *_signals[i] = Blocked_SuitID;
                 }
                 break;
             // TODO: the rest

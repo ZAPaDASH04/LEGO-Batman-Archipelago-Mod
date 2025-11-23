@@ -447,6 +447,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                         *game.levels.levelBeaten[i] = 0;
                     }
                     
+                    game.suits.resetSignals(); // TODO: maybe should be above
 
                 } else if (lev >= LevelName::Shop_Room && lev <= LevelName::Mission_Room) {
                     // entered hub or Unknown
@@ -467,6 +468,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                             *game.characters[i] = 0x00;
                         }
                     }
+
+                    game.suits.clearSignals();
                     
                 }
                 levprev = lev;
@@ -1180,7 +1183,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout << "Suit Unlocked!" << std::endl;
                 // WARN: no idea if this is right
                 game.suits.unlock(i-80);
-                game.suits.fixSignals();
+                game.suits.fixSignals(); // WARN: might need to check if in level
 
             } else if (i < 100) {
                 std::cerr << "Invalid Suit? Received." << std::endl;
