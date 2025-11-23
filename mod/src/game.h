@@ -11,7 +11,9 @@
 #include <windows.h>
 #include "levels.h"
 #include "characters.h"
+#include "suits.h"
 #include "minikits.h"
+
 
 enum ExtraName {
     Adaptive_Difficulty,
@@ -63,6 +65,7 @@ private:
 public:
     Levels levels;
     Characters characters;
+    Suits suits;
     Minikits minikits;
     
     // TODO: test volatile functionality
@@ -79,8 +82,6 @@ public:
     volatile DWORD64& powerBrickPurchased;
     BYTE* extraEnabled[21];
     BYTE* suitUpgradeEnabled[15];
-    volatile WORD& suitUnlocked1; // active value
-    volatile WORD& suitUnlocked2; // loaded value. (when loading sets unlocked1 to unlocked2)
     volatile BYTE& inShopSubMenu;
     // volatile BYTE& inFinalStatusScreen; //Comment out since may be faulty?
 

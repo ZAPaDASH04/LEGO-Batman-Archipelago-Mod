@@ -14,6 +14,7 @@ Game::Game(DWORD BASE_ADDR) :
     BASE_ADDR(BASE_ADDR),
     levels(BASE_ADDR),
     characters(BASE_ADDR),
+    suits(BASE_ADDR),
     minikits(BASE_ADDR),
     currentLevel(*(volatile BYTE*)(BASE_ADDR + 0x006C98C4)),
     saveSlot(*(volatile BYTE*)(BASE_ADDR + 0x0056801C)), // TODO: test
@@ -26,14 +27,6 @@ Game::Game(DWORD BASE_ADDR) :
             reinterpret_cast<uintptr_t>(
                 *reinterpret_cast<void**>(BASE_ADDR + 0x006D01C8)
             ) + 0x80
-        )
-    ),
-    suitUnlocked1(*reinterpret_cast<volatile WORD*>(BASE_ADDR + 0x006C9450)),
-    suitUnlocked2(
-        *reinterpret_cast<volatile WORD*>(
-            reinterpret_cast<uintptr_t>(
-                *reinterpret_cast<void**>(BASE_ADDR + 0x005C49CC)
-            ) + 0x7BB4
         )
     ),
 

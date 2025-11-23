@@ -393,11 +393,12 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     *game.extraEnabled[ExtraName::Power_Brick_Detector] = 1;
 
     // unlock all suits
-    for (size_t i = 0; i < 10; i++) 
-    {
-        game.suitUnlocked1 |= (WORD)(1 << i);
-        game.suitUnlocked2 |= (WORD)(1 << i);
-    }
+    // for (size_t i = 0; i < 10; i++) 
+    // {
+    //     game.suits.unlock(i);
+    // }
+    game.suits.unlock(Bat_Suit);
+    game.suits.unlock(Robin_Suit);
 
 
 
@@ -456,6 +457,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     {
                         if (*game.levels.levelUnlocked[i] == 1 && (game.levels.levelBeatenPrev[i] == 1 || Settings::lb1_freeplayUnlocked == 1)) *game.levels.levelBeaten[i] = 1;
                     }
+
+                    for (size_t i = 0; i < Characters::characterCount; i++)
+                    {
+                        /////// howard
+                        if (game.characters.purchased[i]){
+                            *game.characters[i] = 0x03; // TODO: test if I can set this to 0x02 and it still be blocked. because in villain room what if the character starts spawning in the hub while you are in the shop.
+                        } else {
+                            *game.characters[i] = 0x00;
+                        }
+                    }
+                    
                 }
                 levprev = lev;
             }
@@ -519,7 +531,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     if (game.characters.token[i]) {
                         if (game.characters.purchased[i]){
                             *game.characters[i] = 0x03; // TODO: test if I can set this to 0x02 and it still be blocked. because in villain room what if the character starts spawning in the hub while you are in the shop.
-                            game.characters.purchaseLocks(i);
+                            game.characters.purchaseLocks(i); // maybe put at end of ifs
                         } else {
                             *game.characters[i] = 0x02;
                             game.characters.purchaseLocks(i); // TODO: may be unneeded. // should safely ignore invalid i
@@ -1166,7 +1178,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             } else if (i < 90) {
                 // Suits
                 std::cout << "Suit Unlocked!" << std::endl;
-                // TODO: implement
+                // WARN: no idea if this is right
+                game.suits.unlock(i-80);
+                game.suits.fixSignals();
 
             } else if (i < 100) {
                 std::cerr << "Invalid Suit? Received." << std::endl;
