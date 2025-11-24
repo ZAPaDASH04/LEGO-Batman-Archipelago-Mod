@@ -397,6 +397,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // {
     //     game.suits.unlock(i);
     // }
+
+    // batman and robin on by default
+    *game.characters[0] = 0x03;
+    *game.characters[1] = 0x03;
+    game.characters.unlocked[0] = 1;
+    game.characters.unlocked[1] = 1;
+
     game.suits.unlock(Bat_Suit);
     game.suits.unlock(Robin_Suit);
 
