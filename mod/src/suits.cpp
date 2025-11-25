@@ -23,8 +23,8 @@ Suits::Suits(DWORD BASE_ADDR):
     *(LEGOBatman.exe+6B8BBC)+8C+3D8+3D8
     */
    //TODO: I dk
-   lb1AP_locations[80+0] = true; // batman
-   lb1AP_locations[80+5] = true; // robin
+   lb1AP_items[80+0] = true; // batman
+   lb1AP_items[80+5] = true; // robin
     for (size_t i = 0; i < 6; i++)
     {
         if (i < 3) {
@@ -60,7 +60,7 @@ void Suits::reset()
 {
     for (size_t i = 0; i < 10; i++)
     {
-        if (lb1AP_locations[80+i]) {
+        if (lb1AP_items[80+i]) {
             unlock(i);
         } else {
             // untested
@@ -128,21 +128,21 @@ void Suits::fixSignals()
             //     }
             //     break;
             case Heat_SuitID: 
-                if (lb1AP_locations[80 + Heat_Suit]) {
+                if (lb1AP_items[80 + Heat_Suit]) {
                     std::cout << "heat" << std::endl;
                     *_signals[i] = Heat_SuitID;
                     continue;
                 }
                 break;
             case Glide_SuitID: 
-                if (lb1AP_locations[80 + Glide_Suit]) {
+                if (lb1AP_items[80 + Glide_Suit]) {
                     std::cout << "glide" << std::endl;
                     *_signals[i] = Glide_SuitID;
                     continue;
                 }
                 break;
             case Demo_SuitID: 
-                if (lb1AP_locations[80 + Demo_Suit]) {
+                if (lb1AP_items[80 + Demo_Suit]) {
                     std::cout << "Demo" << std::endl;
                     *_signals[i] = Demo_SuitID;
                     continue;
