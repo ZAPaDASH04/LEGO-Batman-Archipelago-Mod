@@ -55,7 +55,7 @@ enum SuitID {
     Tech_SuitID       = 0x7838,
     Magnat_SuitID     = 0x7888,
     Attracto_SuitID   = 0x78D8,
-    Blocked_SuitID    = 0xD628
+    Blocked_SuitID    = 0xD628 // this likely points to something that coincidentally makes a suit that can't be worn.
 };
 
 class Suits {
@@ -74,8 +74,8 @@ public:
     void lock(size_t i);
     void unlock(size_t i);
     void reset();
-    void clearSignals();
-    void resetSignals();
+    void clearSignals(); // clear prev signal back to 0
+    bool resetSignals(); // set prev signal
     void fixSignals();
 
 };

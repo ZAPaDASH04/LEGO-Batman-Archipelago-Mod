@@ -264,6 +264,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // for beating episode
     WriteCode((BYTE*)(BASE_ADDR + 0x000788BF),(BYTE[]){0xC6, 0x84, 0x81, 0xDA, 0x77, 0x00, 0x00, 0x01},NOP,8);
 
+    // suits
+    // LEGOBatman.exe+A7B15 - 89 15 50A4AC00        - mov [LEGOBatman.exe+6CA450],edx { (41) }
+    WriteCode((BYTE*)(BASE_ADDR + 0x000A7B15),(BYTE[]){0x89, 0x15, 0x50, 0xA4, 0xAC, 0x00},NOP,6);
+    // LEGOBatman.exe+F24AA - 09 15 50A4AC00        - or [LEGOBatman.exe+6CA450],edx { (41) }
+    WriteCode((BYTE*)(BASE_ADDR + 0x000F24AA),(BYTE[]){0x09, 0x15, 0x50, 0xA4, 0xAC, 0x00},NOP,6);
+
+
+
     // PLAN: could be a trap.
     // disable game enabling/disabling extras. including in the extras menu.
     // LEGOBatman.exe+1CE96D - 88 44 8A 18           - mov [edx+ecx*4+18],al
@@ -376,7 +384,12 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     {
         game.characters.purchased[i] = lb1AP_locations[550+i];
     }
+    for (size_t i = 0; i < 10; i++)
+    {
+        if (lb1AP_locations[80+i]) game.suits.unlock(i);
+    }
     
+    game.suits.resetSignals();
 
 
 
@@ -428,7 +441,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     uint8_t numHeroEpsisodesBeaten = 0;
     bool firstHeroEpisodeBeaten = false;
     bool firstHeroLevelBeaten = false;
+    bool inLevel = false;
     while (true) {
+
         // Level changed
         if (game.currentLevel != sublevprev) {
             std::cout << "Sub Level Changed to " 
@@ -437,6 +452,15 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                       << std::endl;
 
             sublevprev = game.currentLevel;
+            
+            // WARN: could be  really bad
+            if (!isSublevelStatus(sublevprev)) {
+                // wait for playable
+                while (playerControl != 1) Sleep(100); // Wait till loaded into level
+                if (game.suits.resetSignals()) {
+                    game.suits.fixSignals();
+                }
+            }
 
             if (lev != sublevelToLevel(sublevprev)) {
                 // Level changed
@@ -445,6 +469,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                       << std::dec << (int)lev
                       << std::endl;
                 if (lev <= LevelName::V3_5) {
+                    inLevel = true;
                     // entered a level
                     std::cout << "entered a level." << std::endl;
                     // TODO: can I make this level specifc. no loop? 
@@ -454,10 +479,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                         *game.levels.levelBeaten[i] = 0;
                     }
                     
-                    game.suits.resetSignals(); // TODO: maybe should be above
 
                 } else if (lev >= LevelName::Shop_Room && lev <= LevelName::Mission_Room) {
                     // entered hub or Unknown
+                    inLevel = false;
                     std::cout << "entered hub." << std::endl;
                     // TODO: can I make this level specifc. no loop?
                     // FIXME: I am pretty sure you can just use lev as the index
@@ -468,22 +493,25 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
                     for (size_t i = 0; i < Characters::characterCount; i++)
                     {
-                        /////// howard
-                        if (game.characters.purchased[i]){
+                        if (game.characters.unlocked[i]){
                             *game.characters[i] = 0x03; // TODO: test if I can set this to 0x02 and it still be blocked. because in villain room what if the character starts spawning in the hub while you are in the shop.
                         } else {
                             *game.characters[i] = 0x00;
                         }
                     }
 
-                    game.suits.clearSignals();
+                    //game.suits.clearSignals();
                     
                 }
                 levprev = lev;
             }
         }
         
-
+        
+        if (inLevel && playerControl) {
+            std::cout << "It is litteraly impossible to be here without \"entered a level\" to be printed before." << std::endl;
+            game.suits.fixSignals();
+        }
 
 
 
@@ -1190,7 +1218,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout << "Suit Unlocked!" << std::endl;
                 // WARN: no idea if this is right
                 game.suits.unlock(i-80);
-                game.suits.fixSignals(); // WARN: might need to check if in level
+                game.suits.fixSignals(); // skips if signals aren't loaded
 
             } else if (i < 100) {
                 std::cerr << "Invalid Suit? Received." << std::endl;
