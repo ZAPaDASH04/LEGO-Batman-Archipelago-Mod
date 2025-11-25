@@ -84,6 +84,7 @@ bool Suits::resetSignals()
 {
     uintptr_t* addr1 = reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6BCF84);
     uintptr_t* addr2 = reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6B8BBC - 0x1000);
+    std::cout << std::hex << addr2 << std::endl;
     while (*addr1 == 0 || *addr2 == 0) Sleep(100);
     std::cout << "resetting signals." << std::endl;
     for (size_t i = 0; i < 6; i++)

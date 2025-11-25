@@ -53,7 +53,7 @@ enum SuitID {
     Robin_SuitID      = 0x7798,
     Dive_SuitID       = 0x77E8,
     Tech_SuitID       = 0x7838,
-    Magnat_SuitID     = 0x7888,
+    Magnet_SuitID     = 0x7888,
     Attracto_SuitID   = 0x78D8,
     Blocked_SuitID    = 0xD628 // this likely points to something that coincidentally makes a suit that can't be worn.
 };
