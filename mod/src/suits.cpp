@@ -33,7 +33,7 @@ Suits::Suits(DWORD BASE_ADDR):
             );
         } else {
             _signals[i] = reinterpret_cast<WORD*>(
-                *reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6B7BBC) + 0x8C + i*0x3D8
+                *reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6B7BBC) + 0x8C + (i-3)*0x3D8
             );
         }
         _signalsPrev[i] = 0;
@@ -96,7 +96,7 @@ bool Suits::resetSignals()
             );
         } else {
             _signals[i] = reinterpret_cast<WORD*>(
-                *addr2 + 0x8C + i*0x3D8
+                *addr2 + 0x8C + (i-3)*0x3D8
             );
         }
         _signalsPrev[i] = *_signals[i];
