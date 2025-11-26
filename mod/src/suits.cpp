@@ -12,7 +12,8 @@ Suits::Suits(DWORD BASE_ADDR):
                 *reinterpret_cast<void**>(BASE_ADDR + 0x005C49CC)
             ) + 0x7BB4
         )
-    )
+    ),
+    _signals(BASE_ADDR)
 {
     /* signals
     *(LEGOBatman.exe+6BDF84)+8C
@@ -27,15 +28,15 @@ Suits::Suits(DWORD BASE_ADDR):
    lb1AP_items[80+5] = true; // robin
     for (size_t i = 0; i < 6; i++)
     {
-        if (i < 3) {
-            _signals[i] = reinterpret_cast<WORD*>(
-                *reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6BCF84) + 0x8C + i*0x3D8
-            );
-        } else {
-            _signals[i] = reinterpret_cast<WORD*>(
-                *reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6B7BBC) + 0x8C + (i-3)*0x3D8
-            );
-        }
+        // if (i < 3) {
+        //     _signals[i] = reinterpret_cast<WORD*>(
+        //         *reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6BCF84) + 0x8C + i*0x3D8
+        //     );
+        // } else {
+        //     _signals[i] = reinterpret_cast<WORD*>(
+        //         *reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6B7BBC) + 0x8C + (i-3)*0x3D8
+        //     );
+        // }
         _signalsPrev[i] = 0;
     }
     
@@ -47,7 +48,6 @@ void Suits::lock(size_t i)
     // untested
     _unlocked1 &= !((WORD)(1 << i));
     _unlocked2 &= !((WORD)(1 << i));
-    //fixSignals(); // TODO: maybe??
 }
 
 void Suits::unlock(size_t i)
@@ -56,7 +56,7 @@ void Suits::unlock(size_t i)
     _unlocked2 |= (WORD)(1 << i);
 }
 
-void Suits::reset() 
+void Suits::updateSuit() 
 {
     for (size_t i = 0; i < 10; i++)
     {
@@ -70,55 +70,94 @@ void Suits::reset()
     
 }
 
+// WORD *Suits::_signals(size_t i)
+// {
+//     uintptr_t* addr1 = reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6BCF84);
+//     uintptr_t* addr2 = reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6B7BBC);
+//     while (*addr1 == 0 || *addr2 == 0) return nullptr; // WARN: this might interfere with stuff. 
+//     //if (*addr1 == 0 || *addr2 == 0) return false;
+//     std::cout << "resetting signals." << std::endl;
+//     if (i < 3) {
+//         return reinterpret_cast<WORD*>(
+//             *addr1 + 0x8C + i*0x3D8
+//         );
+//     } else {
+//         return reinterpret_cast<WORD*>(
+//             *addr2 + 0x8C + (i-3)*0x3D8
+//         );
+//     }
+// }
+
 void Suits::clearSignals()
 {
+    std::cout << "clearing Signals" << std::endl;
     for (size_t i = 0; i < 6; i++)
     {
         _signalsPrev[i] = 0x0000;
+        // should I set *_signal[i] to 0? no because of level instead of hub. I think new level resets auto.
     }
     
+}
+
+void Suits::restoreSignals()
+{
+    if (!_signals[0] && !_signals[3]) {
+        std::cout << "restoreSignals failed. Signals not loaded." << std::endl;
+        return;
+    }
+    for (size_t i = 0; i < 6; i++)
+    {
+        if (*_signals[i] == Blocked_SuitID) { // TODO: may be redundant.
+            std::cout << "restoring Signals " << (*_signals[i]) << " <-- p" << (_signalsPrev[i]) << std::endl;
+            *_signals[i] = _signalsPrev[i];
+        }
+    }
 }
 
 // has a sleep in it. sleeps until suits are loaded
 bool Suits::resetSignals()
 {
-    uintptr_t* addr1 = reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6BCF84);
-    uintptr_t* addr2 = reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6B8BBC - 0x1000);
-    std::cout << std::hex << addr2 << std::endl;
-    while (*addr1 == 0 || *addr2 == 0) Sleep(100);
-    std::cout << "resetting signals." << std::endl;
+    while (!_signals[0] && !_signals[3]) {
+        std::cout << "resetSignal waiting.." << std::endl;
+        Sleep(100); // WARN: this might interfere with stuff. 
+    }
+    // for (size_t i = 0; i < 6; i++)
+    // {
+    //     while (!_signals[i]) {
+    //         std::cout << "resetSignal waiting.." << std::endl;
+    //         Sleep(100); // WARN: this might interfere with stuff. 
+    //     }
+    // }
+    
+   // std::cout << "resetting signals." << std::endl;
     for (size_t i = 0; i < 6; i++)
     {
-        
-        if (i < 3) {
-            _signals[i] = reinterpret_cast<WORD*>(
-                *addr1 + 0x8C + i*0x3D8
-            );
-        } else {
-            _signals[i] = reinterpret_cast<WORD*>(
-                *addr2 + 0x8C + (i-3)*0x3D8
-            );
-        }
+        std::cout << "reseting Signals " << (*_signals[i]) << " --> p" << (_signalsPrev[i]) << std::endl;
         _signalsPrev[i] = *_signals[i];
-        std::cout << "    " << _signalsPrev[i] << std::endl;
+        //std::cout << "    " << _signalsPrev[i] << std::endl;
     }
     return true;
 }
 
-void Suits::fixSignals()
+void Suits::updateSignals()
 {
-    uintptr_t* addr1 = reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6BCF84);
-    uintptr_t* addr2 = reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6B7BBC);
-    while (*addr1 == 0 || *addr2 == 0) return; // skip when signals arent loaded.
+
     for (size_t i = 0; i < 6; i++)
     {
-        std::cout << "fix signal " << i << " " << _signalsPrev[i] << std::endl;
-        if (_signalsPrev[i] == 0 && _signals[i] != 0 && *_signals[i] != 0) {
-            // loaded I guess.
-            _signalsPrev[i] = *_signals[i];
+        //std::cout << "update signal " << i << " " << _signalsPrev[i] << std::endl;
+        // if (_signalsPrev[i] == 0 && _signals[i] != 0 && *_signals[i] != 0 && *_signals[i] != Blocked_SuitID) {
+        //     // loaded I guess.
+        //     std::cout << std::hex << i << " " << _signalsPrev[i] << " = " << (*_signals[i]) << std::endl;
+        //     _signalsPrev[i] = *_signals[i];
+        // }
+        std::cout << "update signal " << i << " p" << _signalsPrev[i] << std::endl;
+
+        if (!_signals[0] && !_signals[3]) {
+            std::cout << "updateSignals failed. Signals not loaded." << std::endl;
+            return;
         }
         
-        switch (_signalsPrev[i]) {
+        switch (static_cast<SuitID>(_signalsPrev[i])) {
             case 0x0000:
                 continue;
                 break;
@@ -148,7 +187,50 @@ void Suits::fixSignals()
                     continue;
                 }
                 break;
+            case Sonar_SuitID: 
+                if (lb1AP_items[80 + Sonar_Suit]) {
+                    std::cout << "Sonar" << std::endl;
+                    *_signals[i] = Sonar_SuitID;
+                    continue;
+                }
+                break;
+            // case Robin_SuitID: 
+            //     if (lb1AP_items[80 + Robin_Suit]) {
+            //         std::cout << "Robin" << std::endl;
+            //         *_signals[i] = Robin_SuitID;
+            //         continue;
+            //     }
+            //     break;
+            case Dive_SuitID: 
+                if (lb1AP_items[80 + Dive_Suit]) {
+                    std::cout << "Dive" << std::endl;
+                    *_signals[i] = Dive_SuitID;
+                    continue;
+                }
+                break;
+            case Tech_SuitID: 
+                if (lb1AP_items[80 + Tech_Suit]) {
+                    std::cout << "Tech" << std::endl;
+                    *_signals[i] = Tech_SuitID;
+                    continue;
+                }
+                break;
+            case Magnet_SuitID: 
+                if (lb1AP_items[80 + Magnet_Suit]) {
+                    std::cout << "Magnet" << std::endl;
+                    *_signals[i] = Magnet_SuitID;
+                    continue;
+                }
+                break;
+            case Attracto_SuitID: 
+                if (lb1AP_items[80 + Attracto_Suit]) {
+                    std::cout << "Attracto" << std::endl;
+                    *_signals[i] = Attracto_SuitID;
+                    continue;
+                }
+                break;
             default:
+                std::cout << "default case " << _signalsPrev[i] << std::endl;
                 break;
             // TODO: the rest
         }
@@ -157,3 +239,58 @@ void Suits::fixSignals()
     }
     
 }
+
+
+size_t Suits::detectWear()
+{
+    for (size_t i = 0; i < 6; i++)
+    {
+        if (_signalsPrev[i] != 0 && _signals[i] != 0 && *_signals[i] != 0 && *_signals[i] != _signalsPrev[i]) {
+            // loaded I guess.
+            std::cout << "Detected wear suit! " << _signalsPrev[i] << " --> " << (*_signals[i]) << std::endl;
+            _signalsPrev[i] = *_signals[i];
+            return i;
+        }
+    }
+    
+    return -1;
+}
+
+
+
+
+
+
+// void extern asmFunc(uintptr_t p, int a);
+
+// &asmFunc = BASE_ADDR + 0xDEADBEEF;
+
+// asmFunc(obj, 7);
+
+Suits::SignalTable::SignalTable(DWORD BASE_ADDR):
+    addr1(reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6BCF84)),
+    addr2(reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6B7BBC))
+{
+    
+}
+
+WORD *Suits::SignalTable::operator[](size_t i) const
+{
+    if (i >= 6) return nullptr;
+    uintptr_t base = (i<3) ? *addr1 : *addr2;
+    if (!base) {
+        return nullptr;
+    }
+    size_t index = i % 3;
+
+    return reinterpret_cast<WORD*>(base + 0x8C + index * 0x3D8);
+    // if (i < 3) {
+    //     return reinterpret_cast<WORD*>(
+    //         addr1 + 0x8C + i*0x3D8
+    //     );
+    // } else {
+    //     return reinterpret_cast<WORD*>(
+    //         addr2 + 0x8C + (i-3)*0x3D8
+    //     );
+    // }
+};

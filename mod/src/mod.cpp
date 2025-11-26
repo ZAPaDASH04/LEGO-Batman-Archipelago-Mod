@@ -453,14 +453,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
             sublevprev = game.currentLevel;
             
-            // WARN: could be  really bad
-            if (!isSublevelStatus(sublevprev)) {
-                // wait for playable
-                while (playerControl != 1) Sleep(100); // Wait till loaded into level
-                if (game.suits.resetSignals()) {
-                    game.suits.fixSignals();
-                }
-            }
+            // WARN: could be bad
 
             if (lev != sublevelToLevel(sublevprev)) {
                 // Level changed
@@ -468,6 +461,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout << "Level Changed to " 
                       << std::dec << (int)lev
                       << std::endl;
+
+                //game.suits.clearSignals();
+
                 if (lev <= LevelName::V3_5) {
                     inLevel = true;
                     // entered a level
@@ -499,18 +495,41 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                             *game.characters[i] = 0x00;
                         }
                     }
-
-                    //game.suits.clearSignals();
                     
                 }
                 levprev = lev;
+
+                if (!isSublevelStatus(sublevprev)) {
+                    std::cout << "new level suits" << std::endl;
+                    // wait for playable
+                    //while (playerControl != 1) Sleep(100); // Wait till loaded into level
+                    //game.suits.clearSignals();
+                    // TODO: maybe insert clear if in mission rooms.
+                    game.suits.resetSignals();
+                    game.suits.updateSignals();
+                
+                }
+            } else {
+                // same level
+                if (!isSublevelStatus(sublevprev)) {
+                    std::cout << "same level suits" << std::endl;
+                    // wait for playable
+                    //while (playerControl != 1) Sleep(100); // Wait till loaded into level
+                    game.suits.restoreSignals();
+                    // TODO: maybe insert clear if in mission rooms.
+                    game.suits.resetSignals();
+                    game.suits.updateSignals();
+                
+                }
             }
         }
         
         
-        if (inLevel && playerControl) {
-            std::cout << "It is litteraly impossible to be here without \"entered a level\" to be printed before." << std::endl;
-            game.suits.fixSignals();
+        if ((loops % 200 == 0) && inLevel && playerControl) {
+            
+            std::cout << "AAAAAAAAAAAAAA" << std::endl;
+            game.suits.updateSignals();
+            // std::cout << "wear? " << game.suits.detectWear() << std::endl;
         }
 
 
@@ -1218,7 +1237,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cout << "Suit Unlocked!" << std::endl;
                 // WARN: no idea if this is right
                 game.suits.unlock(i-80);
-                game.suits.fixSignals(); // skips if signals aren't loaded
+                game.suits.updateSignals(); // skips if signals aren't loaded
 
             } else if (i < 100) {
                 std::cerr << "Invalid Suit? Received." << std::endl;

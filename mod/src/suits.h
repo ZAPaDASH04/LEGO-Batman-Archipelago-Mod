@@ -26,7 +26,7 @@ enum SuitName {
     Attracto_Suit
 };
 
-enum SuitID {
+enum SuitID : unsigned short {
     /*
     7608:batman suit
     7658:batman heat suit
@@ -60,11 +60,26 @@ enum SuitID {
 
 class Suits {
 private:
+
     const DWORD BASE_ADDR; // may eventually make global.
     volatile WORD& _unlocked1; // active value
     volatile WORD& _unlocked2; // loaded value. (when loading sets unlocked1 to unlocked2)
-    WORD* _signals[6];
     WORD _signalsPrev[6];
+
+    class SignalTable {
+    private:
+        // struct SignalRef {
+        //     WORD* address;
+        // };
+        // SignalRef _signals[6];
+        uintptr_t* addr1;
+        uintptr_t* addr2;
+    public:
+        SignalTable(DWORD BASE_ADDR);
+        WORD* operator[](size_t i) const;
+    };
+
+    SignalTable _signals;
     
 public:
     
@@ -73,9 +88,12 @@ public:
 
     void lock(size_t i);
     void unlock(size_t i);
-    void reset();
-    void clearSignals(); // clear prev signal back to 0
-    bool resetSignals(); // set prev signal
-    void fixSignals();
+    void updateSuit();
 
+    //WORD* signals(size_t i);
+    void clearSignals(); // clear prev signal back to 0
+    void restoreSignals();
+    bool resetSignals(); // set prev signal
+    void updateSignals();
+    size_t detectWear();
 };
