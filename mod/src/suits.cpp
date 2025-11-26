@@ -72,9 +72,6 @@ Suits::Suits(DWORD BASE_ADDR):
     *(LEGOBatman.exe+6B8BBC)+8C+3D8
     *(LEGOBatman.exe+6B8BBC)+8C+3D8+3D8
     */
-   //TODO: I dk
-   lb1AP_items[80+Bat_Suit] = true; // batman
-   lb1AP_items[80+Robin_Suit] = true; // robin
     for (size_t i = 0; i < 6; i++)
     {
         // if (i < 3) {
@@ -225,6 +222,7 @@ void Suits::updateSignals()
                 if (lb1AP_items[80 + Bat_Suit]) {
                     std::cout << "Batman" << std::endl;
                     *_signals[i] = Bat_SuitID;
+                    continue;
                 }
                 break;
             case Heat_SuitID: 

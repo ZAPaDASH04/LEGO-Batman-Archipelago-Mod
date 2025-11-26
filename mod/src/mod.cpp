@@ -417,6 +417,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     game.characters.unlocked[0] = 1;
     game.characters.unlocked[1] = 1;
 
+   lb1AP_items[80+Bat_Suit] = true; // batman
+   lb1AP_items[80+Robin_Suit] = true; // robin
     game.suits.unlock(Bat_Suit);
     game.suits.unlock(Robin_Suit);
 
