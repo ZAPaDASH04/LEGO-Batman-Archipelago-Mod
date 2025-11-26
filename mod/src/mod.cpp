@@ -454,6 +454,15 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             sublevprev = game.currentLevel;
             
             // WARN: could be bad
+            // if (!isSublevelStatus(sublevprev)) {
+            //     std::cout << "same level suits" << std::endl;
+            //     // wait for playable
+            //     //while (playerControl != 1) Sleep(100); // Wait till loaded into level
+            //     game.suits.restoreSignals();
+            //     // TODO: maybe insert clear if in mission rooms.
+            //     game.suits.resetSignals();
+            //     game.suits.updateSignals();
+            // }
 
             if (lev != sublevelToLevel(sublevprev)) {
                 // Level changed
@@ -499,38 +508,39 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 }
                 levprev = lev;
 
+                // WARN: USES WAITS
                 if (!isSublevelStatus(sublevprev)) {
                     std::cout << "new level suits" << std::endl;
                     // wait for playable
-                    //while (playerControl != 1) Sleep(100); // Wait till loaded into level
+                    while (playerControl != 1) Sleep(100); // Wait till loaded into level
                     //game.suits.clearSignals();
                     // TODO: maybe insert clear if in mission rooms.
                     game.suits.resetSignals();
                     game.suits.updateSignals();
-                
                 }
             } else {
                 // same level
-                if (!isSublevelStatus(sublevprev)) {
+
+                // WARN: USES WAITS
+                if (!isSublevelStatus(sublevprev)) { 
                     std::cout << "same level suits" << std::endl;
                     // wait for playable
-                    //while (playerControl != 1) Sleep(100); // Wait till loaded into level
+                    while (playerControl != 1) Sleep(100); // Wait till loaded into level
                     game.suits.restoreSignals();
                     // TODO: maybe insert clear if in mission rooms.
                     game.suits.resetSignals();
                     game.suits.updateSignals();
-                
                 }
             }
         }
         
         
-        if ((loops % 200 == 0) && inLevel && playerControl) {
+        // if ((loops % 200 == 0) && inLevel && playerControl) {
             
-            std::cout << "AAAAAAAAAAAAAA" << std::endl;
-            game.suits.updateSignals();
-            // std::cout << "wear? " << game.suits.detectWear() << std::endl;
-        }
+        //     std::cout << "AAAAAAAAAAAAAA" << std::endl;
+        //     game.suits.updateSignals();
+        //     // std::cout << "wear? " << game.suits.detectWear() << std::endl;
+        // }
 
 
 

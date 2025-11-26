@@ -24,8 +24,8 @@ Suits::Suits(DWORD BASE_ADDR):
     *(LEGOBatman.exe+6B8BBC)+8C+3D8+3D8
     */
    //TODO: I dk
-   lb1AP_items[80+0] = true; // batman
-   lb1AP_items[80+5] = true; // robin
+   lb1AP_items[80+Bat_Suit] = true; // batman
+   lb1AP_items[80+Robin_Suit] = true; // robin
     for (size_t i = 0; i < 6; i++)
     {
         // if (i < 3) {
@@ -90,7 +90,7 @@ void Suits::updateSuit()
 
 void Suits::clearSignals()
 {
-    std::cout << "clearing Signals" << std::endl;
+    std::cout << "clearSignals" << std::endl;
     for (size_t i = 0; i < 6; i++)
     {
         _signalsPrev[i] = 0x0000;
@@ -101,7 +101,8 @@ void Suits::clearSignals()
 
 void Suits::restoreSignals()
 {
-    if (!_signals[0] && !_signals[3]) {
+    std::cout << "restoreSignals" << std::endl;
+    if (!_signals[0] || !_signals[3]) {
         std::cout << "restoreSignals failed. Signals not loaded." << std::endl;
         return;
     }
@@ -117,7 +118,8 @@ void Suits::restoreSignals()
 // has a sleep in it. sleeps until suits are loaded
 bool Suits::resetSignals()
 {
-    while (!_signals[0] && !_signals[3]) {
+    std::cout << "resetSignals" << std::endl;
+    while (!_signals[0] || !_signals[3]) {
         std::cout << "resetSignal waiting.." << std::endl;
         Sleep(100); // WARN: this might interfere with stuff. 
     }
@@ -132,6 +134,10 @@ bool Suits::resetSignals()
    // std::cout << "resetting signals." << std::endl;
     for (size_t i = 0; i < 6; i++)
     {
+        // while (!_signals[i]) {
+        //     std::cout << "resetSignal waiting.." << std::endl;
+        //     Sleep(100); // WARN: this might interfere with stuff. 
+        // }
         std::cout << "reseting Signals " << (*_signals[i]) << " --> p" << (_signalsPrev[i]) << std::endl;
         _signalsPrev[i] = *_signals[i];
         //std::cout << "    " << _signalsPrev[i] << std::endl;
@@ -141,6 +147,7 @@ bool Suits::resetSignals()
 
 void Suits::updateSignals()
 {
+    std::cout << "updateSignals" << std::endl;
 
     for (size_t i = 0; i < 6; i++)
     {
@@ -152,7 +159,7 @@ void Suits::updateSignals()
         // }
         std::cout << "update signal " << i << " p" << _signalsPrev[i] << std::endl;
 
-        if (!_signals[0] && !_signals[3]) {
+        if (!_signals[0] || !_signals[3]) {
             std::cout << "updateSignals failed. Signals not loaded." << std::endl;
             return;
         }
@@ -161,11 +168,12 @@ void Suits::updateSignals()
             case 0x0000:
                 continue;
                 break;
-            // case Bat_Suit: 
-            //     if (lb1AP_locations[80 + Bat_Suit]) {
-            //         *_signals[i] = Blocked_Suit;
-            //     }
-            //     break;
+            case Bat_SuitID: 
+                if (lb1AP_locations[80 + Bat_Suit]) {
+                    std::cout << "Batman" << std::endl;
+                    *_signals[i] = Bat_SuitID;
+                }
+                break;
             case Heat_SuitID: 
                 if (lb1AP_items[80 + Heat_Suit]) {
                     std::cout << "heat" << std::endl;
@@ -194,13 +202,13 @@ void Suits::updateSignals()
                     continue;
                 }
                 break;
-            // case Robin_SuitID: 
-            //     if (lb1AP_items[80 + Robin_Suit]) {
-            //         std::cout << "Robin" << std::endl;
-            //         *_signals[i] = Robin_SuitID;
-            //         continue;
-            //     }
-            //     break;
+            case Robin_SuitID: 
+                if (lb1AP_items[80 + Robin_Suit]) {
+                    std::cout << "Robin" << std::endl;
+                    *_signals[i] = Robin_SuitID;
+                    continue;
+                }
+                break;
             case Dive_SuitID: 
                 if (lb1AP_items[80 + Dive_Suit]) {
                     std::cout << "Dive" << std::endl;
@@ -276,13 +284,16 @@ Suits::SignalTable::SignalTable(DWORD BASE_ADDR):
 
 WORD *Suits::SignalTable::operator[](size_t i) const
 {
+    std::cout << " [signal called " << i << "] " ;
     if (i >= 6) return nullptr;
-    uintptr_t base = (i<3) ? *addr1 : *addr2;
+    
+    //std::cout << "    signal derefing addrs " << std::endl;
+    uintptr_t base = (i<3) ? (*addr1) : (*addr2);
+    //std::cout << "    signal derefed addrs " << std::hex << base << std::endl;
     if (!base) {
         return nullptr;
     }
     size_t index = i % 3;
-
     return reinterpret_cast<WORD*>(base + 0x8C + index * 0x3D8);
     // if (i < 3) {
     //     return reinterpret_cast<WORD*>(
