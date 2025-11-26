@@ -84,6 +84,7 @@ void LB1AP_SendItem(int64_t location_id){
 // Handles an item received from the server
 void LB1AP_ReceiveItem(int itemID, bool notify){
     itemID -= LB1AP_ITEM_ID_OFFSET;
+    lb1AP_items[itemID] = true;
     printf("Item %d Received\n", itemID);
     if (itemID < 0) {
         printf("Received Unknown Item: %d\n", itemID);

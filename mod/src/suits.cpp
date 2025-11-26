@@ -169,7 +169,7 @@ void Suits::updateSignals()
                 continue;
                 break;
             case Bat_SuitID: 
-                if (lb1AP_locations[80 + Bat_Suit]) {
+                if (lb1AP_items[80 + Bat_Suit]) {
                     std::cout << "Batman" << std::endl;
                     *_signals[i] = Bat_SuitID;
                 }
@@ -189,6 +189,7 @@ void Suits::updateSignals()
                 }
                 break;
             case Demo_SuitID: 
+                std::cout << "Demo_suit id. item? " << lb1AP_items[80 + Demo_Suit] << std::endl;
                 if (lb1AP_items[80 + Demo_Suit]) {
                     std::cout << "Demo" << std::endl;
                     *_signals[i] = Demo_SuitID;
