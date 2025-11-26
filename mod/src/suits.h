@@ -23,10 +23,12 @@ enum SuitName {
     Dive_Suit,
     Tech_Suit,
     Magnet_Suit,
-    Attracto_Suit
+    Attracto_Suit,
+
+    Blocked_Suit
 };
 
-enum SuitID : unsigned short {
+enum SuitID {
     /*
     7608:batman suit
     7658:batman heat suit
@@ -58,14 +60,13 @@ enum SuitID : unsigned short {
     Blocked_SuitID    = 0xD628 // this likely points to something that coincidentally makes a suit that can't be worn.
 };
 
+SuitName SuitIDtoSuitName(WORD id);
+SuitName SuitIDtoSuitName(SuitID id);
+SuitID SuitNametoSuitID(size_t name);
+SuitID SuitNametoSuitID(SuitName name);
+
 class Suits {
 private:
-
-    const DWORD BASE_ADDR; // may eventually make global.
-    volatile WORD& _unlocked1; // active value
-    volatile WORD& _unlocked2; // loaded value. (when loading sets unlocked1 to unlocked2)
-    WORD _signalsPrev[6];
-
     class SignalTable {
     private:
         // struct SignalRef {
@@ -79,6 +80,10 @@ private:
         WORD* operator[](size_t i) const;
     };
 
+    const DWORD BASE_ADDR; // may eventually make global.
+    volatile WORD& _unlocked1; // active value
+    volatile WORD& _unlocked2; // loaded value. (when loading sets unlocked1 to unlocked2)
+    WORD _signalsPrev[6];
     SignalTable _signals;
     
 public:
@@ -91,6 +96,7 @@ public:
     void updateSuit();
 
     //WORD* signals(size_t i);
+    bool checkSignals();
     void clearSignals(); // clear prev signal back to 0
     void restoreSignals();
     bool resetSignals(); // set prev signal

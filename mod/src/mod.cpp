@@ -513,7 +513,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     std::cout << "new level suits" << std::endl;
                     // wait for playable
                     while (playerControl != 1) Sleep(100); // Wait till loaded into level
-                    //game.suits.clearSignals();
+                    game.suits.clearSignals();
                     // TODO: maybe insert clear if in mission rooms.
                     game.suits.resetSignals();
                     game.suits.updateSignals();

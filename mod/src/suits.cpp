@@ -3,6 +3,55 @@
 #include "suits.h"
 #include "LB1AP.h" // this is for the location array
 
+SuitName SuitIDtoSuitName(WORD id) {
+    return SuitIDtoSuitName(static_cast<SuitID>(id));
+}
+
+SuitName SuitIDtoSuitName(SuitID id)
+{
+    switch (id)
+    {
+    case Bat_SuitID:        return Bat_Suit;
+    case Heat_SuitID:       return Heat_Suit;
+    case Glide_SuitID:      return Glide_Suit;
+    case Demo_SuitID:       return Demo_Suit;
+    case Sonar_SuitID:      return Sonar_Suit;
+        
+    case Robin_SuitID:      return Robin_Suit;
+    case Dive_SuitID:       return Dive_Suit;
+    case Tech_SuitID:       return Tech_Suit;
+    case Magnet_SuitID:     return Magnet_Suit;
+    case Attracto_SuitID:   return Attracto_Suit;
+        
+    default:                return Blocked_Suit;
+    }
+}
+
+SuitID SuitNametoSuitID(size_t name) {
+    return SuitNametoSuitID(static_cast<SuitName>(name));
+}
+
+SuitID SuitNametoSuitID(SuitName name)
+{
+    switch (name)
+    {
+    case Bat_Suit:      return Bat_SuitID;
+    case Heat_Suit:     return Heat_SuitID;
+    case Glide_Suit:    return Glide_SuitID;
+    case Demo_Suit:     return Demo_SuitID;
+    case Sonar_Suit:    return Sonar_SuitID;
+        
+    case Robin_Suit:    return Robin_SuitID;
+    case Dive_Suit:     return Dive_SuitID;
+    case Tech_Suit:     return Tech_SuitID;
+    case Magnet_Suit:   return Magnet_SuitID;
+    case Attracto_Suit: return Attracto_SuitID;
+
+    default:            return Blocked_SuitID;
+    }
+}
+
+
 Suits::Suits(DWORD BASE_ADDR): 
     BASE_ADDR(BASE_ADDR),
     _unlocked1(*reinterpret_cast<volatile WORD*>(BASE_ADDR + 0x006C9450)),
@@ -70,23 +119,15 @@ void Suits::updateSuit()
     
 }
 
-// WORD *Suits::_signals(size_t i)
-// {
-//     uintptr_t* addr1 = reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6BCF84);
-//     uintptr_t* addr2 = reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6B7BBC);
-//     while (*addr1 == 0 || *addr2 == 0) return nullptr; // WARN: this might interfere with stuff. 
-//     //if (*addr1 == 0 || *addr2 == 0) return false;
-//     std::cout << "resetting signals." << std::endl;
-//     if (i < 3) {
-//         return reinterpret_cast<WORD*>(
-//             *addr1 + 0x8C + i*0x3D8
-//         );
-//     } else {
-//         return reinterpret_cast<WORD*>(
-//             *addr2 + 0x8C + (i-3)*0x3D8
-//         );
-//     }
-// }
+bool Suits::checkSignals()
+{
+    for (size_t i = 0; i < 6; i++)
+    {
+        if (!_signals[i]) return false;
+        // should I set *_signal[i] to 0? no because of level instead of hub. I think new level resets auto.
+    }
+    return true;
+}
 
 void Suits::clearSignals()
 {
@@ -111,7 +152,15 @@ void Suits::restoreSignals()
         if (*_signals[i] == Blocked_SuitID) { // TODO: may be redundant.
             std::cout << "restoring Signals " << (*_signals[i]) << " <-- p" << (_signalsPrev[i]) << std::endl;
             *_signals[i] = _signalsPrev[i];
-        }
+        } 
+        // else if (*_signals[i] != _signalsPrev[i]) {
+        //     // suit changed?
+        //     std::cout << "<<<<<<<<<SUIT CHANGED??????>>>>>>>>>>>>>" << std::endl;
+        //     if (!lb1AP_items[80 + SuitIDtoSuitName(*_signals[i])]) {
+        //         // this prevents bad suit detection.
+        //         *_signals[i] = _signalsPrev[i];
+        //     }
+        // }
     }
 }
 
@@ -148,6 +197,10 @@ bool Suits::resetSignals()
 void Suits::updateSignals()
 {
     std::cout << "updateSignals" << std::endl;
+    if (!_signals[0] || !_signals[3]) {
+        std::cout << "updateSignals failed. Signals not loaded." << std::endl;
+        return;
+    }
 
     for (size_t i = 0; i < 6; i++)
     {
@@ -159,10 +212,10 @@ void Suits::updateSignals()
         // }
         std::cout << "update signal " << i << " p" << _signalsPrev[i] << std::endl;
 
-        if (!_signals[0] || !_signals[3]) {
-            std::cout << "updateSignals failed. Signals not loaded." << std::endl;
-            return;
-        }
+        // if (!_signals[0] || !_signals[3]) {
+        //     std::cout << "updateSignals failed. Signals not loaded." << std::endl;
+        //     return;
+        // }
         
         switch (static_cast<SuitID>(_signalsPrev[i])) {
             case 0x0000:
