@@ -777,12 +777,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
         // Hostages
+        bool newHostage = false; // true if a new hostage was gotten this loop.
         int hostageCheck = game.levels.checkHostages();
         if (hostageCheck != -1) { // TODO: I don't know if this is how logic works
             std::cout
                 << "new hostage " << (int) hostageCheck 
                 << ". hostagedata " << std::hex << (int) game.levels.hostages
                 << std::endl;
+            newHostage = true;
             LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 400 + hostageCheck);
             game.levels.hostagesOld = game.levels.hostages;
             // TODO: Hostage count/hush wincon
@@ -1219,6 +1221,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     }
                     break;
             }
+        }
+
+        // Hard Character Found
+        // ras and hush
+        if (Settings::hostages >= Settings::lb1_hushUnlockCondition) {
+            // hush
+            LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Hush);            
+        }
+        if (Settings::minikits >= Settings::lb1_rasUnlockCondition) {
+            // ras al ghul
+            LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Ras_Al_Ghul);
         }
 
         // True Status
