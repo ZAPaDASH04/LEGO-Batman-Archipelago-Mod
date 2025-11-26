@@ -386,7 +386,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     }
     for (size_t i = 0; i < 10; i++)
     {
-        if (lb1AP_locations[80+i]) game.suits.unlock(i);
+        //if (lb1AP_locations[80+i]) game.suits.unlock(i);
+        game.suits.updateSuits();
     }
     
     game.suits.resetSignals();
@@ -455,16 +456,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
             sublevprev = game.currentLevel;
             
-            // WARN: could be bad
-            // if (!isSublevelStatus(sublevprev)) {
-            //     std::cout << "same level suits" << std::endl;
-            //     // wait for playable
-            //     //while (playerControl != 1) Sleep(100); // Wait till loaded into level
-            //     game.suits.restoreSignals();
-            //     // TODO: maybe insert clear if in mission rooms.
-            //     game.suits.resetSignals();
-            //     game.suits.updateSignals();
-            // }
 
             if (lev != sublevelToLevel(sublevprev)) {
                 // Level changed
@@ -537,12 +528,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         }
         
         
-        // if ((loops % 200 == 0) && inLevel && playerControl) {
-            
-        //     std::cout << "AAAAAAAAAAAAAA" << std::endl;
-        //     game.suits.updateSignals();
-        //     // std::cout << "wear? " << game.suits.detectWear() << std::endl;
-        // }
 
 
 
@@ -673,9 +658,28 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         *//// Location Detection ////*
         ////////////////////////////*/
 
-        // TODO: extract each of these to functions. probably in this file.
+        // TODO: extract each of these to functions. 
         // TODO: add autosaveing to some
 
+        // Characters
+        // had to be moved to after levels.
+        // TODO: check alternatives.
+
+        // Suits
+        //if (inLevel && playerControl && game.suits.checkSignals()) {
+        if (inLevel && playerControl) {
+            
+            //std::cout << "AAAAAAAAAAAAAA" << std::endl;
+            size_t wore = game.suits.detectWear();
+            if (wore!=-1) {
+                std::cout 
+                    << "new suit " << wore
+                    << std::endl;
+                // TODO: needes extensive testing
+                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 80 + wore);
+            }
+
+        }
 
         // Minikits
         if (Settings::lb1_minikitSanity) {

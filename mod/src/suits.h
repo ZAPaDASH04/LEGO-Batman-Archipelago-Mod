@@ -83,6 +83,7 @@ private:
     const DWORD BASE_ADDR; // may eventually make global.
     volatile WORD& _unlocked1; // active value
     volatile WORD& _unlocked2; // loaded value. (when loading sets unlocked1 to unlocked2)
+    WORD _signalsStart[6]; // WARN: I am assuming that they are never reused and hoping its true.
     WORD _signalsPrev[6];
     SignalTable _signals;
     
@@ -93,7 +94,7 @@ public:
 
     void lock(size_t i);
     void unlock(size_t i);
-    void updateSuit();
+    void updateSuits();
 
     //WORD* signals(size_t i);
     bool checkSignals();

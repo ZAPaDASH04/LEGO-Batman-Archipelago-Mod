@@ -74,15 +74,7 @@ Suits::Suits(DWORD BASE_ADDR):
     */
     for (size_t i = 0; i < 6; i++)
     {
-        // if (i < 3) {
-        //     _signals[i] = reinterpret_cast<WORD*>(
-        //         *reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6BCF84) + 0x8C + i*0x3D8
-        //     );
-        // } else {
-        //     _signals[i] = reinterpret_cast<WORD*>(
-        //         *reinterpret_cast<uintptr_t*>(BASE_ADDR + 0x6B7BBC) + 0x8C + (i-3)*0x3D8
-        //     );
-        // }
+        _signalsStart[i] = 0;
         _signalsPrev[i] = 0;
     }
     
@@ -102,7 +94,7 @@ void Suits::unlock(size_t i)
     _unlocked2 |= (WORD)(1 << i);
 }
 
-void Suits::updateSuit() 
+void Suits::updateSuits() 
 {
     for (size_t i = 0; i < 10; i++)
     {
@@ -118,9 +110,10 @@ void Suits::updateSuit()
 
 bool Suits::checkSignals()
 {
+    // untested
     for (size_t i = 0; i < 6; i++)
     {
-        if (!_signals[i]) return false;
+        if (!_signals[i]) return false; // TODO: start from last instead. more likely to be unloaded.
         // should I set *_signal[i] to 0? no because of level instead of hub. I think new level resets auto.
     }
     return true;
@@ -132,7 +125,9 @@ void Suits::clearSignals()
     for (size_t i = 0; i < 6; i++)
     {
         _signalsPrev[i] = 0x0000;
+        _signalsStart[i] = 0x0000;
         // should I set *_signal[i] to 0? no because of level instead of hub. I think new level resets auto.
+        
     }
     
 }
@@ -162,6 +157,7 @@ void Suits::restoreSignals()
 }
 
 // has a sleep in it. sleeps until suits are loaded
+// Be very careful of where this function is used.
 bool Suits::resetSignals()
 {
     std::cout << "resetSignals" << std::endl;
@@ -169,13 +165,6 @@ bool Suits::resetSignals()
         std::cout << "resetSignal waiting.." << std::endl;
         Sleep(100); // WARN: this might interfere with stuff. 
     }
-    // for (size_t i = 0; i < 6; i++)
-    // {
-    //     while (!_signals[i]) {
-    //         std::cout << "resetSignal waiting.." << std::endl;
-    //         Sleep(100); // WARN: this might interfere with stuff. 
-    //     }
-    // }
     
    // std::cout << "resetting signals." << std::endl;
     for (size_t i = 0; i < 6; i++)
@@ -185,6 +174,11 @@ bool Suits::resetSignals()
         //     Sleep(100); // WARN: this might interfere with stuff. 
         // }
         std::cout << "reseting Signals " << (*_signals[i]) << " --> p" << (_signalsPrev[i]) << std::endl;
+        if (_signalsPrev[i] == 0 && *_signals[i] != 0) {
+            // hopefully additive for the first appearance of a new suit
+            _signalsStart[i] = *_signals[i];
+            std::cout << "first appearance of suit hopefully " << _signalsStart[i] << std::endl;
+        }
         _signalsPrev[i] = *_signals[i];
         //std::cout << "    " << _signalsPrev[i] << std::endl;
     }
@@ -290,7 +284,7 @@ void Suits::updateSignals()
                 }
                 break;
             default:
-                std::cout << "default case " << _signalsPrev[i] << std::endl;
+                std::cout << "default case p" << _signalsPrev[i] << std::endl;
                 break;
             // TODO: the rest
         }
@@ -305,11 +299,23 @@ size_t Suits::detectWear()
 {
     for (size_t i = 0; i < 6; i++)
     {
-        if (_signalsPrev[i] != 0 && _signals[i] != 0 && *_signals[i] != 0 && *_signals[i] != _signalsPrev[i]) {
+        if (!_signals[i]) break; // TODO: start from last instead. more likely to be unloaded.
+        //std::cout << "Detecting wear suit " << (*_signals[i])  << " !=? p" << _signalsPrev[i] << " ==? s" << _signalsStart[i] << std::endl;
+
+        if (
+            _signalsPrev[i] != 0 && 
+            *_signals[i] != 0 && 
+            *_signals[i] != Blocked_SuitID && // ignore blocked.
+            *_signals[i] != _signalsPrev[i] && // suit swapped
+            _signalsPrev[i] == _signalsStart[i] // from starting suit
+        ) {
             // loaded I guess.
-            std::cout << "Detected wear suit! " << _signalsPrev[i] << " --> " << (*_signals[i]) << std::endl;
+            std::cout << "Detected wear suit! " << (*_signals[i])  << " != p" << _signalsPrev[i] << " == s" << _signalsStart[i] << std::endl;
+            //_signalsPrev[i] = *_signals[i];
+            WORD result = _signalsStart[i];
             _signalsPrev[i] = *_signals[i];
-            return i;
+
+            return SuitIDtoSuitName(result);
         }
     }
     
@@ -336,7 +342,7 @@ Suits::SignalTable::SignalTable(DWORD BASE_ADDR):
 
 WORD *Suits::SignalTable::operator[](size_t i) const
 {
-    std::cout << " [signal called " << i << "] " ;
+    //std::cout << " [signal called " << i << "] " ;
     if (i >= 6) return nullptr;
     
     //std::cout << "    signal derefing addrs " << std::endl;
