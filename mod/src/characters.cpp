@@ -10,7 +10,7 @@
 #include <windows.h>
 #include <iostream>
 
-const DWORD32 Characters::_offsets[characterCount] = 
+const DWORD32 Characters::characterOffsets[characterCount] = 
 {
     0x00, // Batman
     0x01, // Robin
@@ -104,9 +104,10 @@ const DWORD32 Characters::_offsets[characterCount] =
     0xD0, // The Scarecrow's Biplane
     0x118,// Goon Helicopter
     0x11C,// Riddler's jet
-    0x122// Mad Hatter's Glider
+    0x122,// Mad Hatter's Glider
 
-
+    // special
+    0x03
 };
 
 
@@ -122,7 +123,7 @@ Characters::Characters(DWORD BASE_ADDR) :
     // )
 {
     for (size_t i = 0; i < characterCount; i++) {
-        _characterBytes[i] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + _offsets[i];
+        _characterBytes[i] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + characterOffsets[i];
         token[i] = false;
         purchased[i] = false;
         unlocked[i] = false;
@@ -147,7 +148,7 @@ BYTE Characters::characterUnlocked(size_t i, BYTE value)
 // size_t Characters::OffsetToIndex(size_t offset) {
 //     for (DWORD i = 0; i < characterCount; i++)
 //     {
-//         if (index == _offsets[i]) return i;
+//         if (index == characterOffsets[i]) return i;
 //     }
 // }
 

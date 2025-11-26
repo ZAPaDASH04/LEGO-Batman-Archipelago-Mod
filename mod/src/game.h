@@ -83,6 +83,9 @@ public:
     BYTE* extraEnabled[21];
     BYTE* suitUpgradeEnabled[15];
     volatile BYTE& inShopSubMenu;
+    volatile BYTE& inCharacterSelectMenu; // ??? unsure if only happens in character select menu
+    volatile BYTE& player1SelectedCharacter; // value is character index/offset.
+    volatile BYTE& player2SelectedCharacter; // value is character index/offset.
     // volatile BYTE& inFinalStatusScreen; //Comment out since may be faulty?
 
     // Tracking

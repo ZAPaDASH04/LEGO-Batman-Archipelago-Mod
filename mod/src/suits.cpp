@@ -1,3 +1,11 @@
+/**
+ * @file suits.cpp
+ * @author ZAPaDASH04 (ZAPaDASH04@gmail.com) @ZAPaDASH04
+ * @brief 
+ * @date 2025-11-23
+ * 
+ */
+
 #include <iostream>
 
 #include "suits.h"

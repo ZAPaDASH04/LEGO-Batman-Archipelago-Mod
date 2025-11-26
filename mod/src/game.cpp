@@ -31,6 +31,9 @@ Game::Game(DWORD BASE_ADDR) :
     ),
 
     inShopSubMenu(*(volatile BYTE*)(BASE_ADDR + 0x005CBC90)),
+    inCharacterSelectMenu(*(volatile BYTE*)(BASE_ADDR + 0x006D5D24)),
+    player1SelectedCharacter(*(volatile BYTE*)(BASE_ADDR + 0x006C9814)), // these are likely shorts
+    player2SelectedCharacter(*(volatile BYTE*)(BASE_ADDR + 0x006C9816)),
     // inFinalStatusScreen(*(volatile BYTE*)(BASE_ADDR + 0x00696BA8)), //Comment out since may be faulty? Doesn't appear to constantly be 1 so mashing may skip past it?
     //powerBrickEnabled(*(volatile DWORD*)(BASE_ADDR + 0x00536DE0)), // TODO: test
     inLevelKitCountPrev(0),
@@ -39,7 +42,6 @@ Game::Game(DWORD BASE_ADDR) :
     inShopSubMenuPrev(0)
 
 {
-
     // in level minikits
     for (size_t i = 0; i < 10; i++)
     {

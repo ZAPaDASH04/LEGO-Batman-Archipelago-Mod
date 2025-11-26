@@ -445,6 +445,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     bool firstHeroEpisodeBeaten = false;
     bool firstHeroLevelBeaten = false;
     bool inLevel = false;
+    BYTE inCharSelector = 0;
     while (true) {
 
         // Level changed
@@ -527,7 +528,75 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             }
         }
         
-        
+        BYTE levelType = 0;
+        if (!inLevel && game.inCharacterSelectMenu != inCharSelector) {
+            inCharSelector = game.inCharacterSelectMenu;
+            if (inCharSelector) {
+                if (game.player1SelectedCharacter < Characters::characterOffsets[Batmobile]) {
+                    // characters
+                    size_t p1 = -1; // index of hovered character
+                    size_t p2 = -1; // index of hovered character
+                    for (size_t i = 0; i < Characters::characterCount; i++)
+                    {
+                        if (p1==-1 && Characters::characterOffsets[i] == game.player1SelectedCharacter) p1 = i;
+                        if (p2==-1 && Characters::characterOffsets[i] == game.player2SelectedCharacter) p2 = i;
+
+                    }
+
+                    // if (lb1AP_items[p1]) {
+                    //     // p1 is valid so don't move it
+
+                    // };
+                    if (!lb1AP_items[p1]) p1 = -1;
+                    if (!lb1AP_items[p2]) p2 = -1;
+                    // needs to be moved
+                    size_t v1 = p1;
+                    size_t v2 = p2;
+                    for (size_t i = Batman; i < Batmobile; i++)
+                    {
+                        if (lb1AP_items[i]) {
+                            if (v1==-1) {
+                                if (i != p2) v1 = i;
+                            } else if (v2==-1) {
+                                if (i != p1) v2 = i;
+                            }
+                        }
+                    }
+
+                    if (v2 == -1) {
+                        // only one character unlocked
+                        // this is a problem because the player could have control of player 2 while p1 is a bot wich would break this.
+                        // I think I have a non existant character. 0x03
+                        v2 = Noone;
+                    } else if (v1 == -1) {
+                        // only one character unlocked
+                        // this is a problem because the player could have control of player 2 while p1 is a bot wich would break this.
+                        // I think I have a non existant character. 0x03
+                        v1 = Noone;
+                    } else if (v1 == v2) { // both are negative right // TODO: test
+                        v1 = Batman;
+                        v2 = Batman;
+                    }
+
+                    game.player1SelectedCharacter = Characters::characterOffsets[v1];
+                    game.player2SelectedCharacter = Characters::characterOffsets[v2];
+                        
+                } else if (game.player1SelectedCharacter < Characters::characterOffsets[Batboat]) {
+                    // landcraft
+                    levelType = 1;
+                    // seems to auto correct unlike characters
+                } else if (game.player1SelectedCharacter < Characters::characterOffsets[Batwing]) {
+                    // watercraft
+                    levelType = 2;
+                    // seems to auto correct unlike characters
+                } else {
+                    // aircraft
+                    levelType = 3;
+                    
+                    // seems to auto correct unlike characters
+                }
+            }
+        }
 
 
 

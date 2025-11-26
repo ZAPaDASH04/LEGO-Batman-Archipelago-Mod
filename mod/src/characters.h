@@ -35,18 +35,20 @@ enum CharacterName {
 
     // aircraft
     Batwing, Batcopter, Harbour_Helicopter, Police_Helicopter, Bruce_Waynes_Private_Jet, 
-    The_Jokers_Helicopter, The_Scarecrows_Biplane, Goon_Helicopter, Riddlers_jet, Mad_Hatters_Glider
+    The_Jokers_Helicopter, The_Scarecrows_Biplane, Goon_Helicopter, Riddlers_jet, Mad_Hatters_Glider,
 
+    // special
+    Noone
 };
 
 
 class Characters {
 public: // WHY >:(
-    static const DWORD characterCount = 48 + 12 + 10 + 10;
+    static const DWORD characterCount = 48 + 12 + 10 + 10 + 1;
     static const DWORD characterShopCount = 53;
+    static const DWORD32 characterOffsets[characterCount];
 private:
     const DWORD BASE_ADDR; // may eventually make global.
-    static const DWORD32 _offsets[characterCount];
     //BYTE* _purchaseLocks;
 public:
     BYTE* _characterBytes[characterCount];
