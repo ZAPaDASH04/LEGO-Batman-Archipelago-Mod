@@ -37,8 +37,8 @@
 #include "game.h"
 #include "hintmessagebox.h"
 
-#include <cctype> //TODO: remove if easter egg 1 is removed
-#include <algorithm> //TODO: remove if easter egg 1 is removed
+// #include <cctype> //TODO: remove if easter egg 1 is removed
+// #include <algorithm> //TODO: remove if easter egg 1 is removed
 
 std::ofstream file;
 std::ofstream b_file;
@@ -302,7 +302,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // Send to Hub instead of YCBoB for New Game
     volatile DWORD& loadingZonePTR = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x6CA89C);
     volatile DWORD& hubAddress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x6CA8B4);
-    volatile DWORD& villainMissionAdress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x5CA7B8); // WARN: What is this?
+    // volatile DWORD& villainMissionAdress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x5CA7B8); // WARN: What is this? - response: jrad - address that has the pointer for the villain mission loading zone. Currently unused but we wanted it added potentially for future - commenting out for now.
     
     std::cout << "Hub Pointer Address: " << hubAddress << std::endl;
     std::cout << "Loading Zone PTR Value: " << loadingZonePTR << std::endl;
@@ -338,24 +338,24 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     connectionFile.close();
     
     
-    // Easter Egg 1 
-    volatile DWORD& harbouringAGrudgeAddress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x5CA818);
+    // // Easter Egg 1 
+    // volatile DWORD& harbouringAGrudgeAddress = *reinterpret_cast<volatile DWORD*>(BASE_ADDR + 0x5CA818);
     
-    transform(c_player.begin(), c_player.end(), c_player.begin(), ::tolower);
-    bool isEasterEgg1 = (c_player.find("snolid") != std::string::npos);
-    std::cout << "EasterEgg1: " << isEasterEgg1 << std::endl;
+    // transform(c_player.begin(), c_player.end(), c_player.begin(), ::tolower);
+    // bool isEasterEgg1 = (c_player.find("snolid") != std::string::npos);
+    // std::cout << "EasterEgg1: " << isEasterEgg1 << std::endl;
 
 
-    if(sublevelToLevel(game.currentLevel) != LevelName::V2_3 && isEasterEgg1){
-        while (sublevelToLevel(game.currentLevel) != LevelName::V2_3){
-            std::cout << "Loading Zone PTR Value EasterEgg1: " << loadingZonePTR << std::endl;
-            loadingZonePTR = harbouringAGrudgeAddress;
-            Sleep(50);
-        }
-        messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
-        while (playerControl != 1) Sleep(100); // Wait till loaded into level
-    }
-    // End Easter Egg 1
+    // if(sublevelToLevel(game.currentLevel) != LevelName::V2_3 && isEasterEgg1){
+    //     while (sublevelToLevel(game.currentLevel) != LevelName::V2_3){
+    //         std::cout << "Loading Zone PTR Value EasterEgg1: " << loadingZonePTR << std::endl;
+    //         loadingZonePTR = harbouringAGrudgeAddress;
+    //         Sleep(50);
+    //     }
+    //     messageBox.setText("Holy Archipelago Batman!!! Successfully connected...");
+    //     while (playerControl != 1) Sleep(100); // Wait till loaded into level
+    // }
+    // // End Easter Egg 1
     
 
     // check if need to clear log.
