@@ -42,6 +42,7 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
     AP_RegisterSlotDataIntCallback("TrueStatusSanity", &LB1AP_SetTrueStatusSanity);
     AP_RegisterSlotDataIntCallback("FreeplayOrStory", &LB1AP_SetFreeplayOrStory);
     AP_RegisterSlotDataIntCallback("DecoupledTokens", &LB1AP_SetDecoupledTokens);
+    AP_RegisterSlotDataIntCallback("DecoupleShuffleHushAndRasToken", &LB1AP_SetHushAndRasDecoupledTokens);
     AP_RegisterSlotDataIntCallback("ShuffleHushAndRas", &LB1AP_SetShuffleHushAndRas);
     AP_RegisterSlotDataIntCallback("HushUnlockCondition", &LB1AP_SetHushUnlockCondition);
     AP_RegisterSlotDataIntCallback("RasUnlockCondition", &LB1AP_SetRasUnlockCondition);
@@ -294,6 +295,17 @@ void LB1AP_SetDecoupledTokens(int num){
     }
     Settings::lb1_decoupledTokens = num;
     std::cout << "Decoupled Token setting set to: " << Settings::lb1_decoupledTokens<< std::endl;
+}
+
+// Read Decoupled Hush and Ras Tokens setting based on slot data
+void LB1AP_SetHushAndRasDecoupledTokens(int num){
+    if(num < 0 || num > 1){
+        std::cout << "Could not read the Hush and Ras Decoupled Tokens setting. Please report this to the devs. Setting to default" << std::endl;
+        Settings::lb1_decoupleHushandRasTokens = 1; // Set to default
+        return;
+    }
+    Settings::lb1_decoupleHushandRasTokens = num;
+    std::cout << "Decoupled Hush and Ras Token setting set to: " << Settings::lb1_decoupleHushandRasTokens<< std::endl;
 }
 
 // Read Shuffle Hush and Ras setting based on slot data

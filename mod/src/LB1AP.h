@@ -51,6 +51,7 @@ struct Settings {
     static int lb1_freeplayUnlocked; //0 if level unlocks send story mode, 1 if freeplay is sent
     static int lb1_decoupledTokens; //1 for decoupled from purchases, 0 for coupled
     static int lb1_shuffleHushandRas; //1 to shuffle hush and ras, 0 to not
+    static int lb1_decoupleHushandRasTokens; //1 to decouple hush and ras tokens from purchases, 0 to not
     static int lb1_hushUnlockCondition; //Number of hostages required to unlock purchase option
     static int lb1_rasUnlockCondition; //Number of minikits required to unlock purchase option
 };
@@ -76,6 +77,7 @@ void LB1AP_SetMinikitSanity(int num);
 void LB1AP_SetTrueStatusSanity(int num);
 void LB1AP_SetFreeplayOrStory(int num);
 void LB1AP_SetDecoupledTokens(int num);
+void LB1AP_SetHushAndRasDecoupledTokens(int num);
 void LB1AP_SetShuffleHushAndRas(int num);
 void LB1AP_SetHushUnlockCondition(int num);
 void LB1AP_SetRasUnlockCondition(int num);
