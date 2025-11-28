@@ -305,7 +305,7 @@ void LB1AP_SetHushAndRasDecoupledTokens(int num){
         return;
     }
     Settings::lb1_decoupleHushandRasTokens = num;
-    std::cout << "Decoupled Hush and Ras Token setting set to: " << Settings::lb1_decoupleHushandRasTokens<< std::endl;
+    std::cout << "Set Decoupled Hush and Ras Token setting set to: " << Settings::lb1_decoupleHushandRasTokens<< std::endl;
 }
 
 // Read Shuffle Hush and Ras setting based on slot data
