@@ -21,6 +21,7 @@ int Settings::lb1_minikitSanity {}; // 1 if minikit sanity check is enabled, 0 i
 int Settings::lb1_trueStatusSanity {}; // 1 if true status sanity check is enabled, 0 if not
 int Settings::lb1_freeplayUnlocked {}; // 1 if freeplay is unlocked, 0 if story mode is unlocked
 int Settings::lb1_decoupledTokens {}; //1 for decoupled from purchases, 0 for coupled
+int Settings::lb1_decoupleHushandRasTokens {}; //1 to decouple hush and ras tokens from purchases, 0 to not
 int Settings::lb1_shuffleHushandRas {}; //1 to shuffle hush and ras, 0 to not
 int Settings::lb1_hushUnlockCondition {}; //Number of hostages required to unlock purchase option
 int Settings::lb1_rasUnlockCondition {}; //Number of minikits required to unlock purchase option
