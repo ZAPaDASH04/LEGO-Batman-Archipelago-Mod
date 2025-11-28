@@ -176,6 +176,7 @@ Minikits::Minikits(DWORD BASE_ADDR) :
         {{0xA8, "MINI_8"    }, 118},
         {{0xA8, "MINI_10"   }, 119},
         //{{0xAC, "m_pup6"    }, 120},
+        {{0xAC, "mk_2"    }, 120},
         {{0xAC, "m_pup2"    }, 120},
         {{0xAC, "m_pup6"    }, 121},
         {{0xAC, "m_pupER"   }, 122},
