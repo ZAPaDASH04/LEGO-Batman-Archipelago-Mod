@@ -459,7 +459,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
             sublevprev = game.currentLevel;
             
-
+            // if (sublevelToLevel(sublevprev) == (BYTE)-1) {
+            //     // invalid level
+            //     lev = sublevelToLevel(sublevprev);
+            //     std::cerr << "ERR: unknown sublevel id 0x" << std::hex << sublevprev << " previous lev 0x" << levprev << std::endl;
+            // } else 
             if (lev != sublevelToLevel(sublevprev)) {
                 // Level changed
                 lev = sublevelToLevel(sublevprev);
@@ -468,6 +472,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                       << std::endl;
 
                 //game.suits.clearSignals();
+                if (lev == ((BYTE)-1)) {
+                    std::cerr << "ERR: unknown sublevel id 0x" << std::hex << sublevprev << " previous lev 0x" << levprev << std::endl;
+                }
 
                 if (lev <= LevelName::V3_5) {
                     inLevel = true;
@@ -505,7 +512,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 levprev = lev;
 
                 // WARN: USES WAITS
-                if (!isSublevelStatus(sublevprev)) {
+                if (lev != -1 && !isSublevelStatus(sublevprev)) {
                     std::cout << "new level suits" << std::endl;
                     // wait for playable
                     while (playerControl != 1) Sleep(100); // Wait till loaded into level
@@ -518,7 +525,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 // same level
 
                 // WARN: USES WAITS
-                if (!isSublevelStatus(sublevprev)) { 
+                if (lev != -1 &&!isSublevelStatus(sublevprev)) { 
                     std::cout << "same level suits" << std::endl;
                     // wait for playable
                     while (playerControl != 1) Sleep(100); // Wait till loaded into level
@@ -531,8 +538,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         }
         
         BYTE levelType = 0;
+        //fix character selector
         if (!inLevel && game.inCharacterSelectMenu != inCharSelector) {
             inCharSelector = game.inCharacterSelectMenu;
+            
             if (inCharSelector) {
                 if (game.player1SelectedCharacter < Characters::characterOffsets[Batmobile]) {
                     // characters
@@ -1224,15 +1233,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     break;
             }
         }
-
+        
         // Hard Character Found
         // ras and hush
         if (Settings::hostages >= Settings::lb1_hushUnlockCondition) {
             // hush
+            std::cout << "New Hard Character Found: Hush (" << std::dec << Settings::hostages << "/" << Settings::lb1_hushUnlockCondition << ")" << std::endl;
             LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Hush);            
         }
         if (Settings::minikits >= Settings::lb1_rasUnlockCondition) {
             // ras al ghul
+            std::cout << "New Hard Character Found: Ras (" << std::dec << Settings::minikits << "/" << Settings::lb1_rasUnlockCondition << ")" << std::endl;
             LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Ras_Al_Ghul);
         }
 
