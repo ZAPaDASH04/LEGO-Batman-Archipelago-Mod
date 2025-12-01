@@ -413,6 +413,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // }
 
     // batman and robin on by default
+   lb1AP_items[Batman] = true; // batman
+   lb1AP_items[Robin] = true; // robin
     *game.characters[0] = 0x03;
     *game.characters[1] = 0x03;
     game.characters.unlocked[0] = 1;
