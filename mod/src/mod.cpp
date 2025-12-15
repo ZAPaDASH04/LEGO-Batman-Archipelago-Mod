@@ -1316,7 +1316,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     std::cout
                         << "new Character purchased " << (int) i
                         << std::endl;
-                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 550 + i);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 550 + i - tokenOffset);
                     game.characters.purchased[i] = true; // WARN: needs to be stored and loaded.
                 }
                 
