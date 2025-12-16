@@ -184,7 +184,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     printf("\n" RESTART_MARKER "\n"); // I hope this works
 
     file << "ThreadProc started" << std::endl;
-    std::cout << "Using Version 0.3.0-alpha" << std::endl;
+    std::cout << "Using Version 0.3.0-alpha pre-release 5" << std::endl;
 
     
     
@@ -512,7 +512,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 levprev = lev;
 
                 // WARN: USES WAITS
-                if (lev != -1 && !isSublevelStatus(sublevprev)) {
+                if (lev != ((byte)-1) && !isSublevelStatus(sublevprev)) {
                     std::cout << "new level suits" << std::endl;
                     // wait for playable
                     while (playerControl != 1) Sleep(100); // Wait till loaded into level
@@ -525,7 +525,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 // same level
 
                 // WARN: USES WAITS
-                if (lev != -1 &&!isSublevelStatus(sublevprev)) { 
+                if (lev != ((byte)-1) &&!isSublevelStatus(sublevprev)) { 
                     std::cout << "same level suits" << std::endl;
                     // wait for playable
                     while (playerControl != 1) Sleep(100); // Wait till loaded into level
