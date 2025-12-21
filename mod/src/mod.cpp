@@ -184,7 +184,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     printf("\n" RESTART_MARKER "\n"); // I hope this works
 
     file << "ThreadProc started" << std::endl;
-    std::cout << "Using Version 0.3.0-alpha pre-release 5" << std::endl;
+    std::cout << "Using Version 0.3.0-alpha pre-release 6" << std::endl;
 
     
     
@@ -447,6 +447,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     bool firstHeroEpisodeBeaten = false;
     bool firstHeroLevelBeaten = false;
     bool inLevel = false;
+    bool hushSent = false;
+    bool RasSent = false;
     BYTE inCharSelector = 0;
     while (true) {
 
@@ -1237,15 +1239,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         
         // Hard Character Found
         // ras and hush
-        if (Settings::hostages >= Settings::lb1_hushUnlockCondition) {
+        if (Settings::hostages >= Settings::lb1_hushUnlockCondition && !hushSent) {
             // hush
             std::cout << "New Hard Character Found: Hush (" << std::dec << Settings::hostages << "/" << Settings::lb1_hushUnlockCondition << ")" << std::endl;
-            LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Hush);            
+            LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Hush);      
+            hushSent = true;      
         }
-        if (Settings::minikits >= Settings::lb1_rasUnlockCondition) {
+        if (Settings::minikits >= Settings::lb1_rasUnlockCondition && !RasSent) {
             // ras al ghul
             std::cout << "New Hard Character Found: Ras (" << std::dec << Settings::minikits << "/" << Settings::lb1_rasUnlockCondition << ")" << std::endl;
             LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Ras_Al_Ghul);
+            RasSent = true;
         }
 
         // True Status
