@@ -1242,13 +1242,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         if (Settings::hostages >= Settings::lb1_hushUnlockCondition && !hushSent) {
             // hush
             std::cout << "New Hard Character Found: Hush (" << std::dec << Settings::hostages << "/" << Settings::lb1_hushUnlockCondition << ")" << std::endl;
-            LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Hush);      
+            LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Hush + tokenOffset);      
             hushSent = true;      
         }
         if (Settings::minikits >= Settings::lb1_rasUnlockCondition && !RasSent) {
             // ras al ghul
             std::cout << "New Hard Character Found: Ras (" << std::dec << Settings::minikits << "/" << Settings::lb1_rasUnlockCondition << ")" << std::endl;
-            LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Ras_Al_Ghul);
+            LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + Ras_Al_Ghul + tokenOffset);
             RasSent = true;
         }
 
