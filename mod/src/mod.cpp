@@ -664,8 +664,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     //     *game.characters[i] = 0x02;
                     // }
                     // TODO: test
-                    if (game.characters.token[i]) {
-                        if (game.characters.purchased[i]){
+                    if (lb1AP_items[550+i]) { // characters.token
+                        if (lb1AP_locations[550+i]){ // characters.purchased
                             *game.characters[i] = 0x03; // TODO: test if I can set this to 0x02 and it still be blocked. because in villain room what if the character starts spawning in the hub while you are in the shop.
                             game.characters.purchaseLocks(i); // maybe put at end of ifs
                         } else {

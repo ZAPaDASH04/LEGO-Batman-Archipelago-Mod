@@ -52,8 +52,8 @@ private:
     //BYTE* _purchaseLocks;
 public:
     BYTE* _characterBytes[characterCount];
-    bool token[characterCount]; // item
-    bool purchased[characterCount]; // location
+    bool token[characterCount]; // item // WARN: obsolete
+    bool purchased[characterCount]; // location // WARN: obsolete
     bool unlocked[characterCount]; // item
 
     static size_t vanillaShopCharacter(size_t i);
