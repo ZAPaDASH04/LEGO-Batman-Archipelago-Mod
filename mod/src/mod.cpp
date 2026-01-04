@@ -184,7 +184,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     printf("\n" RESTART_MARKER "\n"); // I hope this works
 
     file << "ThreadProc started" << std::endl;
-    std::cout << "Using Version 0.3.0-alpha pre-release 6" << std::endl;
+    std::cout << "Using Version 0.3.0-alpha pre-release 8" << std::endl;
 
     
     
