@@ -28,6 +28,7 @@ Game::Game(DWORD BASE_ADDR) :
                 *reinterpret_cast<void**>(BASE_ADDR + 0x006D01C8)
             ) + 0x80
         )
+        
     ),
 
     inShopSubMenu(*(volatile BYTE*)(BASE_ADDR + 0x005CBC90)),

@@ -721,7 +721,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     // } else {
                     //     *game.characters[i] = 0x00; // this is so that it's a silouhette
                     // }
-                    if (game.characters.unlocked[i]) { // TODO: test
+                    if (game.characters.unlocked[i]) { // TODO: change to use items
                         *game.characters[i] = 0x03;
                     } else {
                         *game.characters[i] = 0x00; // for when character has been purchased it would be 3 when shouldn't
