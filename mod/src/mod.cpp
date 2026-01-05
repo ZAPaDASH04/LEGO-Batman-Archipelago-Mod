@@ -389,6 +389,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         //if (lb1AP_locations[80+i]) game.suits.unlock(i);
         game.suits.updateSuits();
     }
+    for (size_t i = 0; i < 30; i++) {
+        game.levels.levelBeatenPrev[i] = lb1AP_locations[425 + i];
+    }
     
     game.suits.resetSignals();
 
@@ -482,12 +485,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     inLevel = true;
                     // entered a level
                     std::cout << "entered a level." << std::endl;
-                    // TODO: can I make this level specifc. no loop? 
-                    // FIXME: I am pretty sure you can just use lev as the index
-                    for (size_t i = 0; i < 30; i++)
-                    {
-                        *game.levels.levelBeaten[i] = 0;
-                    }
+                    // TODO: test. if works apply to remove the loop below. nvm I think the loop below is needed.
+                    if (game.levels.levelBeatenPrev[lev] == 0) *game.levels.levelBeaten[lev] = 0;
                     
 
                 } else if (lev >= LevelName::Shop_Room && lev <= LevelName::Mission_Room) {
