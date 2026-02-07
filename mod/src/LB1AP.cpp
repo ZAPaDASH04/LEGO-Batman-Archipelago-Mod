@@ -49,8 +49,23 @@ void LB1AP_CheckLocation(int64_t location_id){
 void LB1AP_SendItem(int64_t location_id){
     int temp_location_id = location_id - LB1AP_LOCATION_ID_OFFSET;
     std::cout <<"Temp Location ID: " << temp_location_id << std::endl;
+    // Added Fail-safe for collect messing up level beaten win condition
+    if(temp_location_id >= 425 && temp_location_id < 455 && Settings::lb1_endGoal == 1){
+        auto count = std::count_if(lb1AP_locations + 425, lb1AP_locations + 454, [](bool checked){ return checked == true; });
+        if(!lb1AP_locations[temp_location_id]){
+            count++; //increment count if this level hasn't been counted yet
+        }
+        std::cout << "Levels beaten so far per location array: " << count << std::endl;
+        if(count >= Settings::lb1_levelsToWin){
+            LB1AP_Complete();
+        }
+    }
+    if(LB1AP_LocationChecked(location_id)){
+        std::cout << "Location: " << temp_location_id << " already checked, not sending item." << std::endl;
+        return;
+    }
     // Testing if the level beaten has already been sent. If not, adding one to our level beaten count stored on the server
-    if(temp_location_id >= 425 && temp_location_id < 455 && LB1AP_LocationChecked(location_id) == false){
+    if(temp_location_id >= 425 && temp_location_id < 455 && Settings::lb1_endGoal == 1){
         printf("Calling Level Complete request function\n");
         LB1AP_LevelComplete();
     }

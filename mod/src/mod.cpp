@@ -163,7 +163,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     printf("\n" RESTART_MARKER "\n"); // I hope this works
 
     file << "ThreadProc started" << std::endl;
-    std::cout << "Using Version 0.2.3-alpha" << std::endl;
+    std::cout << "Using Version 0.2.4-alpha" << std::endl;
 
     
     
@@ -360,8 +360,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         game.suitUnlocked2 |= (WORD)(1 << i);
     }
 
-
-
+    for (size_t i = 0; i < 30; i++) {
+        game.levels.levelBeatenPrev[i] = lb1AP_locations[425 + i];
+    }
 
 
 
