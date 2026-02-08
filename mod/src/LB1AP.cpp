@@ -50,7 +50,7 @@ void LB1AP_SendItem(int64_t location_id){
     int temp_location_id = location_id - LB1AP_LOCATION_ID_OFFSET;
     std::cout <<"Temp Location ID: " << temp_location_id << std::endl;
     // Added Fail-safe for collect messing up level beaten win condition
-    if(temp_location_id >= 425 && temp_location_id < 455 && Settings::lb1_endGoal == 1){
+    if(Settings::lb1_endGoal == 1){ // TODO: Move this out of send item
         auto count = std::count_if(lb1AP_locations + 425, lb1AP_locations + 454, [](bool checked){ return checked == true; });
         if(!lb1AP_locations[temp_location_id]){
             count++; //increment count if this level hasn't been counted yet
