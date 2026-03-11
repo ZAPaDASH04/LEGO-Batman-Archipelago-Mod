@@ -372,7 +372,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
 
 
-    ///////// TODO: do a loop of all memory for missed checks.
+    ///////// TODO: do a loop of all memory for missed checks. Instead make every check check against the lists in lb1ap.
 
 
     /*/////////////////////////
@@ -389,6 +389,9 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         //if (lb1AP_locations[80+i]) game.suits.unlock(i);
         game.suits.updateSuits();
     }
+    
+    game.suits.resetSignals();
+
     for (size_t i = 0; i < 30; i++) {
         game.levels.levelBeatenPrev[i] = lb1AP_locations[425 + i];
 
@@ -400,13 +403,17 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             else *game.levels.levelRedBrick[i] = 0;
         }
         // Purchased Item
-        if (lb1AP_items[515+i]) game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
-        else game.powerBrickPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+        if (lb1AP_items[515+i]) {
+            game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+            if (i >= 20) *game.suitUpgradeEnabled[i-20] = 1; 
+        } else {
+            game.powerBrickPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+            if (i >= 20) *game.suitUpgradeEnabled[i-20] = 0; 
+        };
 
+        // enable suit upgrades.
         game.extraPurchasedPrev = game.powerBrickPurchased;
     }
-    
-    game.suits.resetSignals();
 
 
 
