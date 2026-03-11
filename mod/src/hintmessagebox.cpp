@@ -25,7 +25,7 @@ HintMessageBox::HintMessageBox(DWORD BASE_ADDR):
         )
     ),
 
-    messageSpacing(1.0),
+    messageSpacing(0.6),
     hold(false)
 {
     std::cout << "initializing timer" << std::endl;

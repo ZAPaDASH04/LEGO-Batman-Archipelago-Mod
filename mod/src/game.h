@@ -101,6 +101,8 @@ public:
      * bit 2 = Collected Item
      * bit 3 = Purchased Location
      * bit 4 = Purchased Item
+     * might actually be opposite order.
+     * 0b0100 = purchased location
      */
     BYTE powerBrickState[35];
 

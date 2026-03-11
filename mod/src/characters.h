@@ -53,7 +53,7 @@ private:
 public:
     BYTE* _characterBytes[characterCount];
     bool token[characterCount]; // item // WARN: obsolete
-    bool purchased[characterCount]; // location // WARN: obsolete
+    bool purchased[characterCount]; // location // WARN: obsolete Replace with lb1AP_locations[0+i]
     bool unlocked[characterCount]; // item
 
     static size_t vanillaShopCharacter(size_t i);

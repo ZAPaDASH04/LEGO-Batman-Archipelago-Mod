@@ -7,6 +7,7 @@
  */
 
 #include "characters.h"
+#include "LB1AP.h"
 #include <windows.h>
 #include <iostream>
 
@@ -191,7 +192,7 @@ size_t Characters::vanillaShopCharacter(size_t index) {
 void Characters::purchaseLocks(size_t i) {
     std::cout << "hegesdgf " << i << std::endl;
     if (vanillaShopCharacter(i) == -1) return; //TODO: may be obsolete.
-    purchaseLocks(i,purchased[i]);
+    purchaseLocks(i,lb1AP_locations[i]);
 };
 
 void Characters::purchaseLocks(size_t i, bool lock) {

@@ -382,7 +382,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     // TODO: test this.
     for (size_t i = 0; i < Characters::characterCount; i++) 
     {
-        game.characters.purchased[i] = lb1AP_locations[550+i];
+        game.characters.purchased[i] = lb1AP_locations[i];
     }
     for (size_t i = 0; i < 10; i++)
     {
@@ -646,14 +646,20 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
                     // Collected Item
                     if (i<30) {
-                        if (state & 0b0010) *game.levels.levelRedBrick[i] = 1;
+                        // if (state & 0b0010) *game.levels.levelRedBrick[i] = 1;
+                        // else *game.levels.levelRedBrick[i] = 0;
+                        if (lb1AP_items[485+i]) *game.levels.levelRedBrick[i] = 1;
                         else *game.levels.levelRedBrick[i] = 0;
                     }
 
                     // Purchased Location
-                    if (state & 0b0100) game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+                    // TODO: when starting new game purchases in shop aren't shown purchased but are prevented from multipurchasing. need to do the same thing as characters. third pointer.
+                    if (lb1AP_locations[515+i]) game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
                     else game.powerBrickPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+
                     game.extraPurchasedPrev = game.powerBrickPurchased;
+
+
                 }
 
                 // per character
@@ -664,7 +670,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     // }
                     // TODO: test
                     if (lb1AP_items[550+i]) { // characters.token
-                        if (lb1AP_locations[550+i]){ // characters.purchased
+                        if (lb1AP_locations[i]){ // characters.purchased
                             *game.characters[i] = 0x03; // TODO: test if I can set this to 0x02 and it still be blocked. because in villain room what if the character starts spawning in the hub while you are in the shop.
                             game.characters.purchaseLocks(i); // maybe put at end of ifs
                         } else {
@@ -695,14 +701,18 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     state = game.powerBrickState[i];
                     
                     // Collected Location
-                    
                     if (i<30) {
-                        if (state & 0b0001) *game.levels.levelRedBrick[i] = 1;
+                        // if (state & 0b0001) *game.levels.levelRedBrick[i] = 1;
+                        // else *game.levels.levelRedBrick[i] = 0;
+                        if (lb1AP_locations[485+i]) *game.levels.levelRedBrick[i] = 1;
                         else *game.levels.levelRedBrick[i] = 0;
                     }
                     // Purchased Item
-                    if (state & 0b1000) game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+                    // if (state & 0b1000) game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+                    // else game.powerBrickPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+                    if (lb1AP_items[515+i]) game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
                     else game.powerBrickPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+
                     game.extraPurchasedPrev = game.powerBrickPurchased;
                 }
                 
@@ -1315,11 +1325,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
             for (size_t i = 0; i < Characters::characterCount; i++)
             {
                 // TODO: may be bad logic
-                if (game.characters.purchased[i] == false && *game.characters[i] == 0x03) {
+                if (lb1AP_locations[i] == false && *game.characters[i] == 0x03) {
                     std::cout
                         << "new Character purchased " << (int) i
                         << std::endl;
-                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 550 + i - tokenOffset);
+                    LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + i);
                     game.characters.purchased[i] = true; // WARN: needs to be stored and loaded.
                 }
                 
