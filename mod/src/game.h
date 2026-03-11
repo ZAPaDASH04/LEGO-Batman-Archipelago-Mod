@@ -104,7 +104,7 @@ public:
      * might actually be opposite order.
      * 0b0100 = purchased location
      */
-    BYTE powerBrickState[35];
+    //BYTE powerBrickState[35];
 
 
     Game(DWORD BASE_ADDR);

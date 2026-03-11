@@ -66,10 +66,11 @@ Game::Game(DWORD BASE_ADDR) :
     extraPurchasedPrev = powerBrickPurchased;
 
     // red brick stuff
-    for (size_t i = 0; i < 35; i++)
-    {
-        powerBrickState[i] = 0;
-    }
+    // for (size_t i = 0; i < 35; i++)
+    // {
+    //     powerBrickState[i] = 0;
+    // }
+    
     
 };
 

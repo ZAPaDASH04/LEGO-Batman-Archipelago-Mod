@@ -391,6 +391,19 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     }
     for (size_t i = 0; i < 30; i++) {
         game.levels.levelBeatenPrev[i] = lb1AP_locations[425 + i];
+
+    }
+    for (size_t i = 0; i < 35; i++) { // red brick
+        // Collected Location
+        if (i<30) {
+            if (lb1AP_locations[485+i]) *game.levels.levelRedBrick[i] = 1;
+            else *game.levels.levelRedBrick[i] = 0;
+        }
+        // Purchased Item
+        if (lb1AP_items[515+i]) game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+        else game.powerBrickPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
+
+        game.extraPurchasedPrev = game.powerBrickPurchased;
     }
     
     game.suits.resetSignals();
@@ -641,13 +654,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
 
                     // red bricks
 
-                    state = game.powerBrickState[i];
-                    std::cout << i << " : " << std::hex << (int)state << std::endl;
+                    //state = game.powerBrickState[i];
+                    //std::cout << i << " : " << std::hex << (int)state << std::endl;
 
                     // Collected Item
                     if (i<30) {
-                        // if (state & 0b0010) *game.levels.levelRedBrick[i] = 1;
-                        // else *game.levels.levelRedBrick[i] = 0;
                         if (lb1AP_items[485+i]) *game.levels.levelRedBrick[i] = 1;
                         else *game.levels.levelRedBrick[i] = 0;
                     }
@@ -697,19 +708,15 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 // per extra
                 for (DWORD64 i = 0; i < 35; i++)
                 {
-                    std::cout << i << " : " << std::hex << (int)state << std::endl;
-                    state = game.powerBrickState[i];
+                    //std::cout << i << " : " << std::hex << (int)state << std::endl;
+                    //state = game.powerBrickState[i];
                     
                     // Collected Location
                     if (i<30) {
-                        // if (state & 0b0001) *game.levels.levelRedBrick[i] = 1;
-                        // else *game.levels.levelRedBrick[i] = 0;
                         if (lb1AP_locations[485+i]) *game.levels.levelRedBrick[i] = 1;
                         else *game.levels.levelRedBrick[i] = 0;
                     }
                     // Purchased Item
-                    // if (state & 0b1000) game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
-                    // else game.powerBrickPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
                     if (lb1AP_items[515+i]) game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
                     else game.powerBrickPurchased &= ~(DWORD64)(((DWORD64)1) << (DWORD64)(i+((DWORD)1)));
 
@@ -1293,7 +1300,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                     << std::endl;
                 LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 485 + sublevelToLevel(game.currentLevel));
                 game.inLevelPowerBrickPrev = game.inLevelPowerBrick;
-                game.powerBrickState[sublevelToLevel(game.currentLevel)] |= 0b0001;
+                //game.powerBrickState[sublevelToLevel(game.currentLevel)] |= 0b0001;
             }
 
         }
@@ -1315,7 +1322,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                         << "new Power Brick purchased " << (int) lev
                             << std::endl;
                     LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 515 + powerBrickCheck);
-                    game.powerBrickState[powerBrickCheck] != 0b0100;
+                    //game.powerBrickState[powerBrickCheck] != 0b0100;
                     game.extraPurchasedPrev = game.powerBrickPurchased;
                     if (powerBrickCheck >= 20) *game.suitUpgradeEnabled[powerBrickCheck-20] = 0; // enable suit upgrade
                 }
@@ -1380,12 +1387,12 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 std::cerr << "You should not be getting true statuses (report to devs)" << std::endl;
             } else if (i < 515) { // Red Brick token
                 std::cout << "Red Brick Token Unlocked!" << std::endl;
-                game.powerBrickState[i-485] |= 0b0010; // set state to item received
+                //game.powerBrickState[i-485] |= 0b0010; // set state to item received
 
 
             } else if (i < 550) { // Red Brick Purchased
                 std::cout << "Red Brick Unlocked!" << std::endl;
-                game.powerBrickState[i-515] |= 0b1000; // set state to item received
+                //game.powerBrickState[i-515] |= 0b1000; // set state to item received
                 if (!game.isInShop()) { // enable if not in shop
                     game.powerBrickPurchased |= (((DWORD64)1) << (DWORD64)(i-((DWORD64)515)+((DWORD)1)));
                     
