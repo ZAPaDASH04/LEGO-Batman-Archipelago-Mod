@@ -448,7 +448,24 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
     game.suits.unlock(Bat_Suit);
     game.suits.unlock(Robin_Suit);
 
+    // WARNING: this is to remove suit logic
+    lb1AP_items[80+Demo_Suit] = true; 
+    game.suits.unlock(Demo_Suit);
+    lb1AP_items[80+Glide_Suit] = true; 
+    game.suits.unlock(Glide_Suit);
+    lb1AP_items[80+Heat_Suit] = true; 
+    game.suits.unlock(Heat_Suit);
+    lb1AP_items[80+Sonar_Suit] = true; 
+    game.suits.unlock(Sonar_Suit);
 
+    lb1AP_items[80+Tech_Suit] = true; 
+    game.suits.unlock(Tech_Suit);
+    lb1AP_items[80+Magnet_Suit] = true; 
+    game.suits.unlock(Magnet_Suit);
+    lb1AP_items[80+Attracto_Suit] = true; 
+    game.suits.unlock(Attracto_Suit);
+    lb1AP_items[80+Dive_Suit] = true; 
+    game.suits.unlock(Dive_Suit);
 
 
 
