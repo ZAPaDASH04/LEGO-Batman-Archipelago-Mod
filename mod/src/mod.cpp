@@ -563,15 +563,15 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 // same level
 
                 // WARN: USES WAITS
-                if (lev != ((byte)-1) &&!isSublevelStatus(sublevprev)) { 
-                    std::cout << "same level suits" << std::endl;
-                    // wait for playable
-                    while (playerControl != 1) Sleep(100); // Wait till loaded into level
-                    game.suits.restoreSignals();
-                    // TODO: maybe insert clear if in mission rooms.
-                    game.suits.resetSignals();
-                    game.suits.updateSignals();
-                }
+                // if (lev != ((byte)-1) &&!isSublevelStatus(sublevprev)) { 
+                //     std::cout << "same level suits" << std::endl;
+                //     // wait for playable
+                //     while (playerControl != 1) Sleep(100); // Wait till loaded into level
+                //     game.suits.restoreSignals();
+                //     // TODO: maybe insert clear if in mission rooms.
+                //     game.suits.resetSignals();
+                //     game.suits.updateSignals();
+                // }
             }
         }
         
@@ -787,21 +787,21 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
         // had to be moved to after levels.
         // TODO: check alternatives.
 
-        // Suits
-        //if (inLevel && playerControl && game.suits.checkSignals()) {
-        if (inLevel && playerControl) {
+        // // Suits
+        // //if (inLevel && playerControl && game.suits.checkSignals()) {
+        // if (inLevel && playerControl) {
             
-            //std::cout << "AAAAAAAAAAAAAA" << std::endl;
-            size_t wore = game.suits.detectWear();
-            if (wore!=-1) {
-                std::cout 
-                    << "new suit " << wore
-                    << std::endl;
-                // TODO: needes extensive testing
-                LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 80 + wore);
-            }
+        //     //std::cout << "AAAAAAAAAAAAAA" << std::endl;
+        //     size_t wore = game.suits.detectWear();
+        //     if (wore!=-1) {
+        //         std::cout 
+        //             << "new suit " << wore
+        //             << std::endl;
+        //         // TODO: needes extensive testing
+        //         LB1AP_SendItem(LB1AP_LOCATION_ID_OFFSET + 80 + wore);
+        //     }
 
-        }
+        // }
 
         // Minikits
         if (Settings::lb1_minikitSanity) {
@@ -1389,12 +1389,12 @@ DWORD WINAPI ThreadProc(LPVOID lpParam) {
                 }
                 //std::cerr << "You should not be getting this: %d (report to devs)" << std::endl;
             } else if (i < 90) {
-                // Suits
-                std::cout << "Suit Unlocked!" << std::endl;
-                // WARN: no idea if this is right
-                game.suits.unlock(i-80);
-                game.suits.updateSignals(); // skips if signals aren't loaded
-
+                // // Suits
+                // std::cout << "Suit Unlocked!" << std::endl;
+                // // WARN: no idea if this is right
+                // game.suits.unlock(i-80);
+                // game.suits.updateSignals(); // skips if signals aren't loaded
+                std::cout << "Suits don't exist yet. report this." << std::endl;
             } else if (i < 100) {
                 std::cerr << "Invalid Suit? Received." << std::endl;
             } else if (i < 400) { // Minikits
