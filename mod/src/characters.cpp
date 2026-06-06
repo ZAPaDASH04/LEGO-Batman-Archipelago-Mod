@@ -126,7 +126,7 @@ Characters::Characters(DWORD BASE_ADDR) :
     for (size_t i = 0; i < characterCount; i++) {
         _characterBytes[i] = *((BYTE**)(BASE_ADDR + 0x006CA830)) + characterOffsets[i];
         token[i] = false;
-        purchased[i] = false;
+        //purchased[i] = false;
         unlocked[i] = false;
     }
 };
@@ -176,7 +176,7 @@ size_t Characters::vanillaShopCharacter(size_t index) {
         return 41 + (index-61);
     } else if (index > 66 && index < 70) {
         return 44 + (index-66);
-    } else if (index > 71 && index < 75) {
+    } else if (index > 71 && index < 80) {
         return 47 + (index-71);
     } else {
         // not valid

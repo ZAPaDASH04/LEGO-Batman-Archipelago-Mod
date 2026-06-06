@@ -68,6 +68,7 @@ public:
     Suits suits;
     Minikits minikits;
     
+    
     // TODO: test volatile functionality
     volatile BYTE& currentLevel; // TODO: test
     

@@ -30,6 +30,7 @@ Game::Game(DWORD BASE_ADDR) :
         )
         
     ),
+    
 
     inShopSubMenu(*(volatile BYTE*)(BASE_ADDR + 0x005CBC90)),
     inCharacterSelectMenu(*(volatile BYTE*)(BASE_ADDR + 0x006D5D24)),
