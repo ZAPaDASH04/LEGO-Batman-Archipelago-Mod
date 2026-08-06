@@ -2,7 +2,7 @@
   "ModId": "legobatman1.apconnectsupport",
   "ModName": "LB1 Client Connector",
   "ModAuthor": "N00byKing",
-  "ModVersion": "1.0.0",
+  "ModVersion": "1.0.1",
   "ModDescription": "Lego Batman 1 Client Connector Support",
   "ModDll": "",
   "ModIcon": "",
@@ -15,7 +15,29 @@
   "HasExports": null,
   "IsLibrary": true,
   "ReleaseMetadataFileName": "legobatman1.apconnectsupport.ReleaseMetadata.json",
-  "PluginData": {},
+  "IgnoreRegexes": [
+    ".*\\.json"
+  ],
+  "IncludeRegexes": [
+    "\\.deps\\.json",
+    "\\.runtimeconfig\\.json",
+    "ModConfig\\.json"
+  ],
+  "PluginData": {
+    "GitHubDependencies": {
+      "IdToConfigMap": {
+        "legobatman1.apsupport": {
+          "Config": {
+            "UserName": "ZAPaDASH04",
+            "RepositoryName": "LEGO-Batman-Archipelago-Mod",
+            "UseReleaseTag": true,
+            "AssetFileName": "Mod.zip"
+          },
+          "ReleaseMetadataName": "legobatman1.apsupport.ReleaseMetadata.json"
+        }
+      }
+    }
+  },
   "IsUniversalMod": false,
   "ModDependencies": [
     "legobatman1.apsupport",

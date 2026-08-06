@@ -28,7 +28,7 @@ void LB1AP_Init(const char* serverIP, const char* playerName, const char* passwo
     AP_SetItemClearCallback(&LB1AP_Reset); // Used to clear the state of the game. Called when connecting to server as AP sends/receives all locations/items upon connection
     AP_SetItemRecvCallback(LB1AP_ReceiveItem); // What to do when an item is received
     AP_SetLocationCheckedCallback(&LB1AP_CheckLocation); // What to do when a location is checked
-    AP_SetNotify(AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal", AP_DataType::Int); // Used to make sure Level Complete win condition is properly calculated between sessions
+    // AP_SetNotify(AP_GetPrivateServerDataPrefix() + "CompleteLevelGoal", AP_DataType::Int); // Used to make sure Level Complete win condition is properly calculated between sessions
     AP_RegisterSetReplyCallback(&LB1AP_SetReplyHanlder); // Set reply hanlder for Level complete win condition
     AP_RegisterSlotDataIntCallback("EndGoal", &LB1AP_SetCompletionType); // Read slot data for completion type
     AP_RegisterSlotDataIntCallback("MinikitsToWin", &LB1AP_SetMinikitsToWin); // Read slot data for number of minikits to win
